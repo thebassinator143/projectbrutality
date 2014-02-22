@@ -11,7 +11,7 @@ function love.load()
 
 	world = 	{
 				gravity = 1536,
-				ground = 512,
+				ground = 896,
 				friction = -2000
 				}
 				
@@ -29,6 +29,9 @@ function love.load()
 				h = 54,
 				w = 16,
 				standing = false,
+				health = 10,
+				lives = 3,
+				image = love.graphics.newImage( "sprites/playersprite.png" )
 				}
 	function player:jump()
 		if self.standing then
@@ -65,11 +68,33 @@ function love.load()
 		if event == "cieling" then
 			self.y_vel = 0
 		end
+		if event == "spike" then
+			self:damage(spike.damage)
+		end
+	end
+	
+	function player:die()
+		self.x = 256
+		self.y = 256
+	end
+	
+	function player:damage(n)
+		if (n <= 0) then
+			self.health = self.health - n
+		end
+		if self.health <= 0 then
+			self.health = 0
+			self:die()
+		end
 	end
 	
 	function player:update(dt)
 		local halfX = self.w / 2
 		local halfY = self.h / 2
+		
+		if self.y > world.ground then
+			self:die()
+		end
 		
 		self.y_vel = self.y_vel + (world.gravity * dt)
 		
@@ -156,8 +181,6 @@ function love.load()
 		return tempState
 	end
 	
-	imagePlayer = love.graphics.newImage( "sprites/playersprite.png" )
-	
 end
 
 function love.draw()
@@ -167,7 +190,7 @@ function love.draw()
 	map:draw()
 	
 	love.graphics.setColor( 255, 255, 255, 255 )
-	love.graphics.draw( imagePlayer, (player.x - player.w/2) - 24, (player.y - player.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+	love.graphics.draw( player.image, (player.x - player.w/2) - 24, (player.y - player.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
 	
 	camera:unset()
 end
