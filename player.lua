@@ -49,7 +49,7 @@ function player:collide(event)
 		self.y_vel = 0
 		self.standing = true
 	end
-	if event == "cieling" then
+	if event == "ceiling" then
 		self.y_vel = 0
 	end
 	if event == "spike" then
@@ -105,7 +105,7 @@ function player:update(dt)
 			self.standing = false
 		else
 			self.y = nextY + map.tileHeight - ((nextY - halfY) % map.tileHeight)
-			self:collide("cieling")
+			self:collide("ceiling")
 		end
 	end
 	if self.y_vel > 0 then

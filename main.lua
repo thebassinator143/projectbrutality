@@ -51,6 +51,8 @@ function love.update(dt)
 	
 	player:update(dt)
 	
+	ents:update(dt)
+	
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
 end
 

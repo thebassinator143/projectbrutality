@@ -3,16 +3,20 @@ local ent = ents.Derive("base")
 function ent:load(x, y)
 	self:setPos( x, y )
 	self.image = love.graphics.newImage("sprites/hellhound.png")
-	self.speed = 0
+	self.speed = 316
 	self.x_vel = 0
 	self.y_vel = 0
-	self.flySpeed = 0
+	self.flySpeed = 700
+	self.airacceleration = 0.02
+	self.acceleration = 0.06
 	self.size = 1
-	self.height = 28
-	self.width = 43
+	self.h = 28
+	self.w = 43
 	self.health = 2
 	self.damage = 1
 	self.maxhealth = self.health
+	self.standing = false
+	ent:right()
 end
 
 function ent:setPos( x, y )
@@ -20,10 +24,43 @@ function ent:setPos( x, y )
 	self.y = y
 end
 
+function ent:right()
+	if self.standing then
+		self.x_vel = self.x_vel + (self.acceleration * self.speed)
+	else
+		self.x_vel = self.x_vel + (self.airacceleration * self.speed)
+	end
+end
+	
+function ent:left()
+	if self.standing then
+		self.x_vel = self.x_vel - (self.acceleration * self.speed)
+	else
+		self.x_vel = self.x_vel - (self.airacceleration * self.speed)
+	end
+end
+	
+function ent:stop()
+	self.x_vel = 0
+end
+
+function ent:collide(event)
+	if event == "floor" then
+		self.y_vel = 0
+		self.standing = true
+	end
+	if event == "ceiling" then
+		self.y_vel = 0
+	end
+	if event == "spike" then
+		self:damage(spike.damage)
+	end
+end
+
 function ent:update(dt)
 	local halfX = self.w / 2
-	local halfY = self.h / 2
-		
+	local halfY = self.h / 2	
+	
 	if self.y > world.ground + self.h then
 		self:die()
 	end
@@ -72,23 +109,52 @@ function ent:update(dt)
 		if not(ent:isColliding(map, nextX + halfX, self.y - halfY))
 			and not(ent:isColliding(map, nextX + halfX, self.y + halfY - 1)) then
 			self.x = nextX
+			ent:right()
 		else
 			self.x = nextX - ((nextX + halfX) % map.tileWidth)
+			ent:left()
 		end
 	elseif self.x_vel < 0 then
 		if not(ent:isColliding(map, nextX - halfX, self.y - halfY))
 			and not(ent:isColliding(map, nextX - halfX, self.y + halfY - 1)) then
 			self.x = nextX
+			ent:left()
 		else
 			self.x = nextX + map.tileWidth - ((nextX - halfX) % map.tileWidth)
+			ent:right()
 		end
 	end
-		
-	self.state = self:getState()
 end
+
+function ent:isColliding(map, x, y)
+	local layer = map.tl["Solid"]
+	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
+	local tile = layer.tileData(tileX, tileY)
+	return not(tile == nil)
+end
+
+function ent:getState()
+	local tempState = ""
+	if self.standing then
+		if self.x_vel > 0 then
+			tempState = "right"
+		elseif self.x_vel < 0 then
+			tempState = "left"
+		else
+			tempState = "stand"
+		end
+	end
+	if self.y_vel > 0 then
+		tempState = "fall"
+	elseif self.y_vel < 0 then
+		tempState = "jump"
+	end
+	return tempState
+end
+
 function ent:draw()
 	love.graphics.setColor( 255, 255, 255, 255)
-	love.graphics.draw(self.image, self.x, self.y, 0, self.size, self.size, 0, 0)
+	love.graphics.draw(self.image, self.x - self.w/2, self.y - self.h/2, 0, self.size, self.size, 0, 0)
 end
 
 return ent;
