@@ -15,6 +15,9 @@
  <tileset firstgid="32" name="GreyGrasswPit" tilewidth="28" tileheight="28">
   <image source="GreyGrasswPit.png" width="140" height="140"/>
  </tileset>
+ <tileset firstgid="57" name="HellHound" tilewidth="28" tileheight="28">
+  <image source="HellHound.png" width="56" height="28"/>
+ </tileset>
  <layer name="Background" width="96" height="32">
   <data encoding="base64" compression="zlib">
    eJzt1DEKwCAMBVCnttD2/tfVRXAxW5TS9+AvTuFHUgoAAAAAAAAAAACrHS3nJNfGuf7ibnkm0f8a/n+e6L6MPes/R3Rfet7gPVPfM/BdFebcAgY=
@@ -27,7 +30,7 @@
  </layer>
  <layer name="Foreground" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJztzrEJACAQA8BfQm0t3H9GrUXB8sE7CKRIkQgAAAAAAAAAAAAA4FVZqSstYR/b137Zn3YZ/r90+NkE9AMH7Q==
+   eJztzrEJwDAQA0AvEbtNkSWc/QfL18aGpPJD7kCgQoVKAQAAAAAAAACAPXrk3n0CAOCjI1IjLWG/hq/nYj/bZfj/psOfPekBCGA=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="96" height="32"/>
