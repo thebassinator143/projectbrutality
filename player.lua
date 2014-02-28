@@ -60,6 +60,7 @@ end
 function player:die()
 	self.x = 256
 	self.y = 256
+	self.lives = self.lives - 1
 end
 	
 function player:damage(n)

@@ -33,6 +33,12 @@ function love.draw()
 	love.graphics.draw( player.image, (player.x - player.w/2) - 24, (player.y - player.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
 	
 	camera:unset()
+	
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.print ( "Health: " .. player.health, 16, 16, 0, 1, 1 )
+	
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.print ( "Lives: " .. player.lives, 16, 32, 0, 1, 1 )
 end
 
 function love.update(dt)
