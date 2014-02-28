@@ -82,18 +82,25 @@ function player:update(dt)
 	end
 		
 	self.y_vel = self.y_vel + (world.gravity * dt)
-		
-	if self.standing and self.x_vel > 0 then
-		self.x_vel = self.x_vel + (world.friction * dt)
-	else 
-		self.x_vel = self.x_vel
-	end
-		
-	if self.standing and self.x_vel < 0 then
-		self.x_vel = self.x_vel - (world.friction * dt)
-	else
-		self.x_vel = self.x_vel
-	end
+	
+	if self.standing then
+   print("self.x_vel = " .. self.x_vel)
+	 if self.x_vel > 0 then
+	   if self.x_vel <= (world.friction * dt) then
+	     self.x_vel = 0
+     else
+       self.x_vel = self.x_vel + (world.friction * dt)
+     end
+   elseif self.x_vel < 0 then
+     if self.x_vel >= (world.friction * dt) then
+       self.x_vel = 0
+     else
+       self.x_vel = self.x_vel - (world.friction * dt)
+     end
+   else
+     self.x_vel = 0
+   end
+  end
 		
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
