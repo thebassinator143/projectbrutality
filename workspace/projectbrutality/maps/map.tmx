@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="96" height="32" tilewidth="28" tileheight="28">
+ <tileset firstgid="1" name="PlatformGround" tilewidth="28" tileheight="28">
+  <image source="PlatformGround28.png" width="140" height="112"/>
+ </tileset>
+ <tileset firstgid="21" name="GreyGrass" tilewidth="28" tileheight="28">
+  <image source="GreyGrass28.png" width="84" height="84"/>
+ </tileset>
+ <tileset firstgid="30" name="SkullBox" tilewidth="28" tileheight="28">
+  <image source="SkullBox28.png" width="28" height="28"/>
+ </tileset>
+ <tileset firstgid="31" name="Spike" tilewidth="28" tileheight="28">
+  <image source="Spike.png" width="28" height="28"/>
+ </tileset>
+ <tileset firstgid="32" name="GreyGrasswPit" tilewidth="28" tileheight="28">
+  <image source="GreyGrasswPit.png" width="140" height="140"/>
+ </tileset>
+ <layer name="Background" width="96" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt1DEKwCAMBVCnttD2/tfVRXAxW5TS9+AvTuFHUgoAAAAAAAAAAACrHS3nJNfGuf7ibnkm0f8a/n+e6L6MPes/R3Rfet7gPVPfM/BdFebcAgY=
+  </data>
+ </layer>
+ <layer name="Solid" width="96" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztl0sLglAUhO1FFJHb3q1a5ML///O6kpKIV8d8zJE7HwzcxcGOwzhpHAkWO6eYvUTAyH8u8p+L/Oci/7lk/u/ZSwRMOf8Pj8R4qH+4yH8u8p+L/OfSxX/9Nw+P8s9F/nOZwn/1lh99/3JR/3Cx5n9oXaX+4WIt/6ExZf5D6hUU5Z/LGP4/B77enFg7LXNtgPm+/i9Kv1fVqsd150rm5zYX0uvqHxwk25mfh1zyHwPtDCTbTTN17x1t/jf1i/WeGdLXYq4t2//kf47fX2gXdPEVmeuTf9/8VP2DvBd1yWyB7z6P0S+LTfeIzo2V/5PT2eli8Pyu7PvyzNfNWdgfOV+dbk53g+c0+j43hRLPfFrxPzGyP3L+AIB7HGo=
+  </data>
+ </layer>
+ <layer name="Foreground" width="96" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztzrEJACAQA8BfQm0t3H9GrUXB8sE7CKRIkQgAAAAAAAAAAAAA4FVZqSstYR/b137Zn3YZ/r90+NkE9AMH7Q==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="96" height="32"/>
+</map>
