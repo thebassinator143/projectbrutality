@@ -1,4 +1,5 @@
 local ent = ents.Derive("base")
+require("player")
 
 function ent:load(x, y)
 	self:setPos( x, y )
@@ -78,7 +79,7 @@ function ent:update(dt)
 	else
 		self.x_vel = self.x_vel
 	end
-		
+	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
 		
@@ -124,6 +125,7 @@ function ent:update(dt)
 			ent:right()
 		end
 	end
+	
 end
 
 function ent:isColliding(map, x, y)
