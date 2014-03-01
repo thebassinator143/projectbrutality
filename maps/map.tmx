@@ -22,7 +22,7 @@
  </layer>
  <layer name="Solid" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJztl0sLglAUhO1FFJHb3q1a5ML///O6kpKIV8d8zJE7HwzcxcGOwzhpHAkWO6eYvUTAyH8u8p+L/Oci/7lk/u/ZSwRMOf8Pj8R4qH+4yH8u8p+L/OfSxX/9Nw+P8s9F/nOZwn/1lh99/3JR/3Cx5n9oXaX+4WIt/6ExZf5D6hUU5Z/LGP4/B77enFg7LXNtgPm+/i9Kv1fVqsd150rm5zYX0uvqHxwk25mfh1zyHwPtDCTbTTN17x1t/jf1i/WeGdLXYq4t2//kf47fX2gXdPEVmeuTf9/8VP2DvBd1yWyB7z6P0S+LTfeIzo2V/5PT2eli8Pyu7PvyzNfNWdgfOV+dbk53g+c0+j43hRLPfFrxPzGyP3L+AIB7HGo=
+   eJztl0sPgjAQhOsrRmPkquLj5EEO/P+fZ4k0EEJhkcIs6XzJJD1scJkMgySGoDhYJeglIob+Y6H/WOg/FvqPpfD/iF4iYur5f3pEpoP9g4X+Y6H/WOg/liH+890cHuYfC/3HMof/7C0//P7Fwv7Bos3/2LqK/YNFW/5jY878x9QrUph/LPQ/LFurdamdYH6s/6va7zW1GXHdpVL4uS8l6fU+/9nTFZJsF36eSoXwPwaknSHJdtdM2/+OPv+7+kV7z4T01c31Zfuf/C/x+0vaBUN8lcyNyb9vfq7+eQlmhmTW4bvPs6my2HWP0rmp8n+xulrdFJ4/jX3fnvm2OQ37S86p1d3qofCcm99z45R55vOG/5mS/SXnLx9jHGk=
   </data>
  </layer>
  <layer name="Foreground" width="96" height="32">

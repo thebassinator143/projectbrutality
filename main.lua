@@ -19,7 +19,11 @@ function love.load()
 				friction = -2000
 				}
 	ents.Create( "hellhound", 84, 784, false )
-	ents.Create( "hellhound", 2576, 784, false )	
+	ents.Create( "hellhound", 2576, 784, false )
+
+	ents.Create( "spike", 1120, 868, false )
+	ents.Create( "spike", 1148, 868, false )
+	ents.Create( "spike", 1176, 868, false )
 end
 
 function love.draw()
@@ -29,6 +33,9 @@ function love.draw()
 	map:draw()
 	
 	ents:draw()
+	
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.rectangle( "fill", (player.x - player.w/2), (player.y - player.h/2), player.w, player.h )
 	
 	love.graphics.setColor( 255, 255, 255, 255 )
 	love.graphics.draw( player.image, (player.x - player.w/2) - 24, (player.y - player.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )

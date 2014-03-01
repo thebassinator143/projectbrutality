@@ -52,15 +52,16 @@ function player:collide(event)
 	if event == "ceiling" then
 		self.y_vel = 0
 	end
-	if event == "spike" then
-		self:damage(spike.damage)
-	end
 end
 	
 function player:die()
 	self.x = 256
 	self.y = 256
 	self.lives = self.lives - 1
+	self.health = 10
+	
+	--self.x_vel = 0  --Freeze for better visual collision check
+	--self.y_vel = 0
 end
 	
 function player:damage(n)

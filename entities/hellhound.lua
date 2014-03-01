@@ -69,19 +69,25 @@ function ent:update(dt)
 		
 	self.y_vel = self.y_vel + (world.gravity * dt)
 		
-	if self.standing and self.x_vel > 0 then
-		self.x_vel = self.x_vel + (world.friction * dt)
-	else 
-		self.x_vel = self.x_vel
-	end
-		
-	if self.standing and self.x_vel < 0 then
-		self.x_vel = self.x_vel - (world.friction * dt)
-	else
-		self.x_vel = self.x_vel
-	end
+	if self.standing then
+	 if self.x_vel > 0 then
+	   if self.x_vel <= (world.friction * dt) then
+	     self.x_vel = 0
+     else
+       self.x_vel = self.x_vel + (world.friction * dt)
+     end
+   elseif self.x_vel < 0 then
+     if self.x_vel >= (world.friction * dt) then
+       self.x_vel = 0
+     else
+       self.x_vel = self.x_vel - (world.friction * dt)
+     end
+   else
+     self.x_vel = 0
+   end
+  end
 	
-	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
+	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
 		player:damage(self.damage)
 	end
 	
@@ -161,8 +167,12 @@ function ent:getState()
 end
 
 function ent:draw()
+	
+	love.graphics.setColor( 25, 25, 25, 255)
+	love.graphics.rectangle("fill", self.x - self.w/2, self.y - self.h/2, self.w, self.h)
+	
 	love.graphics.setColor( 255, 255, 255, 255)
-	love.graphics.draw(self.image, self.x - self.w/2, self.y - self.h/2, 0, self.size, self.size, 0, 0)
+	love.graphics.draw(self.image, (self.x - self.w/2) - 7, self.y - self.h/2, 0, self.size, self.size, 0, 0)
 end
 
 return ent;
