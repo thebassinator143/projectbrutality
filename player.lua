@@ -3,7 +3,7 @@ player = 	{
 				y = 256,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = 0.06,
+				acceleration = 0.1,
 				airacceleration = 0.02,
 				jump_vel = -1024,
 				speed = 366,
@@ -64,7 +64,7 @@ function player:die()
 end
 	
 function player:damage(n)
-	if (n <= 0) then
+	if (n >= 0) then
 		self.health = self.health - n
 	end
 	if self.health <= 0 then

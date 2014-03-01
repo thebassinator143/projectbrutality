@@ -18,7 +18,8 @@ function love.load()
 				ground = 896,
 				friction = -2000
 				}
-	ents.Create( "hellhound", 84, 784, false )			
+	ents.Create( "hellhound", 84, 784, false )
+	ents.Create( "hellhound", 2576, 784, false )	
 end
 
 function love.draw()

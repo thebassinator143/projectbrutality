@@ -1,5 +1,6 @@
 local ent = ents.Derive("base")
 require("player")
+require("entities")
 
 function ent:load(x, y)
 	self:setPos( x, y )
@@ -9,7 +10,7 @@ function ent:load(x, y)
 	self.y_vel = 0
 	self.flySpeed = 700
 	self.airacceleration = 0.02
-	self.acceleration = 0.06
+	self.acceleration = 0.1
 	self.size = 1
 	self.h = 28
 	self.w = 43
@@ -79,6 +80,11 @@ function ent:update(dt)
 	else
 		self.x_vel = self.x_vel
 	end
+	
+	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
+		player:damage(self.damage)
+	end
+	
 	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
