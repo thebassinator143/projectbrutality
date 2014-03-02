@@ -1,6 +1,7 @@
 local ent = ents.Derive("base")
 require("player")
 require("entities")
+require("entities/spike")
 
 function ent:load(x, y)
 	self:setPos( x, y )
@@ -46,6 +47,22 @@ function ent:stop()
 	self.x_vel = 0
 end
 
+function ent:Die()
+end
+
+function hellhound:damage(n)
+	if self.invincibilityRemaining <= 0 then
+		if (n >= 0) then
+			self.health = self.health - n
+			self.invincibilityRemaining = 0
+		end
+	end
+	if self.health <= 0 then
+		self.health = 0
+		self:die()
+	end
+end
+
 function ent:collide(event)
 	if event == "floor" then
 		self.y_vel = 0
@@ -53,9 +70,6 @@ function ent:collide(event)
 	end
 	if event == "ceiling" then
 		self.y_vel = 0
-	end
-	if event == "spike" then
-		self:damage(spike.damage)
 	end
 end
 
@@ -91,6 +105,9 @@ function ent:update(dt)
 		player:damage(self.damage)
 	end
 	
+	--if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, spike.x - (spike.w/2), spike.y - (spike.h/2), spike.w, spike.h) then
+	--	ent:damage(spike.damage)
+	--end
 	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)

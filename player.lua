@@ -7,13 +7,14 @@ player = 	{
 				airacceleration = 0.02,
 				jump_vel = -1024,
 				speed = 366,
-				flySpeed = 700,
+				flySpeed = 580,
 				state = "",
 				h = 54,
 				w = 16,
 				standing = false,
 				health = 10,
 				lives = 3,
+				invincibilityRemaining = 0,
 				image = love.graphics.newImage( "sprites/playersprite.png" )
 				}
 				
@@ -65,19 +66,28 @@ function player:die()
 end
 	
 function player:damage(n)
-	if (n >= 0) then
-		self.health = self.health - n
+	if self.invincibilityRemaining <= 0 then
+		if (n >= 0) then
+			self.health = self.health - n
+			self.invincibilityRemaining = 1
+		end
 	end
 	if self.health <= 0 then
 		self.health = 0
 		self:die()
 	end
 end
-	
+		
 function player:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
-		
+	
+	if self.invincibilityRemaining <= 0 then
+		self.invincibilityRemaining = 0
+	else 
+		self.invincibilityRemaining = self.invincibilityRemaining - dt
+	end
+	
 	if self.y > world.ground + self.h then
 		self:die()
 	end

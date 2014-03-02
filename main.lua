@@ -20,6 +20,7 @@ function love.load()
 				}
 	ents.Create( "hellhound", 84, 784, false )
 	ents.Create( "hellhound", 2576, 784, false )
+	ents.Create( "hellhound", 1148, 784, false )
 
 	ents.Create( "spike", 1120, 868, false )
 	ents.Create( "spike", 1148, 868, false )
