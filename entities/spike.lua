@@ -20,6 +20,14 @@ function ent:load(x, y)
 	self.maxhealth = self.health 
 end
 
+function getSpikeX()
+	return ent.x
+end
+
+function getSpikeY()
+	return ent.y
+end
+
 function ent:setPos( x, y )
 	self.x = x
 	self.y = y
@@ -28,12 +36,17 @@ function ent:setPos( x, y )
 end
 
 function ent:update(dt)
-	if ents:CollidingWithEntity(spike.x, spike.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
+	if ents:CollidingWithEntity(self.x, self.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
 		player:damage(self.damage)
+		print("Collision!")
 	end
 end
 
 function ent:draw()	
+	
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.rectangle( "fill", getSpikeX(), getSpikeY(), self.w, self.h )
+	
 	love.graphics.setColor( 255, 255, 255, 255)
 	love.graphics.draw(self.image, self.x, self.y, 0, self.size, self.size, 0, 0)
 end

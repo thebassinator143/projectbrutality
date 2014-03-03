@@ -17,6 +17,7 @@ function ent:load(x, y)
 	self.w = 43
 	self.health = 2
 	self.damage = 1
+	self.invincibilityRemaining = 0
 	self.maxhealth = self.health
 	self.standing = false
 	ent:right()
@@ -47,19 +48,21 @@ function ent:stop()
 	self.x_vel = 0
 end
 
-function ent:Die()
+function ent:kill()
+	self.x = 0
+	self.y = 0
+	ents.Destroy( self.id )
 end
 
-function hellhound:damage(n)
+function ent:Damage(n)
 	if self.invincibilityRemaining <= 0 then
 		if (n >= 0) then
 			self.health = self.health - n
 			self.invincibilityRemaining = 0
 		end
-	end
-	if self.health <= 0 then
-		self.health = 0
-		self:die()
+		--if self.health <= 0 then
+		--	ent:kill()
+		--end	
 	end
 end
 
@@ -78,9 +81,13 @@ function ent:update(dt)
 	local halfY = self.h / 2	
 	
 	if self.y > world.ground + self.h then
-		self:die()
+		ents.Destroy( self.id )
 	end
-		
+	
+	if self.health <= 0 then
+		ent:kill()
+	end
+	
 	self.y_vel = self.y_vel + (world.gravity * dt)
 		
 	if self.standing then
@@ -103,11 +110,13 @@ function ent:update(dt)
 	
 	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
 		player:damage(self.damage)
+		print ("Hellhound colliding with player!")
 	end
 	
-	--if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, spike.x - (spike.w/2), spike.y - (spike.h/2), spike.w, spike.h) then
-	--	ent:damage(spike.damage)
-	--end
+	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, getSpikeX() - (spike.w/2), getSpikeY() - (spike.h/2), spike.w, spike.h) then
+		ent:Damage(spike.damage)
+		print (self.health)
+	end
 	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)

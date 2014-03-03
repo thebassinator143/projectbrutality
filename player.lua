@@ -95,7 +95,7 @@ function player:update(dt)
 	self.y_vel = self.y_vel + (world.gravity * dt)
 	
 	if self.standing then
-   print("self.x_vel = " .. self.x_vel)
+   --print("self.x_vel = " .. self.x_vel)
 	 if self.x_vel > 0 then
 	   if self.x_vel <= (world.friction * dt) then
 	     self.x_vel = 0
