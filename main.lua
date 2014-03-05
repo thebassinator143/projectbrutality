@@ -26,6 +26,7 @@ function love.load()
 	ents.Create( "spike", 1120, 868, false )
 	ents.Create( "spike", 1148, 868, false )
 	ents.Create( "spike", 1176, 868, false )
+	
 end
 
 function love.draw()

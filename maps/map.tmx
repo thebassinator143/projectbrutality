@@ -3,16 +3,10 @@
  <tileset firstgid="1" name="PlatformGround" tilewidth="28" tileheight="28">
   <image source="PlatformGround28.png" width="140" height="112"/>
  </tileset>
- <tileset firstgid="21" name="GreyGrass" tilewidth="28" tileheight="28">
-  <image source="GreyGrass28.png" width="84" height="84"/>
- </tileset>
- <tileset firstgid="30" name="SkullBox" tilewidth="28" tileheight="28">
+ <tileset firstgid="21" name="SkullBox" tilewidth="28" tileheight="28">
   <image source="SkullBox28.png" width="28" height="28"/>
  </tileset>
- <tileset firstgid="31" name="Spike" tilewidth="28" tileheight="28">
-  <image source="Spike.png" width="28" height="28"/>
- </tileset>
- <tileset firstgid="32" name="GreyGrasswPit" tilewidth="28" tileheight="28">
+ <tileset firstgid="22" name="GreyGrasswPit" tilewidth="28" tileheight="28">
   <image source="GreyGrasswPit.png" width="140" height="140"/>
  </tileset>
  <layer name="Background" width="96" height="32">
@@ -22,12 +16,12 @@
  </layer>
  <layer name="Solid" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJztl0sPgjAQhOsrRmPkquLj5EEO/P+fZ4k0EEJhkcIs6XzJJD1scJkMgySGoDhYJeglIob+Y6H/WOg/FvqPpfD/iF4iYur5f3pEpoP9g4X+Y6H/WOg/liH+890cHuYfC/3HMof/7C0//P7Fwv7Bos3/2LqK/YNFW/5jY878x9QrUph/LPQ/LFurdamdYH6s/6va7zW1GXHdpVL4uS8l6fU+/9nTFZJsF36eSoXwPwaknSHJdtdM2/+OPv+7+kV7z4T01c31Zfuf/C/x+0vaBUN8lcyNyb9vfq7+eQlmhmTW4bvPs6my2HWP0rmp8n+xulrdFJ4/jX3fnvm2OQ37S86p1d3qofCcm99z45R55vOG/5mS/SXnLx9jHGk=
+   eJztl9kKgzAURO1GaSn1qU/dl///xiYQMYQmXmt0rmQODAS8aDIMo9YVQbEzqtGbKBj6j4X+Y6H/WOg/Fuv/Hr2JgvHzf4qIjAf7Bwv9x0L/sdB/LH3857s5P8w/FvqPZQr/2Vtx+P+Lhf2DRZv/pXUV+weLtvyXxpT5L6lXpDD/WOh/XtZGS6eNYH6o/wvveaFWA+47V6yfWydJr3f5z55ukWTb+nlwyuF/CUg7Q5Lt1Myv744u/1P9or1ncvrazHVl+5/8z/H/S9oFfXyVzA3Jf2xeU//0yWxD7JzHqs1i6ozSubHyfzG6Gt0Uru/Bfs/edemclrPE1k+jl9Fb4foT+PrwrkvntJwltv4CE2Qd+w==
   </data>
  </layer>
  <layer name="Foreground" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJztzrEJACAQA8BfQm0t3H9GrUXB8sE7CKRIkQgAAAAAAAAAAAAA4FVZqSstYR/b137Zn3YZ/r90+NkE9AMH7Q==
+   eJztzrkJADAMA8BMkW//QePalUtD7kAgkAuPAQAAAAAAAAAAAABUrciOnIb9pl9n2qt3nTv87AHmcQhy
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="96" height="32"/>
