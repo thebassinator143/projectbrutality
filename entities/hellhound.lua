@@ -76,6 +76,21 @@ function ent:collide(event)
 	end
 end
 
+function ent:CheckCollision()
+   for i, ent1 in pairs(ents.objects) do
+      for i, ent2 in pairs(ents.objects) do
+         if ent1.x < ent2.x+ent2.w and ent1.x+ent1.w > ent2.x and ent1.y < ent2.y+ent2.h and ent1.y+ent1.h > ent2.y then
+            if ent1.type == "hellhound" and ent2.type == "spike" then 
+				ent1:Damage(spike.damage)
+				print("It worked!")
+				end
+            --if ent1.type == "spike" and ent2.type == "spike" then ??? end
+            --if ent1.type == "hellhound" and ent2.type == "hellhound" then ??? end
+         end
+      end
+   end
+end
+
 function ent:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2	
@@ -108,15 +123,17 @@ function ent:update(dt)
    end
   end
 	
+	ent:CheckCollision()
+	
 	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
 		player:damage(self.damage)
 		print ("Hellhound colliding with player!")
 	end
 	
-	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, getSpikeX() - (spike.w/2), getSpikeY() - (spike.h/2), spike.w, spike.h) then
-		ent:Damage(spike.damage)
-		print (self.health)
-	end
+--	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, getSpikeX() - (spike.w/2), getSpikeY() - (spike.h/2), spike.w, spike.h) then
+--		ent:Damage(spike.damage)
+--		print (self.health)
+--	end
 	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)

@@ -62,9 +62,9 @@ function love.update(dt)
 	if love.keyboard.isDown("a") then
 		player:left()
 	end
-	if love.keyboard.isDown(" ") and not(hasJumped) then
-		player:jump()
-	end
+	--if love.keyboard.isDown(" ") and not(hasJumped) then
+	--	player:jump()
+	--end
 	
 	player:update(dt)
 	
@@ -73,5 +73,8 @@ function love.update(dt)
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
 end
 
-function love.keyreleased(key)
+function love.keypressed(key)
+	if key == " " then
+		player:jump()
+	end
 end

@@ -1,4 +1,4 @@
-local base = {}
+base = {}
 
 base.x = 0
 base.y = 0

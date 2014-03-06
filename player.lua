@@ -1,6 +1,6 @@
 player = 	{
-				x = 256,
-				y = 256,
+				x = 1036,
+				y = 784,
 				x_vel = 0,
 				y_vel = 0,
 				acceleration = 0.1,
