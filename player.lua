@@ -21,6 +21,7 @@ player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
 				facingright = true,
 				facingleft = false,
+				brutality = 0,
 				}
 				
 function player:jump()
@@ -200,19 +201,25 @@ function player:draw()
 	love.graphics.setColor( 255, 255, 255, 255 )
 	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
 	
-	love.graphics.setColor( 255, 0, 0, 255)
-	love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
 	
-	love.graphics.setColor( 255, 0, 0, 255)
-	love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))  --Right melee hitbox
+	
+	love.graphics.setColor( 0, 255, 0, 255)
+	love.graphics.rectangle("fill", (self.x - (self.w*1.5)-81), (self.y - self.h/4), self.w+81, self.h/2)
+	
+	love.graphics.setColor( 0, 255, 0, 255 )
+	love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/4), self.w + 81, self.h/2)
 end
 
 function player:melee()
 	if self.facingright then
 		print("swing right!")
 		for i, ent in pairs(ents.objects) do
-			if (self.x + self.w/2) < ent.x + ent.w 
-			and ((self.x + self.w/2) + (self.w * 1.5)) > ent.x
+			if (self.x + self.w/2)+22 < ent.x + ent.w 
+			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
 			and (self.y - self.h/2) < ent.y + ent.h
 			and ((self.y - self.h/2) + self.h) > ent.y then
 				if ent.type == "hellhound" then
@@ -236,3 +243,38 @@ function player:melee()
 		end
 	end
 end
+
+function player:teleport()
+	if self.facingright then
+		print("teleport right!")
+		for i, ent in pairs(ents.objects) do
+			if ((self.x + self.w/2) + 22) < ent.x + ent.w
+			and ((self.x + self.w/2) + (self.w + 81)) > ent.x
+			and (self.y - (self.h/4)) < ent.y + ent.h
+			and ((self.y - (self.h/4)) + self.h/2) > ent.y then
+				if ent.type == "hellhound" then
+					ent.x, player.x = player.x, ent.x
+					ent.y, player.y = player.y, ent.y
+					print("teleport successful!")
+				end
+			end
+		end
+	end
+	if self.facingleft then
+		print("teleport left!")
+		for i, ent in pairs(ents.objects) do
+			if (self.x - (self.w * 1.5) - 81) < ent.x + ent.w
+			and ((self.x - (self.w * 1.5) - 81) + (self.w + 81)) > ent.x
+			and (self.y - (self.h/4)) < ent.y + ent.h
+			and ((self.y - (self.h/4)) + self.h/2) > ent.y then
+				if ent.type == "hellhound" then
+					ent.x, player.x = player.x, ent.x
+					ent.y, player.y = player.y, ent.y
+					print("teleport successful!")
+				end
+			end
+		end
+	end
+end
+				
+
