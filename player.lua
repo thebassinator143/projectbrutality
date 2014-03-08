@@ -1,3 +1,5 @@
+require("entities")
+
 player = 	{
 				x = 1036,
 				y = 784,
@@ -15,7 +17,10 @@ player = 	{
 				health = 10,
 				lives = 3,
 				invincibilityRemaining = 0,
-				image = love.graphics.newImage( "sprites/playersprite.png" )
+				damage = 1,
+				image = love.graphics.newImage( "sprites/playersprite.png" ),
+				facingright = true,
+				facingleft = false,
 				}
 				
 function player:jump()
@@ -26,6 +31,8 @@ function player:jump()
 end
 	
 function player:right()
+	self.facingright = true
+	self.facingleft = false
 	if self.standing then
 		self.x_vel = self.x_vel + (self.acceleration * self.speed)
 	else
@@ -34,6 +41,8 @@ function player:right()
 end
 	
 function player:left()
+	self.facingleft = true
+	self.facingright = false
 	if self.standing then
 		self.x_vel = self.x_vel - (self.acceleration * self.speed)
 	else
@@ -182,4 +191,48 @@ function player:getState()
 		tempState = "jump"
 	end
 	return tempState
+end
+
+function player:draw()
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )
+	
+	love.graphics.setColor( 255, 255, 255, 255 )
+	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+	
+	love.graphics.setColor( 255, 0, 0, 255)
+	love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))
+	
+	love.graphics.setColor( 255, 0, 0, 255)
+	love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))
+end
+
+function player:melee()
+	if self.facingright then
+		print("swing right!")
+		for i, ent in pairs(ents.objects) do
+			if (self.x + self.w/2) < ent.x + ent.w 
+			and ((self.x + self.w/2) + (self.w * 1.5)) > ent.x
+			and (self.y - self.h/2) < ent.y + ent.h
+			and ((self.y - self.h/2) + self.h) > ent.y then
+				if ent.type == "hellhound" then
+					ent:Damage(1)
+					print("hit!")
+				end
+			end
+		end
+	elseif self.facingleft then
+		print("swing left!")
+		for i, ent in pairs(ents.objects) do
+			if (self.x - (self.w*2)) < ent.x + ent.w 
+			and ((self.x - (self.w*2)) + (self.w * 1.5)) > ent.x
+			and (self.y - self.h/2) < ent.y + ent.h
+			and ((self.y - self.h/2) + self.h) > ent.y then
+				if ent.type == "hellhound" then
+					ent:Damage(1)
+					print("hit!")
+				end
+			end
+		end
+	end
 end
