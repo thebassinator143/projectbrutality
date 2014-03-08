@@ -20,7 +20,7 @@ function ent:load(x, y)
 	self.invincibilityRemaining = 0
 	self.maxhealth = self.health
 	self.standing = false
-	ent:right()
+	--ent:right()
 end
 
 function ent:setPos( x, y )
@@ -76,20 +76,21 @@ function ent:collide(event)
 	end
 end
 
+
 function ent:CheckCollision()
-   for i, ent1 in pairs(ents.objects) do
-      for i, ent2 in pairs(ents.objects) do
-         if ent1.x < ent2.x+ent2.w and ent1.x+ent1.w > ent2.x and ent1.y < ent2.y+ent2.h and ent1.y+ent1.h > ent2.y then
-            if ent1.type == "hellhound" and ent2.type == "spike" then 
-				ent1:Damage(spike.damage)
-				print("It worked!")
-				end
-            --if ent1.type == "spike" and ent2.type == "spike" then ??? end
-            --if ent1.type == "hellhound" and ent2.type == "hellhound" then ??? end
+   for i, ent2 in pairs(ents.objects) do
+      if self.id ~= ent2.id then
+         if self.x < ent2.x+ent2.w and self.x+self.w > ent2.x and self.y < ent2.y+ent2.h and self.y+self.h > ent2.y then
+            if ent2.type == "spike" then 
+               self:Damage(spike.damage)
+               print("It worked!")
+            --elseif ent2.type == "hellhound" then ???
+			end
          end
       end
    end
 end
+
 
 function ent:update(dt)
 	local halfX = self.w / 2
