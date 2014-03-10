@@ -142,7 +142,9 @@ function player:update(dt)
 	end
 	if self.y_vel > 0 then
 		if not (self:isColliding(map, self.x-halfX, nextY + halfY))
-			and not(self:isColliding(map, self.x + halfX - 1, nextY + halfY)) then
+			and not(self:isColliding(map, self.x + halfX - 1, nextY + halfY))
+			and not(self:isOneWayColliding(map, self.x-halfX, nextY + halfY))
+			and not(self:isOneWayColliding(map, self.x + halfX - 1, nextY + halfY)) then
 				self.y = nextY
 				self.standing = false
 		else
@@ -173,10 +175,19 @@ end
 	
 function player:isColliding(map, x, y)
 	local layer = map.tl["Solid"]
-	--local layer = map.tl["Platform"]
 	
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
+	
+	return not(tile == nil)
+end
+
+function player:isOneWayColliding(map, x, y)
+	local layer = map.tl["oneWayPlatforms"]
+	
+	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
+	local tile = layer.tileData(tileX, tileY)
+	
 	return not(tile == nil)
 end
 	
