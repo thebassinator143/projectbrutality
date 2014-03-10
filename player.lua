@@ -92,6 +92,10 @@ function player:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 	
+	if self.brutality >= 100 then
+		self.brutality = 100
+	end
+	
 	if self.invincibilityRemaining <= 0 then
 		self.invincibilityRemaining = 0
 	else 
@@ -196,8 +200,8 @@ function player:getState()
 end
 
 function player:draw()
-	love.graphics.setColor( 25, 25, 25, 255 )
-	love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )
+	--love.graphics.setColor( 25, 25, 25, 255 )
+	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
 	
 	love.graphics.setColor( 255, 255, 255, 255 )
 	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
@@ -208,11 +212,11 @@ function player:draw()
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))  --Right melee hitbox
 	
-	love.graphics.setColor( 0, 255, 0, 255)
-	love.graphics.rectangle("fill", (self.x - (self.w*1.5)-81), (self.y - self.h/4), self.w+81, self.h/2)
-	
-	love.graphics.setColor( 0, 255, 0, 255 )
-	love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/4), self.w + 81, self.h/2)
+	--love.graphics.setColor( 0, 255, 0, 255)
+	--love.graphics.rectangle("fill", (self.x - (self.w*1.5)-81), (self.y - self.h/4), self.w+81, self.h/2)   --Left teleport hitbox
+	 
+	--love.graphics.setColor( 0, 255, 0, 255 )
+	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/4), self.w + 81, self.h/2)   --Right teleport hitbox
 end
 
 function player:melee()
@@ -249,8 +253,8 @@ function player:teleport()
 	if self.facingright then
 		print("teleport right!")
 		for i, ent in pairs(ents.objects) do
-			if ((self.x + self.w/2) + 22) < ent.x + ent.w
-			and ((self.x + self.w/2) + (self.w + 81)) > ent.x
+			if ((self.x + self.w/2) + 21) < ent.x + ent.w
+			and (((self.x + self.w/2) + 21) + (self.w + 81)) > ent.x
 			and (self.y - (self.h/4)) < ent.y + ent.h
 			and ((self.y - (self.h/4)) + self.h/2) > ent.y then
 				if ent.type == "hellhound" then
@@ -264,8 +268,8 @@ function player:teleport()
 	if self.facingleft then
 		print("teleport left!")
 		for i, ent in pairs(ents.objects) do
-			if (self.x - (self.w * 1.5) - 81) < ent.x + ent.w
-			and ((self.x - (self.w * 1.5) - 81) + (self.w + 81)) > ent.x
+			if (self.x - 83) < ent.x + ent.w
+			and (((self.x - 83) - (self.w * 1.5)) + (self.w + 81)) > ent.x
 			and (self.y - (self.h/4)) < ent.y + ent.h
 			and ((self.y - (self.h/4)) + self.h/2) > ent.y then
 				if ent.type == "hellhound" then
