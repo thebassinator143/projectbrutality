@@ -128,7 +128,7 @@ function ent:update(dt)
 	
 	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
 		player:damage(self.damage)
-		print ("Hellhound colliding with player!")
+		--print ("Hellhound colliding with player!")
 	end
 	
 --	if ents:CollidingWithEntity(self.x - (self.w/2), self.y - (self.h/2), self.w, self.h, getSpikeX() - (spike.w/2), getSpikeY() - (spike.h/2), spike.w, spike.h) then

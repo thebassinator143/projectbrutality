@@ -18,7 +18,7 @@ function love.load()
 				ground = 896,
 				friction = -2000
 				}
-	ents.Create( "hellhound", 84, 784, false )
+	ents.Create( "hellhound", 130, 784, false )
 	ents.Create( "hellhound", 2576, 784, false )
 	ents.Create( "hellhound", 1680, 784, false )
 	ents.Create( "hellhound", 1960, 684, false )
@@ -35,9 +35,11 @@ function love.draw()
 	love.graphics.setColor( 255, 255, 255 )
 	map:draw()
 	
+	player:draw()
+	
 	ents:draw()
 	
-	player:draw()
+	--player:draw()
 	
 	camera:unset()
 	
@@ -46,6 +48,9 @@ function love.draw()
 	
 	love.graphics.setColor( 25, 25, 25, 255 )
 	love.graphics.print ( "Lives: " .. player.lives, 16, 32, 0, 1, 1 )
+	
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.print ( "Brutality: " .. player.brutality, 16, 48, 0, 1, 1 )
 end
 
 function love.update(dt)
@@ -75,5 +80,8 @@ function love.keypressed(key)
 	end
 	if key == "v" then
 		player:melee()
+	end
+	if key == "b" then
+		player:teleport()
 	end
 end

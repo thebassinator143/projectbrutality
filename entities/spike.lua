@@ -42,11 +42,7 @@ function ent:update(dt)
 	end
 end
 
-function ent:draw()	
-	
-	love.graphics.setColor( 25, 25, 25, 255 )
-	love.graphics.rectangle( "fill", getSpikeX(), getSpikeY(), self.w, self.h )
-	
+function ent:draw()		
 	love.graphics.setColor( 255, 255, 255, 255)
 	love.graphics.draw(self.image, self.x, self.y, 0, self.size, self.size, 0, 0)
 end
