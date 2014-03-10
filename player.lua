@@ -169,6 +169,8 @@ end
 	
 function player:isColliding(map, x, y)
 	local layer = map.tl["Solid"]
+	local layer = map.tl["Platform"]
+	
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
 	return not(tile == nil)
