@@ -1,55 +1,29 @@
 local ent = ents.Derive("base")
 require("player")
-require("entities")
-require("entities/spike")
 
 function ent:load(x, y)
-	self:setPos( x, y )
-	self.image = love.graphics.newImage("sprites/hellhound.png")
-	self.speed = 316
+	self:setPos(x, y)
+	self.speed = 0
 	self.x_vel = 0
 	self.y_vel = 0
 	self.flySpeed = 700
 	self.airacceleration = 0.02
 	self.acceleration = 0.1
 	self.size = 1
-	self.h = 28
-	self.w = 43
-	self.health = 2
+	self.h = 56
+	self.w = 28
+	self.health = 3
 	self.damage = 1
 	self.invincibilityRemaining = 0
 	self.maxhealth = self.health
-	self.standing = false
-	--ent:right()
+	self.facingright = true
+	self.facingleft = false
+	self.axethrown = 0
 end
 
-function ent:setPos( x, y )
+function ent:setPos(x, y)
 	self.x = x
 	self.y = y
-end
-
-function ent:right()
-	if self.standing then
-		self.x_vel = self.x_vel + (self.acceleration * self.speed)
-	else
-		self.x_vel = self.x_vel + (self.airacceleration * self.speed)
-	end
-end
-	
-function ent:left()
-	if self.standing then
-		self.x_vel = self.x_vel - (self.acceleration * self.speed)
-	else
-		self.x_vel = self.x_vel - (self.airacceleration * self.speed)
-	end
-end
-	
-function ent:stop()
-	self.x_vel = 0
-end
-
-function ent:kill()
-	ents.Destroy( self.id )
 end
 
 function ent:Damage(n)
@@ -58,10 +32,14 @@ function ent:Damage(n)
 			self.health = self.health - n
 			self.invincibilityRemaining = 0
 		end
-		--if self.health <= 0 then
-		--	ent:kill()
-		--end	
+		if self.health <= 0 then
+			ent:kill()
+		end	
 	end
+end
+
+function ent:kill()
+	ents.Destroy( self.id )
 end
 
 function ent:collide(event)
@@ -73,7 +51,6 @@ function ent:collide(event)
 		self.y_vel = 0
 	end
 end
-
 
 function ent:CheckCollision()
    for i, ent2 in pairs(ents.objects) do
@@ -89,17 +66,12 @@ function ent:CheckCollision()
    end
 end
 
-
 function ent:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2	
 	
 	if self.y > world.ground + self.h then
 		ents.Destroy( self.id )
-	end
-	
-	if self.health <= 0 then
-		ent:kill()
 	end
 	
 	self.y_vel = self.y_vel + (world.gravity * dt)
@@ -121,6 +93,27 @@ function ent:update(dt)
      self.x_vel = 0
    end
   end
+	
+	if player.x >= self.x-500 or player.x <= self.x + 500 then
+		if self.axethrown == 0 then
+			self:throwAxe()
+			self.axethrown = 5
+		end
+	end
+	
+	if player.x >= self.x - 500 and player.x < self.x then 
+		self.facingleft = true
+		self.facingright = false
+	elseif player.x <= self.x + 500 and player.x > self.x then
+		self.facingright = true
+		self.facingleft = false
+	end
+	
+	if self.axethrown <= 0 then
+		self.axethrown = 0
+	else 
+		self.axethrown = self.axethrown - dt
+	end
 	
 	ent:CheckCollision()
 	
@@ -159,19 +152,15 @@ function ent:update(dt)
 		if not(ent:isColliding(map, nextX + halfX, self.y - halfY))
 			and not(ent:isColliding(map, nextX + halfX, self.y + halfY - 1)) then
 			self.x = nextX
-			ent:right()
 		else
 			self.x = nextX - ((nextX + halfX) % map.tileWidth)
-			ent:left()
 		end
 	elseif self.x_vel < 0 then
 		if not(ent:isColliding(map, nextX - halfX, self.y - halfY))
 			and not(ent:isColliding(map, nextX - halfX, self.y + halfY - 1)) then
 			self.x = nextX
-			ent:left()
 		else
 			self.x = nextX + map.tileWidth - ((nextX - halfX) % map.tileWidth)
-			ent:right()
 		end
 	end
 	
@@ -203,13 +192,22 @@ function ent:getState()
 	return tempState
 end
 
+function ent:throwAxe()
+	if self.facingright then
+		local axe = ents.Create("axe", self.x + (self.w/2 - 3.5), self.y, false)
+		axe:setVelocity( 300, -800)
+	elseif self.facingleft then
+		local axe = ents.Create("axe", self.x, self.y, false)
+		axe:setVelocity( -300, -800)
+	end
+end
+
 function ent:draw()
 	
 	love.graphics.setColor( 25, 25, 25, 255)
-	love.graphics.rectangle("fill", self.x - self.w/2, self.y - self.h/2, self.w, self.h)   --Hellhound hitbox
+	love.graphics.rectangle("fill", self.x - self.w/2, self.y - self.h/2, self.w, self.h)
 	
-	love.graphics.setColor( 255, 255, 255, 255)
-	love.graphics.draw(self.image, (self.x - self.w/2) - 7, self.y - self.h/2, 0, self.size, self.size, 0, 0)
 end
 
 return ent;
+

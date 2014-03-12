@@ -7,6 +7,8 @@ local id = 0
 function ents.Startup()
 	register["spike"] = love.filesystem.load( ents.objpath .. "spike.lua" )
 	register["hellhound"] = love.filesystem.load( ents.objpath .. "hellhound.lua")
+	register["axethrower"] = love.filesystem.load( ents.objpath .. "axethrower.lua" )
+	register["axe"] = love.filesystem.load( ents.objpath .. "axe.lua")
 end
 
 function ents.Derive(name)

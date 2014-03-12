@@ -20,13 +20,14 @@ function love.load()
 				}
 	ents.Create( "hellhound", 130, 784, false )
 	ents.Create( "hellhound", 2576, 784, false )
-	ents.Create( "hellhound", 1680, 784, false )
 	ents.Create( "hellhound", 1960, 684, false )
 
 	ents.Create( "spike", 1120, 868, false )
 	ents.Create( "spike", 1148, 868, false )
 	ents.Create( "spike", 1176, 868, false )
 	
+	ents.Create( "axethrower", 1680, 756, false )
+	--ents.Create( "axe", 1820, 600, false )
 end
 
 function love.draw()

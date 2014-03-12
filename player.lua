@@ -1,8 +1,8 @@
 require("entities")
 
 player = 	{
-				x = 1036,
-				y = 784,
+				x = 1820,
+				y = 700,
 				x_vel = 0,
 				y_vel = 0,
 				acceleration = 0.1,
@@ -226,7 +226,7 @@ function player:melee()
 			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
 			and (self.y - self.h/2) < ent.y + ent.h
 			and ((self.y - self.h/2) + self.h) > ent.y then
-				if ent.type == "hellhound" then
+				if ent.type == "hellhound" or "axethrower" then
 					ent:Damage(1)
 					print("hit!")
 				end
@@ -239,7 +239,7 @@ function player:melee()
 			and ((self.x - (self.w*2)) + (self.w * 1.5)) > ent.x
 			and (self.y - self.h/2) < ent.y + ent.h
 			and ((self.y - self.h/2) + self.h) > ent.y then
-				if ent.type == "hellhound" then
+				if ent.type == "hellhound" or "axethrower" then
 					ent:Damage(1)
 					print("hit!")
 				end
