@@ -2,8 +2,28 @@ local AdvTiledLoader = require("AdvTiledLoader.Loader")
 require("camera")
 require("entities")
 require("player")
+Gamestate = require ("gamestate")
+
+local menu = {}
+local game = {}
 
 function love.load()
+	Gamestate.registerEvents()
+    Gamestate.switch(menu)
+end
+
+function menu:draw()
+	love.graphics.print("I made a menu state for Project Brutality!", 300, 300)
+    love.graphics.print("Press Enter to switch to game state.", 300, 320)
+end
+
+function menu:keyreleased(key, code)
+    if key == 'return' then
+        Gamestate.switch(game)
+    end
+end
+
+function game:init()
 	love.graphics.setBackgroundColor( 220, 220, 255 )
 	ents.Startup()
 	
@@ -30,7 +50,7 @@ function love.load()
 	--ents.Create( "axe", 1820, 600, false )
 end
 
-function love.draw()
+function game:draw()
 	camera:set()
 	
 	love.graphics.setColor( 255, 255, 255 )
@@ -54,7 +74,7 @@ function love.draw()
 	love.graphics.print ( "Brutality: " .. player.brutality, 16, 48, 0, 1, 1 )
 end
 
-function love.update(dt)
+function game:update()
 	if dt > 0.05 then
 		dt = 0.05
 	end
@@ -75,7 +95,7 @@ function love.update(dt)
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
 end
 
-function love.keypressed(key)
+function game:keypressed(key)
 	if key == " " then
 		player:jump()
 	end
@@ -85,4 +105,10 @@ function love.keypressed(key)
 	if key == "b" then
 		player:teleport()
 	end
+end
+
+function game:keyreleased(key, code)
+    if key == 'escape' then
+        Gamestate.switch(menu)
+    end
 end

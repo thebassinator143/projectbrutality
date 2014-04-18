@@ -5,8 +5,8 @@ player = 	{
 				y = 700,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = 0.1,
-				airacceleration = 0.02,
+				acceleration = 0.15,
+				airacceleration = 0.04,
 				jump_vel = -1024,
 				speed = 366,
 				flySpeed = 580,
@@ -128,7 +128,7 @@ function player:update(dt)
 		
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
-		
+	
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
 		if not (self:isColliding(map, self.x - halfX, nextY - halfY))
@@ -292,5 +292,3 @@ function player:teleport()
 		end
 	end
 end
-				
-
