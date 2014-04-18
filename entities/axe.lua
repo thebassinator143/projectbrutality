@@ -2,7 +2,7 @@ local ent = ents.Derive("base")
 					
 function ent:load(x, y)
 	self:setPos( x, y )
-	self.speed = 300
+	self.speed = 1000
 	self.x_vel = 0
 	self.y_vel = 0
 	self.flySpeed = 700
@@ -14,8 +14,8 @@ function ent:load(x, y)
 	self.health = 10000
 	self.damage = 2
 	self.maxhealth = self.health 
+	self.axetime = 0
 end
-
 function ent:setPos( x, y )
 	self.x = x
 	self.y = y
@@ -34,9 +34,13 @@ function ent:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 	
-	print(self.x_vel)
+	--print(self.x_vel)
 	--print(self.y_vel)
-
+	
+	self.axetime = self.axetime - dt
+	if self.y >= 812 then
+		print(self.axetime)
+	end
 	
 	if self.y > world.ground + self.h then
 		ents.Destroy( self.id )
@@ -46,7 +50,7 @@ function ent:update(dt)
 	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
-		
+	
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
 		self.y = nextY

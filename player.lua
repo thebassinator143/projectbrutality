@@ -5,8 +5,8 @@ player = 	{
 				y = 700,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = 0.1,
-				airacceleration = 0.02,
+				acceleration = 0.15,
+				airacceleration = 0.04,
 				jump_vel = -1024,
 				speed = 366,
 				flySpeed = 580,
@@ -175,19 +175,15 @@ end
 	
 function player:isColliding(map, x, y)
 	local layer = map.tl["Solid"]
-	
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
-	
 	return not(tile == nil)
 end
 
 function player:isOneWayColliding(map, x, y)
 	local layer = map.tl["oneWayPlatforms"]
-	
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
-	
 	return not(tile == nil)
 end
 	
@@ -214,8 +210,13 @@ function player:draw()
 	--love.graphics.setColor( 25, 25, 25, 255 )
 	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
 	
-	love.graphics.setColor( 255, 255, 255, 255 )
-	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+	if self.facingright then
+		love.graphics.setColor( 255, 255, 255, 255 )
+		love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+	elseif self.facingleft then
+		love.graphics.setColor( 255, 255, 255, 255 )
+		love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+	end
 	
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox

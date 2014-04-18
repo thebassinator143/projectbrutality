@@ -5,7 +5,7 @@ require("entities/spike")
 
 function ent:load(x, y)
 	self:setPos( x, y )
-	self.image = love.graphics.newImage("sprites/hellhound.png")
+	self.image = love.graphics.newImage("sprites/warpig.png")
 	self.speed = 316
 	self.x_vel = 0
 	self.y_vel = 0
@@ -205,8 +205,8 @@ end
 
 function ent:draw()
 	
-	love.graphics.setColor( 25, 25, 25, 255)
-	love.graphics.rectangle("fill", self.x - self.w/2, self.y - self.h/2, self.w, self.h)   --Hellhound hitbox
+	--love.graphics.setColor( 25, 25, 25, 255)
+	--love.graphics.rectangle("fill", self.x - self.w/2, self.y - self.h/2, self.w, self.h)   --Hellhound hitbox
 	
 	love.graphics.setColor( 255, 255, 255, 255)
 	love.graphics.draw(self.image, (self.x - self.w/2) - 7, self.y - self.h/2, 0, self.size, self.size, 0, 0)

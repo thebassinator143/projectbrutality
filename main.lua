@@ -55,6 +55,8 @@ function love.draw()
 end
 
 function love.update(dt)
+	print(dt)
+	
 	if dt > 0.05 then
 		dt = 0.05
 	end
