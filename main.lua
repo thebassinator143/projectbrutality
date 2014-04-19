@@ -15,6 +15,7 @@ end
 function menu:draw()
 	love.graphics.print("I made a menu state for Project Brutality!", 300, 300)
     love.graphics.print("Press Enter to switch to game state.", 300, 320)
+	love.graphics.print("Press Esc in game state to pause game and switch back to menu state.", 300, 340)
 end
 
 function menu:keyreleased(key, code)
@@ -74,19 +75,10 @@ function game:draw()
 	love.graphics.print ( "Brutality: " .. player.brutality, 16, 48, 0, 1, 1 )
 end
 
-function game:update()
+function game:update(dt)
 	if dt > 0.05 then
 		dt = 0.05
 	end
-	if love.keyboard.isDown("d") then
-		player:right()
-	end
-	if love.keyboard.isDown("a") then
-		player:left()
-	end
-	--if love.keyboard.isDown(" ") and not(hasJumped) then
-	--	player:jump()
-	--end
 	
 	player:update(dt)
 	

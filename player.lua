@@ -5,8 +5,8 @@ player = 	{
 				y = 700,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = 0.15,
-				airacceleration = 0.04,
+				acceleration = 15, 
+				airacceleration = 4,
 				jump_vel = -1024,
 				speed = 366,
 				flySpeed = 580,
@@ -31,23 +31,23 @@ function player:jump()
 	end
 end
 	
-function player:right()
+function player:right(dt)
 	self.facingright = true
 	self.facingleft = false
 	if self.standing then
-		self.x_vel = self.x_vel + (self.acceleration * self.speed)
+		self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
 	else
-		self.x_vel = self.x_vel + (self.airacceleration * self.speed)
+		self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
 	end
 end
 	
-function player:left()
+function player:left(dt)
 	self.facingleft = true
 	self.facingright = false
 	if self.standing then
-		self.x_vel = self.x_vel - (self.acceleration * self.speed)
+		self.x_vel = self.x_vel - (self.acceleration * self.speed * dt)
 	else
-		self.x_vel = self.x_vel - (self.airacceleration * self.speed)
+		self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
 	end
 end
 	
@@ -91,6 +91,16 @@ end
 function player:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
+	
+	if love.keyboard.isDown("d") then
+		self:right(dt)
+	end
+	if love.keyboard.isDown("a") then
+		self:left(dt)
+	end
+	--if love.keyboard.isDown(" ") and not(hasJumped) then
+	--	self:jump()
+	--end
 	
 	if self.brutality >= 100 then
 		self.brutality = 100
