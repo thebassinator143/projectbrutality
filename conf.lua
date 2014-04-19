@@ -11,7 +11,7 @@ function love.conf(t)
 	t.modules.thead = true
 	t.modules.physics = true
 	t.console = true
-	t.title = "Platformer"
+	t.title = "Project Brutality"
 	t.author = "Evan Boss"
 	t.screen.fullscreen = false
 	t.screen.vsync = false
