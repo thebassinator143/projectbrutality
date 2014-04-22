@@ -27,7 +27,7 @@ function love.load()
 	ents.Create( "spike", 1176, 868, false )
 	
 	ents.Create( "axethrower", 1680, 756, false )
-	--ents.Create( "axe", 1820, 600, false )
+	ents.Create( "axe", 1820, 600, false )
 end
 
 function love.draw()
@@ -55,8 +55,9 @@ function love.draw()
 end
 
 function love.update(dt)
-	if dt > 0.05 then
-		dt = 0.05
+	print(dt)
+	if dt > 0.02 then
+		dt = 0.02
 	end
 	if love.keyboard.isDown("d") then
 		player:right()
