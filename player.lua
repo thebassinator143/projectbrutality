@@ -5,8 +5,8 @@ player = 	{
 				y = 700,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = 15, 
-				airacceleration = 4,
+				acceleration = 9, 
+				airacceleration = 3.5,
 				jump_vel = -1024,
 				speed = 366,
 				flySpeed = 580,
@@ -91,6 +91,8 @@ end
 function player:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
+	
+	print(dt)
 	
 	if love.keyboard.isDown("d") then
 		self:right(dt)
