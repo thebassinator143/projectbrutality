@@ -2,8 +2,29 @@ local AdvTiledLoader = require("AdvTiledLoader.Loader")
 require("camera")
 require("entities")
 require("player")
+Gamestate = require ("gamestate")
+
+local menu = {}
+local game = {}
 
 function love.load()
+	Gamestate.registerEvents()
+    Gamestate.switch(menu)
+end
+
+function menu:draw()
+	love.graphics.print("I made a menu state for Project Brutality!", 300, 300)
+    love.graphics.print("Press Enter to switch to game state.", 300, 320)
+	love.graphics.print("Press Esc in game state to pause game and switch back to menu state.", 300, 340)
+end
+
+function menu:keyreleased(key, code)
+    if key == 'return' then
+        Gamestate.switch(game)
+    end
+end
+
+function game:init()
 	love.graphics.setBackgroundColor( 220, 220, 255 )
 	ents.Startup()
 	
@@ -27,10 +48,10 @@ function love.load()
 	ents.Create( "spike", 1176, 868, false )
 	
 	ents.Create( "axethrower", 1680, 756, false )
-	ents.Create( "axe", 1820, 600, false )
+	--ents.Create( "axe", 1820, 600, false )
 end
 
-function love.draw()
+function game:draw()
 	camera:set()
 	
 	love.graphics.setColor( 255, 255, 255 )
@@ -54,20 +75,10 @@ function love.draw()
 	love.graphics.print ( "Brutality: " .. player.brutality, 16, 48, 0, 1, 1 )
 end
 
-function love.update(dt)
-	print(dt)
-	if dt > 0.02 then
-		dt = 0.02
+function game:update(dt)
+	if dt > 0.05 then
+		dt = 0.05
 	end
-	if love.keyboard.isDown("d") then
-		player:right()
-	end
-	if love.keyboard.isDown("a") then
-		player:left()
-	end
-	--if love.keyboard.isDown(" ") and not(hasJumped) then
-	--	player:jump()
-	--end
 	
 	player:update(dt)
 	
@@ -76,7 +87,7 @@ function love.update(dt)
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
 end
 
-function love.keypressed(key)
+function game:keypressed(key)
 	if key == " " then
 		player:jump()
 	end
@@ -86,4 +97,10 @@ function love.keypressed(key)
 	if key == "b" then
 		player:teleport()
 	end
+end
+
+function game:keyreleased(key, code)
+    if key == 'escape' then
+        Gamestate.switch(menu)
+    end
 end
