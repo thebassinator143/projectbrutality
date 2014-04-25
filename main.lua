@@ -37,7 +37,7 @@ function game:init()
 	world = 	{
 				gravity = 1536,
 				ground = 896,
-				friction = -2000
+				friction = -2200
 				}
 	ents.Create( "hellhound", 130, 784, false )
 	ents.Create( "hellhound", 2576, 784, false )

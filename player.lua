@@ -121,23 +121,23 @@ function player:update(dt)
 	self.y_vel = self.y_vel + (world.gravity * dt)
 	
 	if self.standing then
-	 if self.x_vel > 0 then
-	   if self.x_vel <= (world.friction * dt) then
-	     self.x_vel = 0
-     else
-       self.x_vel = self.x_vel + (world.friction * dt)
-     end
-   elseif self.x_vel < 0 then
-     if self.x_vel >= (world.friction * dt) then
-       self.x_vel = 0
-     else
-       self.x_vel = self.x_vel - (world.friction * dt)
-     end
-   else
-     self.x_vel = 0
-   end
-  end
-		
+		if self.x_vel > 0 then
+			if self.x_vel <= (world.friction * dt) then
+				self.x_vel = 0
+			else
+				self.x_vel = self.x_vel + (world.friction * dt)
+			end
+		elseif self.x_vel < 0 then
+			if self.x_vel >= (world.friction * dt) then
+				self.x_vel = 0
+			else
+				self.x_vel = self.x_vel - (world.friction * dt)
+			end
+		else
+			self.x_vel = 0
+		end
+	end
+	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
 	
@@ -219,8 +219,8 @@ function player:getState()
 end
 
 function player:draw()
-	--love.graphics.setColor( 25, 25, 25, 255 )
-	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
 	
 	if self.facingright then
 		love.graphics.setColor( 255, 255, 255, 255 )
@@ -229,6 +229,7 @@ function player:draw()
 		love.graphics.setColor( 255, 255, 255, 255 )
 		love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
 	end
+	
 	
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
@@ -254,6 +255,9 @@ function player:melee()
 				if ent.type == "hellhound" or "axethrower" then
 					ent:Damage(1)
 					print("hit!")
+				else
+					ent:Damage(0)
+					print("If you really were a boss, you would've deflected it. But you're not.")
 				end
 			end
 		end
@@ -267,6 +271,9 @@ function player:melee()
 				if ent.type == "hellhound" or "axethrower" then
 					ent:Damage(1)
 					print("hit!")
+				else
+					ent:Damage(0)
+					print("If you really were a boss, you would've deflected it. But you're not.")
 				end
 			end
 		end
