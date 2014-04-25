@@ -24,10 +24,20 @@ player = 	{
 				brutality = 0,
 				}
 				
-function player:jump()
+function player:jump(dt)
 	if self.standing then
 		self.y_vel = self.jump_vel
 		self.standing = false
+	elseif wallslide then
+		facingleft = not facingleft -- flips facing
+		facingright = not facingright -- flips facing
+		self.y_vel = self.jump_vel
+		wallslide = false
+		if(self.facingleft)then
+			self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
+		else
+			self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
+		end
 	elseif self.doubleJump then
 		self.y_vel = self.jump_vel
 		self.doubleJump = false
@@ -67,6 +77,10 @@ function player:collide(event)
 	end
 	if event == "ceiling" then
 		self.y_vel = 0
+	end
+	if event == "wall" then
+		wallslide = true
+		doubleJump = true
 	end
 end
 	
@@ -166,8 +180,8 @@ function player:update(dt)
 			self.y = nextY - ((nextY + halfY) % map.tileHeight)
 			self:collide("floor")
 		end
-	end
-		
+	end	
+	
 	local nextX = self.x + (self.x_vel * dt)
 	if self.x_vel > 0 then
 		if not(self:isColliding(map, nextX + halfX, self.y - halfY))
@@ -175,6 +189,7 @@ function player:update(dt)
 			self.x = nextX
 		else
 			self.x = nextX - ((nextX + halfX) % map.tileWidth)
+			self:collide("wall")
 		end
 	elseif self.x_vel < 0 then
 		if not(self:isColliding(map, nextX - halfX, self.y - halfY))
@@ -182,6 +197,7 @@ function player:update(dt)
 			self.x = nextX
 		else
 			self.x = nextX + map.tileWidth - ((nextX - halfX) % map.tileWidth)
+			self:collide("wall")
 		end
 	end
 		
