@@ -7,7 +7,7 @@ player = 	{
 				y_vel = 0,
 				acceleration = 15, 
 				airacceleration = 4,
-				jump_vel = -1024,
+				jump_vel = -512,
 				speed = 366,
 				flySpeed = 580,
 				state = "",
@@ -28,7 +28,11 @@ function player:jump()
 	if self.standing then
 		self.y_vel = self.jump_vel
 		self.standing = false
+	elseif self.doubleJump then
+		self.y_vel = self.jump_vel
+		self.doubleJump = false
 	end
+	
 end
 	
 function player:right(dt)
@@ -59,6 +63,7 @@ function player:collide(event)
 	if event == "floor" then
 		self.y_vel = 0
 		self.standing = true
+		self.doubleJump = true
 	end
 	if event == "ceiling" then
 		self.y_vel = 0
