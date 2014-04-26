@@ -35,7 +35,7 @@ function game:init()
 	camera:setBounds(0, 0, (map.width * map.tileWidth - (0.5 * love.graphics.getWidth())), (map.height * map.tileHeight - (0.5*love.graphics.getHeight())) )
 
 	world = 	{
-				gravity = 1536,
+				gravity = 1350,
 				ground = 896,
 				friction = -2500
 				}
@@ -97,10 +97,16 @@ function game:keypressed(key)
 	if key == "b" then
 		player:teleport()
 	end
+	if key == "s" then
+		player:duck()
+	end
 end
 
 function game:keyreleased(key, code)
     if key == 'escape' then
         Gamestate.switch(menu)
     end
+	if key == "s" then
+		player:stand()
+	end
 end

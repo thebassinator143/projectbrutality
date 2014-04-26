@@ -1,19 +1,36 @@
 require("entities")
 
+WALK = 300
+WALKACCEL = 13 + 1/3
+WALKAIRACCEL = 4 + 2/3
+
+RUN = (1 + 1/3) * WALK                               --Runspeed is scaled by the given factor to walkspeed
+RUNACCEL = (WALK/RUN) * WALKACCEL					 --Formula ensures rate of acceleration remains fixed whether walking or running
+RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
+
+REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
+
+HEIGHT = 54
+DUCKHEIGHT = 27
+
 player = 	{
 				x = 1820,
 				y = 700,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = 10, 
-				airacceleration = 3.5,
+				acceleration = WALKACCEL, 
+				airacceleration = WALKAIRACCEL,
+				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
 				jump_vel = -1024,
-				speed = 366,
+				speed = WALK,
 				flySpeed = 580,
+				slidefriction = 0.25,
 				state = "",
-				h = 54,
+				h = HEIGHT,
 				w = 16,
+				running = false,
 				standing = false,
+				ducking = false,
 				health = 10,
 				lives = 3,
 				invincibilityRemaining = 0,
@@ -34,21 +51,54 @@ end
 function player:right(dt)
 	self.facingright = true
 	self.facingleft = false
-	if self.standing then
-		self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
-	else
-		self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
+	if not self.ducking then
+		if self.standing then
+			if self.running then
+				if self.x_vel < 0 then
+					self.x_vel = self.x_vel + ((self.acceleration + self.reactivity) * self.speed * dt)
+				else
+					self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
+				end
+			else	
+				self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
+			end
+		else
+			self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
+		end
 	end
 end
 	
 function player:left(dt)
 	self.facingleft = true
 	self.facingright = false
-	if self.standing then
-		self.x_vel = self.x_vel - (self.acceleration * self.speed * dt)
-	else
-		self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
+	if not self.ducking then
+		if self.standing then
+			if self.running then
+				if self.x_vel > 0 then
+					self.x_vel = self.x_vel - ((self.acceleration + self.reactivity) * self.speed * dt)
+				else
+					self.x_vel = self.x_vel - (self.acceleration * self.speed * dt)
+				end
+			else
+				self.x_vel = self.x_vel - (self.acceleration * self.speed * dt)
+			end
+		else
+			self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
+		end
 	end
+end
+
+function player:duck()
+	if self.standing then
+		self.h = DUCKHEIGHT
+		self.y = self.y + self.h
+		self.ducking = true
+	end
+end
+
+function player:stand()
+	self.h = HEIGHT
+	self.ducking = false
 end
 	
 function player:stop()
@@ -92,7 +142,19 @@ function player:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 	
-	print(dt)
+	print(self.x_vel)
+	
+	if love.keyboard.isDown("lshift") then
+		self.speed = RUN
+		self.acceleration = RUNACCEL
+		self.airacceleration = RUNAIRACCEL
+		self.running = true
+	else
+		self.speed = WALK
+		self.acceleration = WALKACCEL
+		self.airacceleration = WALKAIRACCEL
+		self.running = false
+	end
 	
 	if love.keyboard.isDown("d") then
 		self:right(dt)
@@ -122,17 +184,33 @@ function player:update(dt)
 	
 	if self.standing then
 		if self.x_vel > 0 then
-			if self.x_vel <= (world.friction * dt) then
-				self.x_vel = 0
+			if self.ducking then
+				if self.x_vel <= (self.slidefriction * world.friction * dt) then
+					self.x_vel = 0
+				else
+					self.x_vel = self.x_vel + (self.slidefriction * world.friction * dt)
+				end
 			else
-				self.x_vel = self.x_vel + (world.friction * dt)
+				if self.x_vel <= (world.friction * dt) then
+					self.x_vel = 0
+				else
+					self.x_vel = self.x_vel + (world.friction * dt)
+				end
 			end
 		elseif self.x_vel < 0 then
-			if self.x_vel >= (world.friction * dt) then
-				self.x_vel = 0
-			else
-				self.x_vel = self.x_vel - (world.friction * dt)
-			end
+			if self.ducking then
+				if self.x_vel >= (self.slidefriction * world.friction * dt) then
+					self.x_vel = 0
+				else
+					self.x_vel = self.x_vel - (self.slidefriction * world.friction * dt)
+				end
+			else	
+				if self.x_vel >= (world.friction * dt) then
+					self.x_vel = 0
+				else
+					self.x_vel = self.x_vel - (world.friction * dt)
+				end
+			end	
 		else
 			self.x_vel = 0
 		end
@@ -222,12 +300,22 @@ function player:draw()
 	love.graphics.setColor( 25, 25, 25, 255 )
 	love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
 	
-	if self.facingright then
-		love.graphics.setColor( 255, 255, 255, 255 )
-		love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
-	elseif self.facingleft then
-		love.graphics.setColor( 255, 255, 255, 255 )
-		love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+	if self.ducking then
+		if self.facingright then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 0.5, 0, 0, 0, 0 )
+		elseif self.facingleft then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 0.5, 0, 0, 0, 0 )
+		end
+	else
+		if self.facingright then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+		elseif self.facingleft then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+		end
 	end
 	
 	
