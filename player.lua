@@ -2,7 +2,7 @@ require("entities")
 
 player = 	{
 				x = 1820,
-				y = 700,
+				y = 673,
 				x_vel = 0,
 				y_vel = 0,
 				acceleration = 15, 
@@ -22,6 +22,10 @@ player = 	{
 				facingright = true,
 				facingleft = false,
 				brutality = 0,
+				meleeHitboxSize = 1.5,	-- * player.w
+				teleHitboxSize = 7,	-- * player.w
+				spriteOffset_x = -24,
+				spriteOffset_y = -4
 				}
 				
 function player:jump()
@@ -89,8 +93,6 @@ function player:damage(n)
 end
 		
 function player:update(dt)
-	local halfX = self.w / 2
-	local halfY = self.h / 2
 	
 	if love.keyboard.isDown("d") then
 		self:right(dt)
@@ -141,42 +143,42 @@ function player:update(dt)
 	
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
-		if not (self:isColliding(map, self.x - halfX, nextY - halfY))
-			and not (self:isColliding(map, self.x + halfX - 1, nextY - halfY)) then
+		if not (self:isColliding(map, self.x, nextY))
+			and not (self:isColliding(map, self.x + self.w - 1, nextY)) then
 			self.y = nextY
 			self.standing = false
 		else
-			self.y = nextY + map.tileHeight - ((nextY - halfY) % map.tileHeight)
+			self.y = nextY + map.tileHeight - ((nextY) % map.tileHeight)
 			self:collide("ceiling")
 		end
 	end
 	if self.y_vel > 0 then
-		if not (self:isColliding(map, self.x-halfX, nextY + halfY))
-			and not(self:isColliding(map, self.x + halfX - 1, nextY + halfY))
-			and not(self:isOneWayColliding(map, self.x-halfX, nextY + halfY))
-			and not(self:isOneWayColliding(map, self.x + halfX - 1, nextY + halfY)) then
+		if not (self:isColliding(map, self.x, nextY + self.h))
+			and not(self:isColliding(map, self.x + self.w - 1, nextY + self.h))
+			and not(self:isOneWayColliding(map, self.x, nextY + self.h))
+			and not(self:isOneWayColliding(map, self.x + self.w - 1, nextY + self.h)) then
 				self.y = nextY
 				self.standing = false
 		else
-			self.y = nextY - ((nextY + halfY) % map.tileHeight)
+			self.y = nextY - ((nextY + self.h) % map.tileHeight)
 			self:collide("floor")
 		end
 	end
 		
 	local nextX = self.x + (self.x_vel * dt)
 	if self.x_vel > 0 then
-		if not(self:isColliding(map, nextX + halfX, self.y - halfY))
-			and not(self:isColliding(map, nextX + halfX, self.y + halfY - 1)) then
+		if not(self:isColliding(map, nextX + self.w, self.y))
+			and not(self:isColliding(map, nextX + self.w, self.y + self.h - 1)) then
 			self.x = nextX
 		else
-			self.x = nextX - ((nextX + halfX) % map.tileWidth)
+			self.x = nextX - ((nextX + self.w) % map.tileWidth)
 		end
 	elseif self.x_vel < 0 then
-		if not(self:isColliding(map, nextX - halfX, self.y - halfY))
-			and not(self:isColliding(map, nextX - halfX, self.y + halfY - 1)) then
+		if not(self:isColliding(map, nextX, self.y)) 
+			and not(self:isColliding(map, nextX, self.y + self.h - 1)) then 
 			self.x = nextX
 		else
-			self.x = nextX + map.tileWidth - ((nextX - halfX) % map.tileWidth)
+			self.x = nextX + map.tileWidth - ((nextX) % map.tileWidth) 	
 		end
 	end
 		
@@ -221,34 +223,32 @@ function player:getState()
 end
 
 function player:draw()
-	--love.graphics.setColor( 25, 25, 25, 255 )
-	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
+	love.graphics.setColor( 25, 25, 25, 255 )
+	love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
 	
 	love.graphics.setColor( 255, 255, 255, 255 )
-	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+	love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 ) --Player sprite
 	
 	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
+	--love.graphics.rectangle("fill", self.x - (self.w*self.meleeHitboxSize), self.y, self.w*self.meleeHitboxSize, self.h)   --Left melee hitbox
 	
 	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))  --Right melee hitbox
+	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.w*self.meleeHitboxSize, self.h)  --Right melee hitbox
 	
-	--love.graphics.setColor( 0, 255, 0, 255)
-	--love.graphics.rectangle("fill", (self.x - (self.w*1.5)-81), (self.y - self.h/4), self.w+81, self.h/2)   --Left teleport hitbox
+	love.graphics.setColor( 0, 255, 0, 255)
+	love.graphics.rectangle("fill", self.x - (self.w*self.teleHitboxSize), self.y, self.w*self.teleHitboxSize, self.h)   --Left teleport hitbox
 	 
-	--love.graphics.setColor( 0, 255, 0, 255 )
-	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/4), self.w + 81, self.h/2)   --Right teleport hitbox
+	love.graphics.setColor( 0, 255, 0, 255 )
+	love.graphics.rectangle("fill", self.x + self.w, self.y, self.w*self.teleHitboxSize, self.h)   --Right teleport hitbox
 end
 
 function player:melee()
 	if self.facingright then
 		print("swing right!")
 		for i, ent in pairs(ents.objects) do
-			if (self.x + self.w/2)+22 < ent.x + ent.w 
-			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
-			and (self.y - self.h/2) < ent.y + ent.h
-			and ((self.y - self.h/2) + self.h) > ent.y then
-				if ent.type == "hellhound" or "axethrower" then
+			if ent.x > self.x + self.w and ent.x < self.x + self.w*(self.meleeHitboxSize + 1)
+			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then				
+				if ent.type == "hellhound" or "axethrower" then	
 					ent:Damage(1)
 					print("hit!")
 				end
@@ -257,10 +257,8 @@ function player:melee()
 	elseif self.facingleft then
 		print("swing left!")
 		for i, ent in pairs(ents.objects) do
-			if (self.x - (self.w*2)) < ent.x + ent.w 
-			and ((self.x - (self.w*2)) + (self.w * 1.5)) > ent.x
-			and (self.y - self.h/2) < ent.y + ent.h
-			and ((self.y - self.h/2) + self.h) > ent.y then
+			if ent.x + ent.w > self.x - self.w*self.meleeHitboxSize and ent.x + ent.w < self.x
+			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
 				if ent.type == "hellhound" or "axethrower" then
 					ent:Damage(1)
 					print("hit!")
@@ -274,13 +272,13 @@ function player:teleport()
 	if self.facingright then
 		print("teleport right!")
 		for i, ent in pairs(ents.objects) do
-			if ((self.x + self.w/2) + 21) < ent.x + ent.w
-			and (((self.x + self.w/2) + 21) + (self.w + 81)) > ent.x
-			and (self.y - (self.h/4)) < ent.y + ent.h
-			and ((self.y - (self.h/4)) + self.h/2) > ent.y then
+			if ent.x > self.x + self.w and ent.x < self.x + self.w*(self.teleHitboxSize + 1)
+			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then	
 				if ent.type == "hellhound" then
-					ent.x, player.x = player.x, ent.x
-					ent.y, player.y = player.y, ent.y
+					ydiff = self.h - ent.h
+					xdiff = ent.w - self.w
+					ent.x, self.x = self.x, ent.x + xdiff
+					ent.y, self.y = self.y, ent.y
 					print("teleport successful!")
 				end
 			end
@@ -289,13 +287,13 @@ function player:teleport()
 	if self.facingleft then
 		print("teleport left!")
 		for i, ent in pairs(ents.objects) do
-			if (self.x - 83) < ent.x + ent.w
-			and (((self.x - 83) - (self.w * 1.5)) + (self.w + 81)) > ent.x
-			and (self.y - (self.h/4)) < ent.y + ent.h
-			and ((self.y - (self.h/4)) + self.h/2) > ent.y then
+			if ent.x + ent.w > self.x - self.w*self.teleHitboxSize and ent.x + ent.w < self.x
+			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
 				if ent.type == "hellhound" then
-					ent.x, player.x = player.x, ent.x
-					ent.y, player.y = player.y, ent.y
+					ydiff = self.h - ent.h
+					xdiff = ent.w - self.w
+					ent.x, self.x = self.x - xdiff, ent.x
+					ent.y, self.y = self.y, ent.y
 					print("teleport successful!")
 				end
 			end
