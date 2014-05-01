@@ -1,8 +1,14 @@
 require("entities")
 
 player = 	{
+				image = love.graphics.newImage( "sprites/playersprite.png" ),
 				x = 1820,
 				y = 673,
+				h = 54,
+				w = 16,
+				spriteOffset_x = -24,
+				spriteOffset_y = -4,
+				teleHitboxSize = 100,
 				x_vel = 0,
 				y_vel = 0,
 				acceleration = 15, 
@@ -11,21 +17,19 @@ player = 	{
 				speed = 366,
 				flySpeed = 580,
 				state = "",
-				h = 54,
-				w = 16,
 				standing = false,
+				facingright = true,
+				facingleft = false,
 				health = 10,
+				brutality = 0,
 				lives = 3,
 				invincibilityRemaining = 0,
 				damage = 1,
-				image = love.graphics.newImage( "sprites/playersprite.png" ),
-				facingright = true,
-				facingleft = false,
-				brutality = 0,
-				meleeHitboxSize = 1.5,	-- * player.w
-				teleHitboxSize = 7,	-- * player.w
-				spriteOffset_x = -24,
-				spriteOffset_y = -4
+				cooldown = 0,
+				x_knockback = 0,
+				y_knockback = 0,
+				enemyAttackDelay = 0,
+				meleeHitboxSize = 24
 				}
 				
 function player:jump()
@@ -230,26 +234,26 @@ function player:draw()
 	love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 ) --Player sprite
 	
 	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", self.x - (self.w*self.meleeHitboxSize), self.y, self.w*self.meleeHitboxSize, self.h)   --Left melee hitbox
+	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
 	
 	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.w*self.meleeHitboxSize, self.h)  --Right melee hitbox
+	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.meleeHitboxSize, self.h)  --Right melee hitbox
 	
 	love.graphics.setColor( 0, 255, 0, 255)
-	love.graphics.rectangle("fill", self.x - (self.w*self.teleHitboxSize), self.y, self.w*self.teleHitboxSize, self.h)   --Left teleport hitbox
+	love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
 	 
 	love.graphics.setColor( 0, 255, 0, 255 )
-	love.graphics.rectangle("fill", self.x + self.w, self.y, self.w*self.teleHitboxSize, self.h)   --Right teleport hitbox
+	love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
 end
 
-function player:melee()
+function player:melee()			
 	if self.facingright then
 		print("swing right!")
 		for i, ent in pairs(ents.objects) do
-			if ent.x > self.x + self.w and ent.x < self.x + self.w*(self.meleeHitboxSize + 1)
+			if ent.x > self.x + self.w and ent.x < self.x + self.w + self.meleeHitboxSize
 			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then				
 				if ent.type == "hellhound" or "axethrower" then	
-					ent:Damage(1)
+					ent:Damage(1) --replace with generic melee attack function
 					print("hit!")
 				end
 			end
@@ -257,10 +261,10 @@ function player:melee()
 	elseif self.facingleft then
 		print("swing left!")
 		for i, ent in pairs(ents.objects) do
-			if ent.x + ent.w > self.x - self.w*self.meleeHitboxSize and ent.x + ent.w < self.x
+			if ent.x + ent.w > self.x - self.meleeHitboxSize and ent.x + ent.w < self.x
 			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
 				if ent.type == "hellhound" or "axethrower" then
-					ent:Damage(1)
+					ent:Damage(1) --replace with generic melee attack function
 					print("hit!")
 				end
 			end
@@ -268,11 +272,20 @@ function player:melee()
 	end
 end
 
+function player:setBasicAttack()
+	self.damage = 1
+	self.cooldown = 0,
+	self.x_knockback = 0,
+	self.y_knockback = 0,
+	self.enemyAttackDelay = 1,
+	self.meleeHitboxSize = 24
+end
+
 function player:teleport()
 	if self.facingright then
 		print("teleport right!")
 		for i, ent in pairs(ents.objects) do
-			if ent.x > self.x + self.w and ent.x < self.x + self.w*(self.teleHitboxSize + 1)
+			if ent.x > self.x + self.w and ent.x < self.x + self.w + self.teleHitboxSize
 			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then	
 				if ent.type == "hellhound" then
 					ydiff = self.h - ent.h
@@ -287,7 +300,7 @@ function player:teleport()
 	if self.facingleft then
 		print("teleport left!")
 		for i, ent in pairs(ents.objects) do
-			if ent.x + ent.w > self.x - self.w*self.teleHitboxSize and ent.x + ent.w < self.x
+			if ent.x + ent.w > self.x - self.teleHitboxSize and ent.x + ent.w < self.x
 			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
 				if ent.type == "hellhound" then
 					ydiff = self.h - ent.h
