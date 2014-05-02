@@ -17,7 +17,7 @@ DUCKHEIGHT = HEIGHT/2
 player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
 				x = 1820,
-				y = 673,
+				y = 700,
 				h = 54,
 				w = 16,
 				spriteOffset_x = -24,
@@ -25,7 +25,7 @@ player = 	{
 				teleHitboxSize = 100,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = WALKACCEL, 
+				acceleration = WALKACCEL,
 				airacceleration = WALKAIRACCEL,
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
 				jump_vel = -1024,
@@ -33,8 +33,6 @@ player = 	{
 				flySpeed = 580,
 				slidefriction = 0.25,
 				state = "",
-				h = HEIGHT,
-				w = 16,
 				running = false,
 				standing = false,
 				ducking = false,
@@ -50,8 +48,71 @@ player = 	{
 				x_knockback = 0,
 				y_knockback = 0,
 				enemyAttackDelay = 0,
-				meleeHitboxSize = 24
+				meleeHitboxSize = 24,
+				delay = 0,
+				ability =	{ 
+					delay = 0, 
+					damage = 0, 
+					knockback = {
+						x = 0, 
+						y = 0
+						}, 
+					enemyDelay = 0, 
+					hitbox = {
+						x = 0, 
+						y = 0, 
+						width = 0, 
+						height = 0
+						} 
+					}
 				}
+function player:attack()
+	--[[
+	--Prequisite: unset values are default to 0
+	--set ability.delay
+	--set ability.damage
+	--set ability.knockback.x
+	--set ability.knockback.y
+	--set ability.enemyDekay
+	--set ability.hitbox.x
+	--set ability.hitbox.y
+	--set ability.hitbox.width
+	--set ability.hitbox.height
+	--All values are set to 0 after attack is called.
+	--]]
+	if self.delay <= 0 then --delay is a global cooldown period where the player cannot use skills, generally this means they are still animating a skill and cant use another.
+		for i, ent in pairs(ents.objects) do
+			if not ent.BG then
+				if self.facingright then
+					--Collision Detection
+					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x) and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+						ent.health = ent.health - self.ability.damage     --Apply Damage
+						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
+						ent.x_vel = ent.x_vel + self.ability.knockback.x  --Apply X knockback
+						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
+					end 
+				else --If facing left, invert width and x for player.  
+					if (ent.x > self.x - self.ability.hitbox.x - self.ability.hitbox.width) and (ent.x + ent.w < self.x - self.ability.hitbox.x) and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+						ent.health = ent.health - self.ability.damage     --Apply Damage
+						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
+						ent.x_vel = ent.x_vel - self.ability.knockback.x  --Apply X knockback
+						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
+					end 
+				end
+				self.delay = self.delay - self.ability.delay
+			end
+		end
+	end
+	self.ability.delay = 0
+	self.ability.damage = 0 
+	self.ability.knockback.x = 0
+	self.ability.knockback.y = 0
+	self.ability.enemyDelay = 0 
+	self.ability.hitbox.x = 0
+	self.ability.hitbox.y = 0
+	self.ability.hitbox.width = 0
+	self.ability.hitbox.height = 0
+end
 				
 function player:jump()
 	if self.standing then
@@ -79,7 +140,7 @@ function player:right(dt)
 		end
 	end
 end
-	
+
 function player:left(dt)
 	self.facingleft = true
 	self.facingright = false
@@ -99,7 +160,7 @@ function player:left(dt)
 		end
 	end
 end
-
+	
 function player:duck()
 	if self.standing then
 		self.h = DUCKHEIGHT
@@ -112,7 +173,7 @@ function player:stand()
 	self.h = HEIGHT
 	self.ducking = false
 end
-	
+
 function player:stop()
 	self.x_vel = 0
 end
@@ -151,9 +212,9 @@ function player:damage(n)
 end
 		
 function player:update(dt)
-	
+
 	print(self.x_vel)
-	
+
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
 		self.acceleration = RUNACCEL
@@ -165,7 +226,7 @@ function player:update(dt)
 		self.airacceleration = WALKAIRACCEL
 		self.running = false
 	end
-	
+
 	if love.keyboard.isDown("d") then
 		self:right(dt)
 	end
@@ -175,23 +236,23 @@ function player:update(dt)
 	--if love.keyboard.isDown(" ") and not(hasJumped) then
 	--	self:jump()
 	--end
-	
+
 	if self.brutality >= 100 then
 		self.brutality = 100
 	end
-	
+
 	if self.invincibilityRemaining <= 0 then
 		self.invincibilityRemaining = 0
 	else 
 		self.invincibilityRemaining = self.invincibilityRemaining - dt
 	end
-	
+
 	if self.y > world.ground + self.h then
 		self:die()
 	end
-		
+
 	self.y_vel = self.y_vel + (world.gravity * dt)
-	
+
 	if self.standing then
 		if self.x_vel > 0 then
 			if self.ducking then
@@ -225,10 +286,10 @@ function player:update(dt)
 			self.x_vel = 0
 		end
 	end
-	
+
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
-	
+
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
 		if not (self:isColliding(map, self.x + 1, nextY))
@@ -252,7 +313,7 @@ function player:update(dt)
 			self:collide("floor")
 		end
 	end
-		
+
 	local nextX = self.x + (self.x_vel * dt)
 	if self.x_vel > 0 then
 		if not(self:isColliding(map, nextX + self.w, self.y))
@@ -269,10 +330,10 @@ function player:update(dt)
 			self.x = nextX + map.tileWidth - ((nextX) % map.tileWidth) 	
 		end
 	end
-		
+
 	self.state = self:getState()
 end
-	
+
 function player:isColliding(map, x, y)
 	local layer = map.tl["Solid"]
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
@@ -286,7 +347,7 @@ function player:isOneWayColliding(map, x, y)
 	local tile = layer.tileData(tileX, tileY)
 	return not(tile == nil)
 end
-	
+
 function player:getState()
 	local tempState = ""
 	if self.standing then
@@ -309,9 +370,9 @@ end
 function player:draw()
 	--love.graphics.setColor( 25, 25, 25, 255 )
 	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
-	
+
 	love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
-	
+
 if self.ducking then
 		if self.facingright then
 			love.graphics.setColor( 255, 255, 255, 255 )
@@ -329,50 +390,31 @@ if self.ducking then
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
 		end
 	end
-	
+
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
-	
+
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.meleeHitboxSize, self.h)  --Right melee hitbox
-	
+
 	--love.graphics.setColor( 0, 255, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
-	 
+
 	--love.graphics.setColor( 0, 255, 0, 255 )
 	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
 end
 
-function player:melee()			
-	if self.facingright then
-		print("swing right!")
-		for i, ent in pairs(ents.objects) do
-			if ent.x > self.x + self.w and ent.x < self.x + self.w + self.meleeHitboxSize
-			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then				
-				if ent.type == "hellhound" or "axethrower" then	
-					ent:Damage(1) --replace with generic melee attack function
-					print("hit!")
-				else
-					ent:Damage(0)
-					print("If you really were a boss, you would've deflected it. But you're not.")
-				end
-			end
-		end
-	elseif self.facingleft then
-		print("swing left!")
-		for i, ent in pairs(ents.objects) do
-			if ent.x + ent.w > self.x - self.meleeHitboxSize and ent.x + ent.w < self.x
-			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
-				if ent.type == "hellhound" or "axethrower" then
-					ent:Damage(1) --replace with generic melee attack function
-					print("hit!")
-				else
-					ent:Damage(0)
-					print("If you really were a boss, you would've deflected it. But you're not.")
-				end
-			end
-		end
-	end
+function player:melee()
+	self.ability.delay = 0
+	self.ability.damage = 10
+	self.ability.knockback.x = 1000
+	self.ability.knockback.y = -1000
+	self.ability.enemyDelay = 0
+	self.ability.hitbox.x = 0
+	self.ability.hitbox.y = -25
+	self.ability.hitbox.width = 30
+	self.ability.hitbox.height = 50
+	player:attack()
 end
 
 function player:setBasicAttack()
