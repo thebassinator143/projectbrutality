@@ -14,7 +14,12 @@ function ent:load(x, y)
 	self.health = 10000
 	self.damage = 2
 	self.maxhealth = self.health 
+<<<<<<< HEAD
 	self.axetime = 0
+=======
+	self.spriteOffset_x = 0
+	self.spriteOffset_y = 0
+>>>>>>> defb14cc4c3ecf821fdbc3c941bf4d83d1595afc
 end
 function ent:setPos( x, y )
 	self.x = x
@@ -31,8 +36,6 @@ function ent:getVelocity( x, y )
 end
 
 function ent:update(dt)
-	local halfX = self.w / 2
-	local halfY = self.h / 2
 	
 	--print(self.x_vel)
 	--print(self.y_vel)
@@ -52,22 +55,16 @@ function ent:update(dt)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
 	
 	local nextY = self.y + (self.y_vel*dt)
-	if self.y_vel < 0 then
+	if self.y_vel ~= 0 then
 		self.y = nextY
-	end
-	
-	if self.y_vel > 0 then
-		self.y = nextY	
 	end
 		
 	local nextX = self.x + (self.x_vel * dt)
-	if self.x_vel > 0 then
-		self.x = nextX
-	elseif self.x_vel < 0 then
+	if self.x_vel ~= 0 then
 		self.x = nextX
 	end
 	
-	if ents:CollidingWithEntity(self.x, self.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
+	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
 		player:damage(self.damage)
 		print("Axed!!")
 	end

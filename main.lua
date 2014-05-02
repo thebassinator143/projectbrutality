@@ -61,8 +61,6 @@ function game:draw()
 	
 	ents:draw()
 	
-	--player:draw()
-	
 	camera:unset()
 	
 	love.graphics.setColor( 25, 25, 25, 255 )
@@ -92,6 +90,7 @@ function game:keypressed(key)
 		player:jump()
 	end
 	if key == "v" then
+		player:setBasicAttack()
 		player:melee()
 	end
 	if key == "b" then

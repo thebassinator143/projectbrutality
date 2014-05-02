@@ -36,9 +36,9 @@ function ent:setPos( x, y )
 end
 
 function ent:update(dt)
-	if ents:CollidingWithEntity(self.x, self.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
+	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
 		player:damage(self.damage)
-		print("Collision!")
+		print("Collision with spike!")
 	end
 end
 
