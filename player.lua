@@ -5,7 +5,7 @@ player = 	{
 				y = 700,
 				x_vel = 0,
 				y_vel = 0,
-				acceleration = 15, 
+				acceleration = 15,
 				airacceleration = 4,
 				jump_vel = -1024,
 				speed = 366,
@@ -23,14 +23,14 @@ player = 	{
 				facingleft = false,
 				brutality = 0,
 				}
-				
+
 function player:jump()
 	if self.standing then
 		self.y_vel = self.jump_vel
 		self.standing = false
 	end
 end
-	
+
 function player:right(dt)
 	self.facingright = true
 	self.facingleft = false
@@ -40,7 +40,7 @@ function player:right(dt)
 		self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
 	end
 end
-	
+
 function player:left(dt)
 	self.facingleft = true
 	self.facingright = false
@@ -50,11 +50,11 @@ function player:left(dt)
 		self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
 	end
 end
-	
+
 function player:stop()
 	self.x_vel = 0
 end
-	
+
 function player:collide(event)
 	if event == "floor" then
 		self.y_vel = 0
@@ -64,17 +64,17 @@ function player:collide(event)
 		self.y_vel = 0
 	end
 end
-	
+
 function player:die()
 	self.x = 256
 	self.y = 256
 	self.lives = self.lives - 1
 	self.health = 10
-	
+
 	--self.x_vel = 0  --Freeze for better visual collision check
 	--self.y_vel = 0
 end
-	
+
 function player:damage(n)
 	if self.invincibilityRemaining <= 0 then
 		if (n >= 0) then
@@ -87,11 +87,11 @@ function player:damage(n)
 		self:die()
 	end
 end
-		
+
 function player:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
-	
+
 	if love.keyboard.isDown("d") then
 		self:right(dt)
 	end
@@ -101,23 +101,23 @@ function player:update(dt)
 	--if love.keyboard.isDown(" ") and not(hasJumped) then
 	--	self:jump()
 	--end
-	
+
 	if self.brutality >= 100 then
 		self.brutality = 100
 	end
-	
+
 	if self.invincibilityRemaining <= 0 then
 		self.invincibilityRemaining = 0
-	else 
+	else
 		self.invincibilityRemaining = self.invincibilityRemaining - dt
 	end
-	
+
 	if self.y > world.ground + self.h then
 		self:die()
 	end
-		
+
 	self.y_vel = self.y_vel + (world.gravity * dt)
-	
+
 	if self.standing then
 	 if self.x_vel > 0 then
 	   if self.x_vel <= (world.friction * dt) then
@@ -135,10 +135,10 @@ function player:update(dt)
      self.x_vel = 0
    end
   end
-		
+
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
-	
+
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
 		if not (self:isColliding(map, self.x - halfX, nextY - halfY))
@@ -162,7 +162,7 @@ function player:update(dt)
 			self:collide("floor")
 		end
 	end
-		
+
 	local nextX = self.x + (self.x_vel * dt)
 	if self.x_vel > 0 then
 		if not(self:isColliding(map, nextX + halfX, self.y - halfY))
@@ -179,28 +179,28 @@ function player:update(dt)
 			self.x = nextX + map.tileWidth - ((nextX - halfX) % map.tileWidth)
 		end
 	end
-		
+
 	self.state = self:getState()
 end
-	
+
 function player:isColliding(map, x, y)
 	local layer = map.tl["Solid"]
-	
+
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
-	
+
 	return not(tile == nil)
 end
 
 function player:isOneWayColliding(map, x, y)
 	local layer = map.tl["oneWayPlatforms"]
-	
+
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
-	
+
 	return not(tile == nil)
 end
-	
+
 function player:getState()
 	local tempState = ""
 	if self.standing then
@@ -223,19 +223,19 @@ end
 function player:draw()
 	--love.graphics.setColor( 25, 25, 25, 255 )
 	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
-	
+
 	love.graphics.setColor( 255, 255, 255, 255 )
 	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
-	
+
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
-	
+
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))  --Right melee hitbox
-	
+
 	--love.graphics.setColor( 0, 255, 0, 255)
 	--love.graphics.rectangle("fill", (self.x - (self.w*1.5)-81), (self.y - self.h/4), self.w+81, self.h/2)   --Left teleport hitbox
-	 
+
 	--love.graphics.setColor( 0, 255, 0, 255 )
 	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/4), self.w + 81, self.h/2)   --Right teleport hitbox
 end
@@ -244,7 +244,7 @@ function player:melee()
 	if self.facingright then
 		print("swing right!")
 		for i, ent in pairs(ents.objects) do
-			if (self.x + self.w/2)+22 < ent.x + ent.w 
+			if (self.x + self.w/2)+22 < ent.x + ent.w
 			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
 			and (self.y - self.h/2) < ent.y + ent.h
 			and ((self.y - self.h/2) + self.h) > ent.y then
@@ -257,7 +257,7 @@ function player:melee()
 	elseif self.facingleft then
 		print("swing left!")
 		for i, ent in pairs(ents.objects) do
-			if (self.x - (self.w*2)) < ent.x + ent.w 
+			if (self.x - (self.w*2)) < ent.x + ent.w
 			and ((self.x - (self.w*2)) + (self.w * 1.5)) > ent.x
 			and (self.y - self.h/2) < ent.y + ent.h
 			and ((self.y - self.h/2) + self.h) > ent.y then
