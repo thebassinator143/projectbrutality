@@ -15,6 +15,7 @@ function ent:load(x, y)
 	self.totalDistance=100
 	self.currentDistance=0
 	self.movingright = true
+	self.deltax=0
 end
 
 function ent:setPos( x, y )
@@ -23,14 +24,6 @@ function ent:setPos( x, y )
 end
 
 function ent:update(dt)
-	--player collision
-	if ents:CollidingWithEntity(self.x, self.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
-		if (player.y_vel>0) then
-			player:collide("floor")
-			player.x_vel=player.x_vel+self.x_vel
-			player.y=self.y-(self.h-1)
-		end
-	end
 	--makes the platform move
 	if self.movingright then
 		self.x_vel=self.speed
@@ -45,7 +38,19 @@ function ent:update(dt)
 	if self.currentDistance<=0 then
 		self.movingright=true
 	end
+	self.deltax=nextX-self.x
 	self.x=nextX
+
+	--player collision
+	if ents:CollidingWithEntity(self.x, self.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
+		if (player.y_vel>0) then
+			player:collide("floor")
+			player.y=self.y-(self.h-1)
+		end
+	end
+	if player.y==self.y-(self.h-1) then
+		player.x=player.x+(self.deltax*2)
+	end
 end
 
 function ent:getState()
