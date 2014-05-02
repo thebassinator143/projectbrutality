@@ -4,14 +4,15 @@ WALK = 300
 WALKACCEL = 13 + 1/3
 WALKAIRACCEL = 4 + 2/3
 
-RUN = (1 + 1/3) * WALK                               --Runspeed is scaled by the given factor to walkspeed
+RUNRATIO = 1 + 1/3									 --Ratio based on WALK that determines RUN
+RUN = (RUNRATIO) * WALK                              
 RUNACCEL = (WALK/RUN) * WALKACCEL					 --Formula ensures rate of acceleration remains fixed whether walking or running
 RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
 REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
 
 HEIGHT = 54
-DUCKHEIGHT = 27
+DUCKHEIGHT = HEIGHT/2
 
 player = 	{
 				x = 1820,
