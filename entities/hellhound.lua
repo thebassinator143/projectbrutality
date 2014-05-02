@@ -126,7 +126,7 @@ function ent:update(dt)
 	ent:CheckCollision()
 	
 	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
-		player:damage(self.damage)
+		player:damage(ent.damage)
 		--print ("Hellhound colliding with player!")
 	end
 	
