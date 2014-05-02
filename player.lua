@@ -147,7 +147,7 @@ function player:update(dt)
 	
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
-		if not (self:isColliding(map, self.x, nextY))
+		if not (self:isColliding(map, self.x + 1, nextY))
 			and not (self:isColliding(map, self.x + self.w - 1, nextY)) then
 			self.y = nextY
 			self.standing = false
@@ -157,9 +157,9 @@ function player:update(dt)
 		end
 	end
 	if self.y_vel > 0 then
-		if not (self:isColliding(map, self.x, nextY + self.h))
+		if not (self:isColliding(map, self.x + 1, nextY + self.h))
 			and not(self:isColliding(map, self.x + self.w - 1, nextY + self.h))
-			and not(self:isOneWayColliding(map, self.x, nextY + self.h))
+			and not(self:isOneWayColliding(map, self.x + 1, nextY + self.h))
 			and not(self:isOneWayColliding(map, self.x + self.w - 1, nextY + self.h)) then
 				self.y = nextY
 				self.standing = false
@@ -274,10 +274,10 @@ end
 
 function player:setBasicAttack()
 	self.damage = 1
-	self.cooldown = 0,
-	self.x_knockback = 0,
-	self.y_knockback = 0,
-	self.enemyAttackDelay = 1,
+	self.cooldown = 0
+	self.x_knockback = 0
+	self.y_knockback = 0
+	self.enemyAttackDelay = 1
 	self.meleeHitboxSize = 24
 end
 
@@ -300,7 +300,7 @@ function player:teleport()
 	if self.facingleft then
 		print("teleport left!")
 		for i, ent in pairs(ents.objects) do
-			if ent.x + ent.w > self.x - self.teleHitboxSize and ent.x + ent.w < self.x
+			if ent.x + ent.w > self.x - self.teleHitboxSize and ent.x + ent.w < self.x     
 			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
 				if ent.type == "hellhound" then
 					ydiff = self.h - ent.h

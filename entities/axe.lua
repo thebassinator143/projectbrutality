@@ -34,7 +34,7 @@ end
 
 function ent:update(dt)
 	
-	print(self.x_vel)
+	--print(self.x_vel)
 	--print(self.y_vel)
 
 	

@@ -135,7 +135,7 @@ function ent:update(dt)
 		
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
-		if not (ent:isColliding(map, self.x, nextY))
+		if not (ent:isColliding(map, self.x + 1, nextY))
 			and not (ent:isColliding(map, self.x + self.w - 1, nextY)) then
 			self.y = nextY
 			self.standing = false
@@ -145,7 +145,7 @@ function ent:update(dt)
 		end
 	end
 	if self.y_vel > 0 then
-		if not (ent:isColliding(map, self.x, nextY + self.h))
+		if not (ent:isColliding(map, self.x + 1, nextY + self.h))
 			and not(ent:isColliding(map, self.x + self.w - 1, nextY + self.h)) then
 				self.y = nextY
 				self.standing = false
