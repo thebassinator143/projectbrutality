@@ -25,9 +25,14 @@ player = 	{
 				teleHitboxSize = 100,
 				x_vel = 0,
 				y_vel = 0,
+<<<<<<< HEAD
 				acceleration = WALKACCEL,
 				airacceleration = WALKAIRACCEL,
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
+=======
+				acceleration = 15,
+				airacceleration = 4,
+>>>>>>> origin/Ben's-Branch
 				jump_vel = -1024,
 				speed = WALK,
 				flySpeed = 580,
@@ -66,6 +71,7 @@ player = 	{
 						} 
 					}
 				}
+<<<<<<< HEAD
 function player:attack()
 	--[[
 	--Prequisite: unset values are default to 0
@@ -114,13 +120,16 @@ function player:attack()
 	self.ability.hitbox.height = 0
 end
 				
+=======
+
+>>>>>>> origin/Ben's-Branch
 function player:jump()
 	if self.standing then
 		self.y_vel = self.jump_vel
 		self.standing = false
 	end
 end
-	
+
 function player:right(dt)
 	self.facingright = true
 	self.facingleft = false
@@ -160,6 +169,7 @@ function player:left(dt)
 		end
 	end
 end
+<<<<<<< HEAD
 	
 function player:duck()
 	if self.standing then
@@ -173,11 +183,13 @@ function player:stand()
 	self.h = HEIGHT
 	self.ducking = false
 end
+=======
+>>>>>>> origin/Ben's-Branch
 
 function player:stop()
 	self.x_vel = 0
 end
-	
+
 function player:collide(event)
 	if event == "floor" then
 		self.y_vel = 0
@@ -187,17 +199,17 @@ function player:collide(event)
 		self.y_vel = 0
 	end
 end
-	
+
 function player:die()
 	self.x = 256
 	self.y = 256
 	self.lives = self.lives - 1
 	self.health = 10
-	
+
 	--self.x_vel = 0  --Freeze for better visual collision check
 	--self.y_vel = 0
 end
-	
+
 function player:damage(n)
 	if self.invincibilityRemaining <= 0 then
 		if (n >= 0) then
@@ -210,8 +222,9 @@ function player:damage(n)
 		self:die()
 	end
 end
-		
+
 function player:update(dt)
+<<<<<<< HEAD
 
 	print(self.x_vel)
 
@@ -226,6 +239,10 @@ function player:update(dt)
 		self.airacceleration = WALKAIRACCEL
 		self.running = false
 	end
+=======
+	local halfX = self.w / 2
+	local halfY = self.h / 2
+>>>>>>> origin/Ben's-Branch
 
 	if love.keyboard.isDown("d") then
 		self:right(dt)
@@ -243,7 +260,7 @@ function player:update(dt)
 
 	if self.invincibilityRemaining <= 0 then
 		self.invincibilityRemaining = 0
-	else 
+	else
 		self.invincibilityRemaining = self.invincibilityRemaining - dt
 	end
 
@@ -254,6 +271,7 @@ function player:update(dt)
 	self.y_vel = self.y_vel + (world.gravity * dt)
 
 	if self.standing then
+<<<<<<< HEAD
 		if self.x_vel > 0 then
 			if self.ducking then
 				if self.x_vel <= (self.slidefriction * world.friction * dt) then
@@ -286,6 +304,24 @@ function player:update(dt)
 			self.x_vel = 0
 		end
 	end
+=======
+	 if self.x_vel > 0 then
+	   if self.x_vel <= (world.friction * dt) then
+	     self.x_vel = 0
+     else
+       self.x_vel = self.x_vel + (world.friction * dt)
+     end
+   elseif self.x_vel < 0 then
+     if self.x_vel >= (world.friction * dt) then
+       self.x_vel = 0
+     else
+       self.x_vel = self.x_vel - (world.friction * dt)
+     end
+   else
+     self.x_vel = 0
+   end
+  end
+>>>>>>> origin/Ben's-Branch
 
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
@@ -336,15 +372,29 @@ end
 
 function player:isColliding(map, x, y)
 	local layer = map.tl["Solid"]
+<<<<<<< HEAD
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
+=======
+
+	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
+	local tile = layer.tileData(tileX, tileY)
+
+>>>>>>> origin/Ben's-Branch
 	return not(tile == nil)
 end
 
 function player:isOneWayColliding(map, x, y)
 	local layer = map.tl["oneWayPlatforms"]
+<<<<<<< HEAD
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
+=======
+
+	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
+	local tile = layer.tileData(tileX, tileY)
+
+>>>>>>> origin/Ben's-Branch
 	return not(tile == nil)
 end
 
@@ -371,6 +421,7 @@ function player:draw()
 	--love.graphics.setColor( 25, 25, 25, 255 )
 	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
 
+<<<<<<< HEAD
 	love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
 
 if self.ducking then
@@ -399,12 +450,26 @@ if self.ducking then
 
 	--love.graphics.setColor( 0, 255, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
+=======
+	love.graphics.setColor( 255, 255, 255, 255 )
+	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
+
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))  --Right melee hitbox
+
+	--love.graphics.setColor( 0, 255, 0, 255)
+	--love.graphics.rectangle("fill", (self.x - (self.w*1.5)-81), (self.y - self.h/4), self.w+81, self.h/2)   --Left teleport hitbox
+>>>>>>> origin/Ben's-Branch
 
 	--love.graphics.setColor( 0, 255, 0, 255 )
 	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
 end
 
 function player:melee()
+<<<<<<< HEAD
 	self.ability.delay = 0
 	self.ability.damage = 10
 	self.ability.knockback.x = 1000
@@ -424,6 +489,35 @@ function player:setBasicAttack()
 	self.y_knockback = 0
 	self.enemyAttackDelay = 1
 	self.meleeHitboxSize = 24
+=======
+	if self.facingright then
+		print("swing right!")
+		for i, ent in pairs(ents.objects) do
+			if (self.x + self.w/2)+22 < ent.x + ent.w
+			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
+			and (self.y - self.h/2) < ent.y + ent.h
+			and ((self.y - self.h/2) + self.h) > ent.y then
+				if ent.type == "hellhound" or "axethrower" then
+					ent:Damage(1)
+					print("hit!")
+				end
+			end
+		end
+	elseif self.facingleft then
+		print("swing left!")
+		for i, ent in pairs(ents.objects) do
+			if (self.x - (self.w*2)) < ent.x + ent.w
+			and ((self.x - (self.w*2)) + (self.w * 1.5)) > ent.x
+			and (self.y - self.h/2) < ent.y + ent.h
+			and ((self.y - self.h/2) + self.h) > ent.y then
+				if ent.type == "hellhound" or "axethrower" then
+					ent:Damage(1)
+					print("hit!")
+				end
+			end
+		end
+	end
+>>>>>>> origin/Ben's-Branch
 end
 
 function player:teleport()
