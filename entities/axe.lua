@@ -14,12 +14,9 @@ function ent:load(x, y)
 	self.health = 10000
 	self.damage = 2
 	self.maxhealth = self.health 
-<<<<<<< HEAD
 	self.axetime = 0
-=======
 	self.spriteOffset_x = 0
 	self.spriteOffset_y = 0
->>>>>>> defb14cc4c3ecf821fdbc3c941bf4d83d1595afc
 end
 function ent:setPos( x, y )
 	self.x = x

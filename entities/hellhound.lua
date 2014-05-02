@@ -206,13 +206,11 @@ end
 
 function ent:draw()
 	
-<<<<<<< HEAD
 	--love.graphics.setColor( 25, 25, 25, 255)
 	--love.graphics.rectangle("fill", self.x - self.w/2, self.y - self.h/2, self.w, self.h)   --Hellhound hitbox
-=======
-	love.graphics.setColor( 25, 25, 25, 255)
-	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)   --Hellhound bounding box
->>>>>>> defb14cc4c3ecf821fdbc3c941bf4d83d1595afc
+
+	--love.graphics.setColor( 25, 25, 25, 255)
+	--love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)   --Hellhound bounding box
 	
 	love.graphics.setColor( 255, 255, 255, 255)
 	love.graphics.draw(self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, self.size, self.size, 0, 0)

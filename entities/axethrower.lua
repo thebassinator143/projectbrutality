@@ -197,19 +197,16 @@ end
 
 function ent:throwAxe()
 	if self.facingright then
-<<<<<<< HEAD
 		local axe = ents.Create("axe", self.x + (self.w/2 - 3.5), self.y, false)
 		axe:setVelocity( ((player.x + player.w/2) - (self.x + self.w/2)), -800)
 	elseif self.facingleft then
 		local axe = ents.Create("axe", self.x - (self.w/2 + 3.5), self.y, false)
 		axe:setVelocity( ((player.x + player.w/2) - self.x), -800)
-=======
 		local axe = ents.Create("axe", self.x + self.w - 7, self.y, false)
 		axe:setVelocity(self.axe_x_vel, -self.axe_y_vel)
 	elseif self.facingleft then
 		local axe = ents.Create("axe", self.x , self.y, false)
 		axe:setVelocity(-self.axe_x_vel, -self.axe_y_vel)
->>>>>>> defb14cc4c3ecf821fdbc3c941bf4d83d1595afc
 	end
 end
 

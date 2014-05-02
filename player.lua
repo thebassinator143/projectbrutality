@@ -33,17 +33,14 @@ player = 	{
 				flySpeed = 580,
 				slidefriction = 0.25,
 				state = "",
-<<<<<<< HEAD
 				h = HEIGHT,
 				w = 16,
 				running = false,
 				standing = false,
 				ducking = false,
-=======
 				standing = false,
 				facingright = true,
 				facingleft = false,
->>>>>>> defb14cc4c3ecf821fdbc3c941bf4d83d1595afc
 				health = 10,
 				brutality = 0,
 				lives = 3,
@@ -310,34 +307,28 @@ function player:getState()
 end
 
 function player:draw()
-	love.graphics.setColor( 25, 25, 25, 255 )
-<<<<<<< HEAD
-	love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
+	--love.graphics.setColor( 25, 25, 25, 255 )
+	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
 	
-	if self.ducking then
+	love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
+	
+if self.ducking then
 		if self.facingright then
 			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 0.5, 0, 0, 0, 0 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
 		elseif self.facingleft then
 			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 0.5, 0, 0, 0, 0 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
 		end
 	else
 		if self.facingright then
 			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
 		elseif self.facingleft then
 			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
 		end
 	end
-	
-=======
-	love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
-	
-	love.graphics.setColor( 255, 255, 255, 255 )
-	love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 ) --Player sprite
->>>>>>> defb14cc4c3ecf821fdbc3c941bf4d83d1595afc
 	
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
@@ -345,11 +336,11 @@ function player:draw()
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.meleeHitboxSize, self.h)  --Right melee hitbox
 	
-	love.graphics.setColor( 0, 255, 0, 255)
-	love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
+	--love.graphics.setColor( 0, 255, 0, 255)
+	--love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
 	 
-	love.graphics.setColor( 0, 255, 0, 255 )
-	love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
+	--love.graphics.setColor( 0, 255, 0, 255 )
+	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
 end
 
 function player:melee()			
