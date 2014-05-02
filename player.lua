@@ -22,7 +22,70 @@ player = 	{
 				facingright = true,
 				facingleft = false,
 				brutality = 0,
+				delay = 0,
+				ability =	{ 
+					delay = 0, 
+					damage = 0, 
+					knockback = {
+						x = 0, 
+						y = 0
+						}, 
+					enemyDelay = 0, 
+					hitbox = {
+						x = 0, 
+						y = 0, 
+						width = 0, 
+						height = 0
+						} 
+					}
 				}
+function player:attack()
+	--[[
+	--Prequisite: set the following values: unset values are default to 0
+	ability.delay
+	ability.damage
+	ability.knockback.x
+	ability.knockback.y
+	ability.enemyDekay
+	ability.hitbox.x
+	ability.hitbox.y
+	ability.hitbox.width
+	ability.hitbox.height
+	--All values are set to 0 after attack is called.
+	--]]
+	if self.delay <= 0 then --delay is a global cooldown period where the player cannot use skills, generally this means they are still animating a skill and cant use another.
+		for i, ent in pairs(ents.objects) do
+			if not ent.BG then
+				if self.facingright then
+					--Collision Detection
+					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x) and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+						ent.health = ent.health - self.ability.damage     --Apply Damage
+						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
+						ent.x_vel = ent.x_vel + self.ability.knockback.x  --Apply X knockback
+						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
+					end 
+				else --If facing left, invert width and x for player.  
+					if (ent.x > self.x - self.ability.hitbox.x - self.ability.hitbox.width) and (ent.x + ent.w < self.x - self.ability.hitbox.x) and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+						ent.health = ent.health - self.ability.damage     --Apply Damage
+						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
+						ent.x_vel = ent.x_vel - self.ability.knockback.x  --Apply X knockback
+						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
+					end 
+				end
+				self.delay = self.delay - self.ability.delay
+			end
+		end
+	end
+	self.ability.delay = 0
+	self.ability.damage = 0 
+	self.ability.knockback.x = 0
+	self.ability.knockback.y = 0
+	self.ability.enemyDelay = 0 
+	self.ability.hitbox.x = 0
+	self.ability.hitbox.y = 0
+	self.ability.hitbox.width = 0
+	self.ability.hitbox.height = 0
+end
 				
 function player:jump()
 	if self.standing then
@@ -179,7 +242,23 @@ function player:isColliding(map, x, y)
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
 	
-	return not(tile == nil)
+	local sLayer = map.tl["Slopes"]
+	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
+	local sTile = sLayer.tileData(tileX, tileY)
+
+	if (sTile == nil) then
+		return not(tile == nil)
+	end 
+
+	if(sTile.properties["Direction"] == "Right") then
+		if (x - tileX > self.y - self.h - tileY) then
+			return false
+		else
+			return true
+		end
+	end
+
+	return false
 end
 
 function player:isOneWayColliding(map, x, y)
@@ -216,7 +295,6 @@ function player:draw()
 	
 	love.graphics.setColor( 255, 255, 255, 255 )
 	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
-	
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
 	
@@ -231,6 +309,17 @@ function player:draw()
 end
 
 function player:melee()
+	self.ability.delay = 0
+	self.ability.damage = 10
+	self.ability.knockback.x = 1000
+	self.ability.knockback.y = -1000
+	self.ability.enemyDelay = 0
+	self.ability.hitbox.x = 0
+	self.ability.hitbox.y = -self.h/2
+	self.ability.hitbox.width = 30
+	self.ability.hitbox.height = 50
+	player:attack()
+	--[[
 	if self.facingright then
 		print("swing right!")
 		for i, ent in pairs(ents.objects) do
@@ -258,6 +347,7 @@ function player:melee()
 			end
 		end
 	end
+	--]]
 end
 
 function player:teleport()

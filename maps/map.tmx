@@ -9,6 +9,19 @@
  <tileset firstgid="46" name="SkullBox" tilewidth="28" tileheight="28">
   <image source="skullbox28.png" width="28" height="28"/>
  </tileset>
+ <tileset firstgid="47" name="Slopes" tilewidth="28" tileheight="28">
+  <image source="Slopes.png" width="56" height="28"/>
+  <tile id="0">
+   <properties>
+    <property name="Direction" value="Left"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="Direction" value="Right"/>
+   </properties>
+  </tile>
+ </tileset>
  <layer name="Background" width="96" height="32" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt1UEKgzAQBdBZWaF6/+tWoYHBGhpNQSrvwV8oWYSfiUYAAAAAAAAAAPy/YcnjRMYrNntDpf/pnZbu13X6/41ntPeeM1+x2RvK/U8HUuY/f7/cieN653+IzzOhXW3+v92Hwvz32Zv/9TnPde1+jKH/XqX/bWrvc+bNOv9koNUL0LwFDw==
@@ -21,7 +34,7 @@
  </layer>
  <layer name="oneWayPlatforms" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJztmMsKwjAQReMLUaTdq/X5///oBDIYumjGEHpTcw8MJHAX6WEyLe0dQdFJ9ehDNMzB0T8S+sdC/1joHwvfv1jY/1joHwv9Y+H8x+L7/4g+RMPQPxbOfyz0j4X+sdA/FvrHQv9Y6B8L/WNR/yupdUZt5j/yX8H+x0L/WEr5j+dX6zNp674udoks+9+O1at3ug+V+rdJ/+W9lvRv+S6qed6o21JeT6Es/lM5zS6x/y1ePeqiRL/+mluqf71zU/fK4tXThdzUM/qM9vWcOc1epK5SQ0Vr3d9G5z1n5mpbx/uH1FPqVdFa9++R13tmrrZ1vP8A5Mwa+A==
+   eJztmNkKgzAQRdON0lL0vfvy///YBDIYRM3URm8k98CFBOYhnoyJWBuCorKp0YsomIOhfyT0j4X+sdA/Ft6/WNj/WOgfC/1j4fmPxfX/Eb2IgqF/LDz/sdA/FvrHQv9Y6B/LkP+VzWbGtZRIn3/nfu3DPZiOLv+he+7BtIj/LueacF/+g/cvFvrHkso/7+uGrWlc7CK17H89Wq/O6d4n9m+T/tN7Telf812U83kjblN5Pflo/MfqpHaJ/a/x6hAXKfr117ql+pd3bui90nh1VL5u6BldjfT1nHVSe7G52twyGsv83lrveWRdbuNw/rR52bwzGsv80/L6GFmX2zicfwGqVhsQ
   </data>
  </layer>
  <layer name="Foreground" width="96" height="32" visible="0">
@@ -30,4 +43,9 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="96" height="32" visible="0"/>
+ <layer name="Slopes" width="96" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt0TEOACAIA0B+hP9/nZOJAzNGvZuaToRGAAAAAAAAwNtyy+PYFX/KorNBj+r3iw0AAAAA7jQByasBHg==
+  </data>
+ </layer>
 </map>
