@@ -61,13 +61,9 @@ function game:draw()
 	player:draw()
 
 	ents:draw()
-<<<<<<< HEAD
-	
-=======
 
 	--player:draw()
 
->>>>>>> origin/Ben's-Branch
 	camera:unset()
 
 	love.graphics.setColor( 25, 25, 25, 255 )
@@ -112,11 +108,8 @@ function game:keyreleased(key, code)
     if key == 'escape' then
         Gamestate.switch(menu)
     end
-<<<<<<< HEAD
 	if key == "s" then
 		player:stand()
 	end
 end
-=======
-end
->>>>>>> origin/Ben's-Branch
+
