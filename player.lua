@@ -5,7 +5,7 @@ WALKACCEL = 13 + 1/3
 WALKAIRACCEL = 4 + 2/3
 
 RUNRATIO = 1 + 1/3									 --Ratio based on WALK that determines RUN
-RUN = (RUNRATIO) * WALK                              
+RUN = (RUNRATIO) * WALK
 RUNACCEL = (WALK/RUN) * WALKACCEL					 --Formula ensures rate of acceleration remains fixed whether walking or running
 RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
@@ -52,23 +52,22 @@ player = 	{
 				enemyAttackDelay = 0,
 				meleeHitboxSize = 24,
 				delay = 0,
-				ability =	{ 
-					delay = 0, 
-					damage = 0, 
+				ability =	{
+					delay = 0,
+					damage = 0,
 					knockback = {
-						x = 0, 
+						x = 0,
 						y = 0
-						}, 
-					enemyDelay = 0, 
+						},
+					enemyDelay = 0,
 					hitbox = {
-						x = 0, 
-						y = 0, 
-						width = 0, 
+						x = 0,
+						y = 0,
+						width = 0,
 						height = 0
-						} 
+						}
 					}
 				}
-				
 function player:attack()
 	--[[
 	--Prequisite: unset values are default to 0
@@ -93,24 +92,24 @@ function player:attack()
 						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
 						ent.x_vel = ent.x_vel + self.ability.knockback.x  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
-					end 
-				else --If facing left, invert width and x for player.  
+					end
+				else --If facing left, invert width and x for player.
 					if (ent.x > self.x - self.ability.hitbox.x - self.ability.hitbox.width) and (ent.x + ent.w < self.x - self.ability.hitbox.x) and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - self.ability.damage     --Apply Damage
 						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
 						ent.x_vel = ent.x_vel - self.ability.knockback.x  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
-					end 
+					end
 				end
 				self.delay = self.delay - self.ability.delay
 			end
 		end
 	end
 	self.ability.delay = 0
-	self.ability.damage = 0 
+	self.ability.damage = 0
 	self.ability.knockback.x = 0
 	self.ability.knockback.y = 0
-	self.ability.enemyDelay = 0 
+	self.ability.enemyDelay = 0
 	self.ability.hitbox.x = 0
 	self.ability.hitbox.y = 0
 	self.ability.hitbox.width = 0
@@ -135,7 +134,7 @@ function player:right(dt)
 				else
 					self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
 				end
-			else	
+			else
 				self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
 			end
 		else
@@ -163,7 +162,7 @@ function player:left(dt)
 		end
 	end
 end
-	
+
 function player:duck()
 	if self.standing then
 		self.h = DUCKHEIGHT
@@ -229,7 +228,6 @@ function player:update(dt)
 		self.airacceleration = WALKAIRACCEL
 		self.running = false
 	end
-	
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 
@@ -281,33 +279,17 @@ function player:update(dt)
 				else
 					self.x_vel = self.x_vel - (self.slidefriction * world.friction * dt)
 				end
-			else	
+			else
 				if self.x_vel >= (world.friction * dt) then
 					self.x_vel = 0
 				else
 					self.x_vel = self.x_vel - (world.friction * dt)
 				end
-			end	
+			end
 		else
 			self.x_vel = 0
 		end
 	end
-	 if self.x_vel > 0 then
-	   if self.x_vel <= (world.friction * dt) then
-	     self.x_vel = 0
-     else
-       self.x_vel = self.x_vel + (world.friction * dt)
-     end
-   elseif self.x_vel < 0 then
-     if self.x_vel >= (world.friction * dt) then
-       self.x_vel = 0
-     else
-       self.x_vel = self.x_vel - (world.friction * dt)
-     end
-   else
-     self.x_vel = 0
-   end
-  end
 
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
@@ -345,11 +327,11 @@ function player:update(dt)
 			self.x = nextX - ((nextX + self.w) % map.tileWidth)
 		end
 	elseif self.x_vel < 0 then
-		if not(self:isColliding(map, nextX, self.y)) 
-			and not(self:isColliding(map, nextX, self.y + self.h - 1)) then 
+		if not(self:isColliding(map, nextX, self.y))
+			and not(self:isColliding(map, nextX, self.y + self.h - 1)) then
 			self.x = nextX
 		else
-			self.x = nextX + map.tileWidth - ((nextX) % map.tileWidth) 	
+			self.x = nextX + map.tileWidth - ((nextX) % map.tileWidth)
 		end
 	end
 
@@ -422,9 +404,6 @@ if self.ducking then
 	--love.graphics.setColor( 0, 255, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
 
-	love.graphics.setColor( 255, 255, 255, 255 )
-	love.graphics.draw( self.image, (self.x - self.w/2) - 24, (self.y - self.h/2) - 4, 0, 1, 1, 0, 0, 0, 0 )
-
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
 
@@ -458,7 +437,6 @@ function player:setBasicAttack()
 	self.y_knockback = 0
 	self.enemyAttackDelay = 1
 	self.meleeHitboxSize = 24
-	
 	if self.facingright then
 		print("swing right!")
 		for i, ent in pairs(ents.objects) do
@@ -493,7 +471,7 @@ function player:teleport()
 		print("teleport right!")
 		for i, ent in pairs(ents.objects) do
 			if ent.x > self.x + self.w and ent.x < self.x + self.w + self.teleHitboxSize
-			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then	
+			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
 				if ent.type == "hellhound" then
 					ydiff = self.h - ent.h
 					xdiff = ent.w - self.w
@@ -507,7 +485,7 @@ function player:teleport()
 	if self.facingleft then
 		print("teleport left!")
 		for i, ent in pairs(ents.objects) do
-			if ent.x + ent.w > self.x - self.teleHitboxSize and ent.x + ent.w < self.x     
+			if ent.x + ent.w > self.x - self.teleHitboxSize and ent.x + ent.w < self.x
 			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
 				if ent.type == "hellhound" then
 					ydiff = self.h - ent.h

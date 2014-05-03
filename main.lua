@@ -62,8 +62,6 @@ function game:draw()
 
 	ents:draw()
 
-	--player:draw()
-
 	camera:unset()
 
 	love.graphics.setColor( 25, 25, 25, 255 )
@@ -112,4 +110,5 @@ function game:keyreleased(key, code)
 		player:stand()
 	end
 end
+
 
