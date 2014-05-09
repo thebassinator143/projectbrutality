@@ -78,6 +78,10 @@ function ent:update(dt)
 		ents.Destroy( self.id )
 	end
 	
+	if self.health <= 0 then
+		ent:kill()
+	end
+	
 	self.y_vel = self.y_vel + (world.gravity * dt)
 		
 	if self.standing then
@@ -197,11 +201,6 @@ end
 
 function ent:throwAxe()
 	if self.facingright then
-		local axe = ents.Create("axe", self.x + (self.w/2 - 3.5), self.y, false)
-		axe:setVelocity( ((player.x + player.w/2) - (self.x + self.w/2)), -800)
-	elseif self.facingleft then
-		local axe = ents.Create("axe", self.x - (self.w/2 + 3.5), self.y, false)
-		axe:setVelocity( ((player.x + player.w/2) - self.x), -800)
 		local axe = ents.Create("axe", self.x + self.w - 7, self.y, false)
 		axe:setVelocity(self.axe_x_vel, -self.axe_y_vel)
 	elseif self.facingleft then
