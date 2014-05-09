@@ -94,6 +94,7 @@ function game:keypressed(key)
 	end
 	if key == "v" then
 		player:melee()
+		player:setChargeTimer()
 	end
 	if key == "b" then
 		player:teleport()
@@ -104,4 +105,8 @@ function game:keyreleased(key, code)
     if key == 'escape' then
         Gamestate.switch(menu)
     end
+	if key == "v" then
+		print("herp")
+		player:chargedMelee()
+	end
 end
