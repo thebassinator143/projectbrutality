@@ -96,9 +96,9 @@ function game:update(dt)
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
 end
 
-function game:keypressed(key)
+function game:keypressed(key, dt)
 	if key == " " then
-		player:jump()
+		player:jump(dt)
 	end
 	if key == "v" then
 		interval = timer.gameTime - timer.lastAttack
