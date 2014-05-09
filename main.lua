@@ -35,21 +35,21 @@ function game:init()
 	camera:setBounds(0, 0, (map.width * map.tileWidth - (0.5 * love.graphics.getWidth())), (map.height * map.tileHeight - (0.5*love.graphics.getHeight())) )
 
 	world = 	{
-				gravity = 1350,
+				gravity = 1600,
 				ground = 896,
 				friction = -2500
 				}
-	ents.Create( "hellhound", 130, 784, false )
-	ents.Create( "hellhound", 2576, 784, false )
-	ents.Create( "hellhound", 1960, 684, false )
+	--ents.Create( "hellhound", 130, 784, false )
+	--ents.Create( "hellhound", 2576, 784, false )
+	--ents.Create( "hellhound", 1960, 684, false )
 
-	ents.Create( "spike", 1120, 868, false )
-	ents.Create( "spike", 1148, 868, false )
-	ents.Create( "spike", 1176, 868, false )
+	--ents.Create( "spike", 1120, 868, false )
+	--ents.Create( "spike", 1148, 868, false )
+	--ents.Create( "spike", 1176, 868, false )
 
-	ents.Create( "axethrower", 1680, 756, false )
+	--ents.Create( "axethrower", 1680, 756, false )
 	--ents.Create( "axe", 1820, 600, false )
-	ents.Create( "movingplatform", 1680, 700, false)
+	--ents.Create( "movingplatform", 1680, 700, false)
 end
 
 function game:draw()

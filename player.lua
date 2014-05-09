@@ -1,8 +1,8 @@
 require("entities")
 
 WALK = 300
-WALKACCEL = 13 + 1/3
-WALKAIRACCEL = 4 + 2/3
+WALKACCEL = 12
+WALKAIRACCEL = 3
 
 RUNRATIO = 1 + 1/3									 --Ratio based on WALK that determines RUN
 RUN = (RUNRATIO) * WALK
@@ -16,8 +16,8 @@ DUCKHEIGHT = HEIGHT/2
 
 player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
-				x = 1820,
-				y = 700,
+				x = 2100,
+				y = 644,
 				h = 54,
 				w = 16,
 				spriteOffset_x = -24,
@@ -28,8 +28,6 @@ player = 	{
 				acceleration = WALKACCEL,
 				airacceleration = WALKAIRACCEL,
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
-				acceleration = 15,
-				airacceleration = 4,
 				jump_vel = -1024,
 				speed = WALK,
 				flySpeed = 580,
@@ -45,7 +43,7 @@ player = 	{
 				brutality = 0,
 				lives = 3,
 				invincibilityRemaining = 0,
-				damage = 1,
+				damage = 0,
 				cooldown = 0,
 				x_knockback = 0,
 				y_knockback = 0,

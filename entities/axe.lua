@@ -62,7 +62,7 @@ function ent:update(dt)
 	end
 	
 	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
-		player:damage(self.damage)
+		player:damage(2)
 		print("Axed!!")
 	end
 end

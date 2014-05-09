@@ -13,9 +13,9 @@ function love.conf(t)
 	t.console = true
 	t.title = "Project Brutality"
 	t.author = "Evan Boss"
-	t.screen.fullscreen = false
-	t.screen.vsync = false
-	t.screen.fsaa = 0
-	t.screen.height = 750
-	t.screen.width = 1000
+	t.window.fullscreen = false
+	t.window.vsync = false
+	t.window.fsaa = 0
+	t.window.height = 750
+	t.window.width = 1000
 end
