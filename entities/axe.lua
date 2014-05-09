@@ -38,9 +38,9 @@ function ent:update(dt)
 	--print(self.y_vel)
 	
 	self.axetime = self.axetime - dt
-	if self.y >= 812 then
-		print(self.axetime)
-	end
+	--if self.y >= 812 then
+	--	print(self.axetime)
+	--end
 	
 	if self.y > world.ground + self.h then
 		ents.Destroy( self.id )

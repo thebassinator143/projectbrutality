@@ -14,10 +14,12 @@ REACTIVITY = 0.75									 --Modifies running deceleration without affecting acc
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
 
+BASE_MELEE_DAMAGE = 1
+
 player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
 				x = 1820,
-				y = 700,
+				y = 673,
 				h = 54,
 				w = 16,
 				spriteOffset_x = -24,
@@ -45,16 +47,11 @@ player = 	{
 				brutality = 0,
 				lives = 3,
 				invincibilityRemaining = 0,
-				damage = 1,
-				cooldown = 0,
-				x_knockback = 0,
-				y_knockback = 0,
-				enemyAttackDelay = 0,
-				meleeHitboxSize = 24,
 				delay = 0,
 				ability =	{
+					cooldown = 0,
 					delay = 0,
-					damage = 0,
+					damage = BASE_MELEE_DAMAGE,
 					knockback = {
 						x = 0,
 						y = 0
@@ -67,15 +64,17 @@ player = 	{
 						height = 0
 						}
 					}
-				}
+			}
+
 function player:attack()
 	--[[
 	--Prequisite: unset values are default to 0
+	--set ability.cooldown
 	--set ability.delay
 	--set ability.damage
 	--set ability.knockback.x
 	--set ability.knockback.y
-	--set ability.enemyDekay
+	--set ability.enemyDelay
 	--set ability.hitbox.x
 	--set ability.hitbox.y
 	--set ability.hitbox.width
@@ -84,21 +83,25 @@ function player:attack()
 	--]]
 	if self.delay <= 0 then --delay is a global cooldown period where the player cannot use skills, generally this means they are still animating a skill and cant use another.
 		for i, ent in pairs(ents.objects) do
-			if not ent.BG then
+			if not ent.BG then --why??
 				if self.facingright then
 					--Collision Detection
-					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x) and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x) 
+					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - self.ability.damage     --Apply Damage
 						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
 						ent.x_vel = ent.x_vel + self.ability.knockback.x  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
+						print("Right attack on "..ent.type.."!")
 					end
 				else --If facing left, invert width and x for player.
-					if (ent.x > self.x - self.ability.hitbox.x - self.ability.hitbox.width) and (ent.x + ent.w < self.x - self.ability.hitbox.x) and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width) 
+					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - self.ability.damage     --Apply Damage
 						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
 						ent.x_vel = ent.x_vel - self.ability.knockback.x  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
+						print("Left attack on "..ent.type.."!")
 					end
 				end
 				self.delay = self.delay - self.ability.delay
@@ -110,10 +113,10 @@ function player:attack()
 	self.ability.knockback.x = 0
 	self.ability.knockback.y = 0
 	self.ability.enemyDelay = 0
-	self.ability.hitbox.x = 0
-	self.ability.hitbox.y = 0
-	self.ability.hitbox.width = 0
-	self.ability.hitbox.height = 0
+	--self.ability.hitbox.x = 0
+	--self.ability.hitbox.y = 0
+	--self.ability.hitbox.width = 0
+	--self.ability.hitbox.height = 0
 end
 
 function player:jump()
@@ -215,7 +218,7 @@ end
 
 function player:update(dt)
 
-	print(self.x_vel)
+	--print(self.x_vel)
 
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
@@ -228,8 +231,6 @@ function player:update(dt)
 		self.airacceleration = WALKAIRACCEL
 		self.running = false
 	end
-	local halfX = self.w / 2
-	local halfY = self.h / 2
 
 	if love.keyboard.isDown("d") then
 		self:right(dt)
@@ -372,11 +373,20 @@ function player:getState()
 end
 
 function player:draw()
-	--love.graphics.setColor( 25, 25, 25, 255 )
-	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
+	--love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
 
-	love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", self.x + self.w - self.ability.hitbox.width, self.y, self.ability.hitbox.width, self.ability.hitbox.height)   --Left melee hitbox
 
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", self.x, self.y, self.ability.hitbox.width, self.ability.hitbox.height)  --Right melee hitbox
+
+	--love.graphics.setColor( 0, 255, 0, 255)
+	--love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
+
+	--love.graphics.setColor( 0, 255, 0, 255 )
+	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
+	
 if self.ducking then
 		if self.facingright then
 			love.graphics.setColor( 255, 255, 255, 255 )
@@ -394,75 +404,74 @@ if self.ducking then
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
 		end
 	end
-
-	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
-
-	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.meleeHitboxSize, self.h)  --Right melee hitbox
-
-	--love.graphics.setColor( 0, 255, 0, 255)
-	--love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
-
-	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", (self.x - (self.w*2)), (self.y - self.h/2), (self.w*1.5), (self.h))   --Left melee hitbox
-
-	--love.graphics.setColor( 255, 0, 0, 255)
-	--love.graphics.rectangle("fill", (self.x + self.w/2), (self.y - self.h/2), (self.w*1.5), (self.h))  --Right melee hitbox
-
-	--love.graphics.setColor( 0, 255, 0, 255)
-	--love.graphics.rectangle("fill", (self.x - (self.w*1.5)-81), (self.y - self.h/4), self.w+81, self.h/2)   --Left teleport hitbox
-
-	--love.graphics.setColor( 0, 255, 0, 255 )
-	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
 end
 
-function player:melee()
-	self.ability.delay = 0
-	self.ability.damage = 10
-	self.ability.knockback.x = 1000
-	self.ability.knockback.y = -1000
-	self.ability.enemyDelay = 0
-	self.ability.hitbox.x = 0
-	self.ability.hitbox.y = -25
-	self.ability.hitbox.width = 30
-	self.ability.hitbox.height = 50
-	player:attack()
-end
+--Deprecated function. Each attack type should have its own function to set the values (see setBasicAttack), then call attack() to perform the attack.
+--function player:melee()
+--	self.ability.delay = 0
+--	self.ability.damage = 10
+--	self.ability.knockback.x = 1000
+--	self.ability.knockback.y = -1000
+--	self.ability.enemyDelay = 0
+--	self.ability.hitbox.x = 0
+--	self.ability.hitbox.y = -25
+--	self.ability.hitbox.width = 30
+--	self.ability.hitbox.height = 50
+--	player:attack()
+--end
 
 function player:setBasicAttack()
-	self.damage = 1
-	self.cooldown = 0
-	self.x_knockback = 0
-	self.y_knockback = 0
-	self.enemyAttackDelay = 1
-	self.meleeHitboxSize = 24
-	if self.facingright then
-		print("swing right!")
-		for i, ent in pairs(ents.objects) do
-			if (self.x + self.w/2)+22 < ent.x + ent.w
-			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
-			and (self.y - self.h/2) < ent.y + ent.h
-			and ((self.y - self.h/2) + self.h) > ent.y then
-				if ent.type == "hellhound" or "axethrower" then
-					ent:Damage(1)
-					print("hit!")
-				end
-			end
-		end
-	elseif self.facingleft then
-		print("swing left!")
-		for i, ent in pairs(ents.objects) do
-			if (self.x - (self.w*2)) < ent.x + ent.w
-			and ((self.x - (self.w*2)) + (self.w * 1.5)) > ent.x
-			and (self.y - self.h/2) < ent.y + ent.h
-			and ((self.y - self.h/2) + self.h) > ent.y then
-				if ent.type == "hellhound" or "axethrower" then
-					ent:Damage(1)
-					print("hit!")
-				end
-			end
-		end
+	self.ability.cooldown = 0
+	self.ability.delay = 0
+	self.ability.enemyDelay = 0
+	self.ability.damage = BASE_MELEE_DAMAGE
+	self.ability.knockback.x = 0
+	self.ability.knockback.y = 0
+	self.ability.hitbox.x = 0
+	self.ability.hitbox.y = 0
+	self.ability.hitbox.width = 40
+	self.ability.hitbox.height = 54
+end
+
+function player:setSequenceAttack(count)
+	if count == 4 then
+		self.ability.cooldown = 0
+		self.ability.delay = 0
+		self.ability.enemyDelay = 0
+		self.ability.damage = 2 * BASE_MELEE_DAMAGE
+		self.ability.knockback.x = 0
+		self.ability.knockback.y = 0
+		self.ability.hitbox.x = 0
+		self.ability.hitbox.y = 0
+		self.ability.hitbox.width = 40
+		self.ability.hitbox.height = 54
+		print("Executing special attack 1!")
+	elseif count == 5 then
+		self.ability.cooldown = 0
+		self.ability.delay = 0
+		self.ability.enemyDelay = 0
+		self.ability.damage = 2 * BASE_MELEE_DAMAGE
+		self.ability.knockback.x = 0
+		self.ability.knockback.y = 0
+		self.ability.hitbox.x = 0
+		self.ability.hitbox.y = 0
+		self.ability.hitbox.width = 40
+		self.ability.hitbox.height = 54
+		self.brutality = self.brutality + 1
+		print("Executing special attack 2!")
+	elseif count == 6 then
+		self.ability.cooldown = 0
+		self.ability.delay = 0
+		self.ability.enemyDelay = 0
+		self.ability.damage = 3 * BASE_MELEE_DAMAGE
+		self.ability.knockback.x = 50
+		self.ability.knockback.y = -1000
+		self.ability.hitbox.x = 0
+		self.ability.hitbox.y = 0
+		self.ability.hitbox.width = 40
+		self.ability.hitbox.height = 54
+		self.brutality = self.brutality + 2
+		print("Executing special attack 3!")
 	end
 end
 

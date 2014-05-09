@@ -15,7 +15,7 @@ function ent:load(x, y)
 	self.size = 1
 	self.h = 28
 	self.w = 43
-	self.health = 2
+	self.health = 50
 	self.damage = 1
 	self.invincibilityRemaining = 0
 	self.maxhealth = self.health

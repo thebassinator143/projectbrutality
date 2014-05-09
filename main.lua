@@ -37,8 +37,15 @@ function game:init()
 	world = 	{
 				gravity = 1350,
 				ground = 896,
-				friction = -2500
+				friction = -2500,
 				}
+				
+	timer = 	{
+				gameTime = 0,
+				lastAttack = 0,
+				attackCount = 1
+				}
+				
 	ents.Create( "hellhound", 130, 784, false )
 	ents.Create( "hellhound", 2576, 784, false )
 	ents.Create( "hellhound", 1960, 684, false )
@@ -75,6 +82,9 @@ function game:draw()
 end
 
 function game:update(dt)
+	
+	timer.gameTime = timer.gameTime + dt
+	
 	if dt > 0.05 then
 		dt = 0.05
 	end
@@ -91,8 +101,24 @@ function game:keypressed(key)
 		player:jump()
 	end
 	if key == "v" then
-		player:setBasicAttack()
-		player:melee()
+		interval = timer.gameTime - timer.lastAttack
+		print(interval)
+		if interval <= 1.7 and interval >= 1.3 and timer.attackCount < 6 then
+			timer.attackCount = timer.attackCount + 1
+			print("Sequential attack "..timer.attackCount..".")
+			if timer.attackCount >= 3 then
+				player:setSequenceAttack(timer.attackCount)
+				player:attack()
+			else
+				player:setBasicAttack()
+				player:attack()
+			end
+		else
+			timer.attackCount = 1
+			player:setBasicAttack()
+			player:attack()
+		end
+		timer.lastAttack = timer.gameTime
 	end
 	if key == "b" then
 		player:teleport()
@@ -110,5 +136,3 @@ function game:keyreleased(key, code)
 		player:stand()
 	end
 end
-
-
