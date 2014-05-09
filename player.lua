@@ -22,25 +22,36 @@ player = 	{
 				facingright = true,
 				facingleft = false,
 				brutality = 0,
+				wallslide = false,
+				wallLeft = false,
+				doubleJump = true,
+				wallFric = 1
 				}
 				
 function player:jump(dt)
 	if self.standing then
 		self.y_vel = self.jump_vel
 		self.standing = false
-	elseif wallslide then
-		facingleft = not facingleft -- flips facing
-		facingright = not facingright -- flips facing
-		self.y_vel = self.jump_vel
-		wallslide = false
-		if(self.facingleft)then
-			self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
-		else
-			self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
+		wallFric = 1
+	elseif self.wallslide then
+		if love.keyboard.isDown("a") then
+			if self.wallLeft == true then
+				print("walljump right")
+				self:right(dt)
+			end
+		elseif love.keyboard.isDown("d") then
+			if self.wallLeft == false then
+				print("walljump left")
+				self:left(dt)
+			end
 		end
-	elseif self.doubleJump then
 		self.y_vel = self.jump_vel
+		self.wallslide = false
+		self.wallFric = 1
+	elseif self.doubleJump then
+		self.y_vel = self.jump_vel*.75
 		self.doubleJump = false
+		wallFric = 1
 	end
 	
 end
@@ -74,13 +85,22 @@ function player:collide(event)
 		self.y_vel = 0
 		self.standing = true
 		self.doubleJump = true
-	end
-	if event == "ceiling" then
+		wallFric = 1
+	elseif event == "ceiling" then
 		self.y_vel = 0
-	end
-	if event == "wall" then
-		wallslide = true
-		doubleJump = true
+		wallFric = 1
+	elseif event == "wall" then
+		if self.facingleft == true then
+			self.wallLeft = true
+		elseif self.facingright == true then
+			self.wallLeft = false
+		else
+			print ("Wallclolide FAIL!")
+		end
+		self.wallslide = true
+		self.wallFric = 2
+	else
+		wallFric = 1
 	end
 end
 	
@@ -134,8 +154,8 @@ function player:update(dt)
 	if self.y > world.ground + self.h then
 		self:die()
 	end
-		
-	self.y_vel = self.y_vel + (world.gravity * dt)
+	self.y_vel = (self.y_vel + (world.gravity * dt)) / self.wallFric
+	wallFric = 1
 	
 	if self.standing then
 	 if self.x_vel > 0 then
@@ -164,6 +184,7 @@ function player:update(dt)
 			and not (self:isColliding(map, self.x + halfX - 1, nextY - halfY)) then
 			self.y = nextY
 			self.standing = false
+			self:collide("none")
 		else
 			self.y = nextY + map.tileHeight - ((nextY - halfY) % map.tileHeight)
 			self:collide("ceiling")
@@ -176,6 +197,7 @@ function player:update(dt)
 			and not(self:isOneWayColliding(map, self.x + halfX - 1, nextY + halfY)) then
 				self.y = nextY
 				self.standing = false
+				self:collide("none")
 		else
 			self.y = nextY - ((nextY + halfY) % map.tileHeight)
 			self:collide("floor")
@@ -187,6 +209,7 @@ function player:update(dt)
 		if not(self:isColliding(map, nextX + halfX, self.y - halfY))
 			and not(self:isColliding(map, nextX + halfX, self.y + halfY - 1)) then
 			self.x = nextX
+			self:collide("none")
 		else
 			self.x = nextX - ((nextX + halfX) % map.tileWidth)
 			self:collide("wall")
@@ -195,6 +218,7 @@ function player:update(dt)
 		if not(self:isColliding(map, nextX - halfX, self.y - halfY))
 			and not(self:isColliding(map, nextX - halfX, self.y + halfY - 1)) then
 			self.x = nextX
+			self:collide("none")
 		else
 			self.x = nextX + map.tileWidth - ((nextX - halfX) % map.tileWidth)
 			self:collide("wall")

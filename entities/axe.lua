@@ -34,7 +34,7 @@ function ent:update(dt)
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 	
-	print(self.x_vel)
+	--print(self.x_vel)
 	--print(self.y_vel)
 
 	
