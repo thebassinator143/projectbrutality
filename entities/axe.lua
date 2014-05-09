@@ -2,7 +2,7 @@ local ent = ents.Derive("base")
 					
 function ent:load(x, y)
 	self:setPos( x, y )
-	self.speed = 300
+	self.speed = 1000
 	self.x_vel = 0
 	self.y_vel = 0
 	self.flySpeed = 700
@@ -14,8 +14,10 @@ function ent:load(x, y)
 	self.health = 10000
 	self.damage = 2
 	self.maxhealth = self.health 
+	self.axetime = 0
+	self.spriteOffset_x = 0
+	self.spriteOffset_y = 0
 end
-
 function ent:setPos( x, y )
 	self.x = x
 	self.y = y
@@ -31,12 +33,14 @@ function ent:getVelocity( x, y )
 end
 
 function ent:update(dt)
-	local halfX = self.w / 2
-	local halfY = self.h / 2
 	
 	--print(self.x_vel)
 	--print(self.y_vel)
-
+	
+	self.axetime = self.axetime - dt
+	--if self.y >= 812 then
+	--	print(self.axetime)
+	--end
 	
 	if self.y > world.ground + self.h then
 		ents.Destroy( self.id )
@@ -46,24 +50,18 @@ function ent:update(dt)
 	
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
-		
-	local nextY = self.y + (self.y_vel*dt)
-	if self.y_vel < 0 then
-		self.y = nextY
-	end
 	
-	if self.y_vel > 0 then
-		self.y = nextY	
+	local nextY = self.y + (self.y_vel*dt)
+	if self.y_vel ~= 0 then
+		self.y = nextY
 	end
 		
 	local nextX = self.x + (self.x_vel * dt)
-	if self.x_vel > 0 then
-		self.x = nextX
-	elseif self.x_vel < 0 then
+	if self.x_vel ~= 0 then
 		self.x = nextX
 	end
 	
-	if ents:CollidingWithEntity(self.x, self.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
+	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
 		player:damage(self.damage)
 		print("Axed!!")
 	end

@@ -9,6 +9,7 @@ function ents.Startup()
 	register["hellhound"] = love.filesystem.load( ents.objpath .. "hellhound.lua")
 	register["axethrower"] = love.filesystem.load( ents.objpath .. "axethrower.lua" )
 	register["axe"] = love.filesystem.load( ents.objpath .. "axe.lua")
+	register["movingplatform"] = love.filesystem.load( ents.objpath .. "movingplatform.lua" )
 end
 
 function ents.Derive(name)
@@ -19,15 +20,15 @@ function ents.Create(name, x, y, BG)
 	if not x then
 		x = 0
 	end
-	
+
 	if not y then
 		y = 0
 	end
-	
+
 	if not BG then
 		BG = false
 	end
-	
+
 	if register[name] then
 		id = id + 1
 		local ent = register[name]()
