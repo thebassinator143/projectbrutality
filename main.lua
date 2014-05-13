@@ -39,13 +39,13 @@ function game:init()
 				ground = 896,
 				friction = -2500,
 				}
-				
+
 	timer = 	{
 				gameTime = 0,
 				lastAttack = 0,
 				attackCount = 1
 				}
-				
+
 	ents.Create( "hellhound", 130, 784, false )
 	ents.Create( "hellhound", 2576, 784, false )
 	ents.Create( "hellhound", 1960, 684, false )
@@ -82,9 +82,8 @@ function game:draw()
 end
 
 function game:update(dt)
-	
 	timer.gameTime = timer.gameTime + dt
-	
+
 	if dt > 0.05 then
 		dt = 0.05
 	end
@@ -96,8 +95,10 @@ function game:update(dt)
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
 end
 
-function game:keypressed(key, dt)
+function game:keypressed(key,dt)
+	print(dt)
 	if key == " " then
+		print(dt)
 		player:jump(dt)
 	end
 	if key == "v" then
@@ -119,6 +120,7 @@ function game:keypressed(key, dt)
 			player:attack()
 		end
 		timer.lastAttack = timer.gameTime
+		player:setChargeTimer()
 	end
 	if key == "b" then
 		player:teleport()
@@ -134,5 +136,8 @@ function game:keyreleased(key, code)
     end
 	if key == "s" then
 		player:stand()
+	end
+	if key == "v" then
+		player:chargedMelee()
 	end
 end

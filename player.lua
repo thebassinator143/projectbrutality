@@ -14,6 +14,7 @@ REACTIVITY = 0.75									 --Modifies running deceleration without affecting acc
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
 
+
 BASE_MELEE_DAMAGE = 1
 
 player = 	{
@@ -43,15 +44,22 @@ player = 	{
 				standing = false,
 				facingright = true,
 				facingleft = false,
+				charging=false,
+				charge=0,
 				health = 10,
 				brutality = 0,
 				lives = 3,
 				invincibilityRemaining = 0,
+				damage = 1,
+				cooldown = 0,
+				x_knockback = 0,
+				y_knockback = 0,
+				enemyAttackDelay = 0,
+				meleeHitboxSize = 24,
 				delay = 0,
 				ability =	{
-					cooldown = 0,
 					delay = 0,
-					damage = BASE_MELEE_DAMAGE,
+					damage = 0,
 					knockback = {
 						x = 0,
 						y = 0
@@ -70,10 +78,10 @@ player = 	{
 				wallFric = 1
 			}
 
+
 function player:attack()
 	--[[
 	--Prequisite: unset values are default to 0
-	--set ability.cooldown
 	--set ability.delay
 	--set ability.damage
 	--set ability.knockback.x
@@ -90,7 +98,7 @@ function player:attack()
 			if not ent.BG then --why??
 				if self.facingright then
 					--Collision Detection
-					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x) 
+					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x)
 					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - self.ability.damage     --Apply Damage
 						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
@@ -99,7 +107,7 @@ function player:attack()
 						print("Right attack on "..ent.type.."!")
 					end
 				else --If facing left, invert width and x for player.
-					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width) 
+					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width)
 					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - self.ability.damage     --Apply Damage
 						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
@@ -271,6 +279,8 @@ function player:update(dt)
 		self.airacceleration = WALKAIRACCEL
 		self.running = false
 	end
+	local halfX = self.w / 2
+	local halfY = self.h / 2
 
 	if love.keyboard.isDown("d") then
 		self:right(dt)
@@ -387,6 +397,11 @@ function player:update(dt)
 		end
 	end
 
+	if self.charging==true then
+		self.charge=self.charge+dt
+		print(self.charge)
+	end
+
 	self.state = self:getState()
 end
 
@@ -424,7 +439,38 @@ function player:getState()
 end
 
 function player:draw()
-	--love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
+
+	--love.graphics.setColor( 25, 25, 25, 255 )
+	--love.graphics.rectangle( "fill", (self.x - self.w/2), (self.y - self.h/2), self.w, self.h )   --Player hitbox
+
+	love.graphics.rectangle( "fill", self.x, self.y, self.w, self.h )   --Player bounding box
+
+	if self.ducking then
+		if self.facingright then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
+		elseif self.facingleft then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
+		end
+	else
+		if self.facingright then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
+		elseif self.facingleft then
+			love.graphics.setColor( 255, 255, 255, 255 )
+			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
+		end
+	end
+
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
+
+	--love.graphics.setColor( 255, 0, 0, 255)
+	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.meleeHitboxSize, self.h)  --Right melee hitbox
+
+	--love.graphics.setColor( 0, 255, 0, 255)
+	--love.graphics.rectangle("fill", self.x - self.teleHitboxSize, self.y, self.teleHitboxSize, self.h)   --Left teleport hitbox
 
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x + self.w - self.ability.hitbox.width, self.y, self.ability.hitbox.width, self.ability.hitbox.height)   --Left melee hitbox
@@ -437,14 +483,75 @@ function player:draw()
 
 	--love.graphics.setColor( 0, 255, 0, 255 )
 	--love.graphics.rectangle("fill", self.x + self.w, self.y, self.teleHitboxSize, self.h)   --Right teleport hitbox
-	
-if self.ducking then
+
+	if self.ducking then
 		if self.facingright then
 			love.graphics.setColor( 255, 255, 255, 255 )
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
 		elseif self.facingleft then
 			love.graphics.setColor( 255, 255, 255, 255 )
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
+		end
+	end
+end
+
+--function player:melee()
+--	print("MELEE")
+--	self.ability.delay = 0
+--	self.ability.damage = 10
+--	self.ability.knockback.x = 1000
+--	self.ability.knockback.y = -1000
+--	self.ability.enemyDelay = 02
+--	self.ability.hitbox.x = 0
+--	self.ability.hitbox.y = -25
+--	self.ability.hitbox.width = 30
+--	self.ability.hitbox.height = 50
+--	player:attack()
+--end
+
+function player:setChargeTimer()
+	print("CHARGNING")
+	self.charging=true
+end
+
+function player:chargedMelee()
+	print(self.charge)
+	if self.charge>2 then
+		self.ability.delay = 0
+		self.ability.damage = 20
+		self.ability.knockback.x = 1000
+		self.ability.knockback.y = -2000
+		self.ability.enemyDelay = 0
+		self.ability.hitbox.x = 0
+		self.ability.hitbox.y = 0
+		self.ability.hitbox.width = 40
+		self.ability.hitbox.height = 54
+		player:attack()
+	end
+	self.charging=false
+	self.charge=0
+end
+
+
+function player:setBasicAttack()
+	self.damage = 1
+	self.cooldown = 0
+	self.x_knockback = 0
+	self.y_knockback = 0
+	self.enemyAttackDelay = 1
+	self.meleeHitboxSize = 24
+	if self.facingright then
+		print("swing right!")
+		for i, ent in pairs(ents.objects) do
+			if (self.x + self.w/2)+22 < ent.x + ent.w
+			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
+			and (self.y - self.h/2) < ent.y + ent.h
+			and ((self.y - self.h/2) + self.h) > ent.y then
+				if ent.type == "hellhound" or "axethrower" then
+					ent:Damage(1)
+					print("hit!")
+				end
+			end
 		end
 	else
 		if self.facingright then
