@@ -67,7 +67,9 @@ player = 	{
 				wallslide = false,
 				doubleJump = false,
 				swallLeft = false,
-				wallFric = 1
+				wallFric = 1,
+				wallTimer = 0,
+				isWallJumping = false
 			}
 
 function player:attack()
@@ -124,28 +126,38 @@ function player:attack()
 end
 
 function player:jump(dt)
-	if self.standing then
-		self.y_vel = self.jump_vel
-		self.standing = false
- 	elseif self.wallslide then
+	print("attempting Jump")
+ 	if self.wallslide then
+		print("Is Wallslide")
  		if love.keyboard.isDown("a") then
+			print("a down")
  			if self.wallLeft == true then
  				print("walljump right")
  				self:right(dt)
-				self.y_vel = self.jump_vel
+				self.y_vel = self.jump_vel*2
 				self.wallslide = false
+				self.isWallJumping = true
 				self.wallFric = 1
+				self.wallTimer = 10
 			end
  		elseif love.keyboard.isDown("d") then
+			print("d down")
  			if self.wallLeft == false then
  				print("walljump left")
  				self:left(dt)
-				self.y_vel = self.jump_vel
+				self.y_vel = self.jump_vel*2
 				self.wallslide = false
 				self.wallFric = 1
+				self.wallTimer = 10
 			end
 		end
- 	elseif self.doubleJump then
+	elseif self.standing then
+		print("Is Standing")
+		print("not Wallslide")
+		self.y_vel = self.jump_vel
+		self.standing = false
+	elseif self.doubleJump then
+		print ("doubleJumping")
 		if self.wallslide == false then
 			self.y_vel = self.jump_vel*0.5
 			self.doubleJump = false
@@ -168,7 +180,11 @@ function player:right(dt)
 				self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
 			end
 		else
-			self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
+			if isWallJumping then
+				self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt*2)
+			else
+				self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
+			end
 		end
 	end
 end
@@ -188,7 +204,11 @@ function player:left(dt)
 				self.x_vel = self.x_vel - (self.acceleration * self.speed * dt)
 			end
 		else
-			self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
+			if isWallJumping then
+				self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt*2)
+			else
+				self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
+			end
 		end
 	end
 end
@@ -211,25 +231,46 @@ function player:stop()
 end
 
 function player:collide(event)
+	--print("Event:", event)
 	if event == "floor" then
 		self.y_vel = 0
 		self.standing = true
 		self.doubleJump = true
+		self.isWallJumping = false
+		self.wallTimer = 0
+		
 		wallFric = 1
 	end
  	if event == "ceiling" then
 		self.y_vel = 0
 		self.wallFric = 1
+		self.wallTimer = 0
+		self.isWallJumping = false
 	end
  	if event == "wall" then
- 		self.wallslide = true
-		if self.wallFric == 1 then
-			self.wallFric = 2
-		end
+			if self.wallLeft == true then
+				if love.keyboard.isDown("a") then
+					self.wallslide = true
+					if self.wallFric == 1 then
+						self.wallFric = 2
+						print ("wallslide after:", self.wallslide)
+					end
+				end
+			else
+				if love.keyboard.isDown("d") then
+					self.wallslide = true
+					if self.wallFric == 1 then
+						self.wallFric = 2
+						print ("wallslide after:", self.wallslide)
+					end
+				end
+			end
+			self.isWallJumping = false
 	end
  	if event == "none" then
  		self.wallFric = 1
 		self.wallslide = false
+		--print ("none")
   	end
 end
 
@@ -273,10 +314,31 @@ function player:update(dt)
 	end
 
 	if love.keyboard.isDown("d") then
-		self:right(dt)
-	end
-	if love.keyboard.isDown("a") then
-		self:left(dt)
+		--print("timer: ",  self.wallTimer)
+		if isWallJumping == false then
+			self:right(dt)
+		else
+			if self.wallTimer <= 0 then
+				self:right(dt)
+			else
+				self.wallTimer = self.wallTimer - 1
+			end
+		end
+	elseif love.keyboard.isDown("a") then
+	--print("timer: ",  self.wallTimer)
+		if isWallJumping == false then
+			self:left(dt)
+		else
+			if self.wallTimer <= 0 then
+				self:left(dt)
+			else
+				self.wallTimer = self.wallTimer - 1
+			end
+		end
+	else
+		if self.wallTimer > 0 then
+			self.wallTimer = self.wallTimer - 1
+		end
 	end
 	--if love.keyboard.isDown(" ") and not(hasJumped) then
 	--	self:jump()
@@ -296,8 +358,9 @@ function player:update(dt)
 		self:die()
 	end
 	self.y_vel = (self.y_vel + (world.gravity * dt)) / self.wallFric
- 	if self.wallFric > 1 then
-		self.wallFric = self.wallFric - 0.1
+ 	if self.wallFric >= 1.2 then
+		self.wallFric = self.wallFric - 0.2
+		--print (self.wallFric)
 	end
 
 	if self.standing then
