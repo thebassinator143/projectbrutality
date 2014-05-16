@@ -251,6 +251,7 @@ function player:collide(event)
 			if self.wallLeft == true then
 				if love.keyboard.isDown("a") then
 					self.wallslide = true
+					self.doubleJump = true
 					if self.wallFric == 1 then
 						self.wallFric = 2
 						print ("wallslide after:", self.wallslide)
@@ -259,6 +260,7 @@ function player:collide(event)
 			else
 				if love.keyboard.isDown("d") then
 					self.wallslide = true
+					self.doubleJump = true
 					if self.wallFric == 1 then
 						self.wallFric = 2
 						print ("wallslide after:", self.wallslide)
