@@ -1,15 +1,17 @@
 require("entities")
 
-WALK = 300
+WALK = 285
 WALKACCEL = 13 + 1/3
-WALKAIRACCEL = 4 + 2/3
+WALKAIRACCEL = 2.60
 
-RUNRATIO = 1 + 1/3									 --Ratio based on WALK that determines RUN
-RUN = (RUNRATIO) * WALK
+RUNRATIO = 1.3509									 --Ratio based on WALK that determines RUN
+RUN = WALK * RUNRATIO
 RUNACCEL = (WALK/RUN) * WALKACCEL					 --Formula ensures rate of acceleration remains fixed whether walking or running
 RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
 REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
+
+WALLFRIC = 1.16										 --Modifies gravity while player is wallsliding
 
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
@@ -19,8 +21,8 @@ BASE_MELEE_DAMAGE = 1
 
 player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
-				x = 1820,
-				y = 673,
+				x = 532,
+				y = 616,
 				h = 54,
 				w = 16,
 				spriteOffset_x = -24,
@@ -33,7 +35,9 @@ player = 	{
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
 				acceleration = 15,
 				airacceleration = 4,
-				jump_vel = -1024,
+				jump_vel = -495,
+				doublejump_vel = 0.86,							--Multiplies by jump_vel
+				walljump_vel = 0.86,							--Multiplies by jump_vel
 				speed = WALK,
 				flySpeed = 580,
 				slidefriction = 0.25,
@@ -44,8 +48,8 @@ player = 	{
 				standing = false,
 				facingright = true,
 				facingleft = false,
-				charging=false,
-				charge=0,
+				charging = false,
+				charge = 0,
 				health = 10,
 				brutality = 0,
 				lives = 3,
@@ -142,7 +146,7 @@ function player:jump(dt)
  			if self.wallLeft == true then
  				print("walljump right")
  				self:right(dt)
-				self.y_vel = self.jump_vel*2
+				self.y_vel = self.jump_vel * self.walljump_vel
 				self.wallslide = false
 				self.isWallJumping = true
 				self.wallFric = 1
@@ -153,7 +157,7 @@ function player:jump(dt)
  			if self.wallLeft == false then
  				print("walljump left")
  				self:left(dt)
-				self.y_vel = self.jump_vel*2
+				self.y_vel = self.jump_vel * self.walljump_vel
 				self.wallslide = false
 				self.wallFric = 1
 				self.wallTimer = 10
@@ -167,7 +171,7 @@ function player:jump(dt)
 	elseif self.doubleJump then
 		print ("doubleJumping")
 		if self.wallslide == false then
-			self.y_vel = self.jump_vel*0.5
+			self.y_vel = self.jump_vel * self.doublejump_vel
 			self.doubleJump = false
 		end
   	end
@@ -261,7 +265,7 @@ function player:collide(event)
 					self.wallslide = true
 					self.doubleJump = true
 					if self.wallFric == 1 then
-						self.wallFric = 2
+						self.wallFric = WALLFRIC
 						print ("wallslide after:", self.wallslide)
 					end
 				end
@@ -270,7 +274,7 @@ function player:collide(event)
 					self.wallslide = true
 					self.doubleJump = true
 					if self.wallFric == 1 then
-						self.wallFric = 2
+						self.wallFric = WALLFRIC
 						print ("wallslide after:", self.wallslide)
 					end
 				end
@@ -309,7 +313,7 @@ end
 
 function player:update(dt)
 
-	--print(self.x_vel)
+	print(self.x_vel)
 
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN

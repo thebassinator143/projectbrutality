@@ -9,14 +9,14 @@
  <tileset firstgid="46" name="SkullBox" tilewidth="28" tileheight="28">
   <image source="skullbox28.png" width="28" height="28"/>
  </tileset>
- <layer name="Background" width="96" height="32" visible="0">
+ <layer name="Background" width="96" height="32">
   <data encoding="base64" compression="zlib">
    eJzt1UEKgzAQBdBZWaF6/+tWoYHBGhpNQSrvwV8oWYSfiUYAAAAAAAAAAPy/YcnjRMYrNntDpf/pnZbu13X6/41ntPeeM1+x2RvK/U8HUuY/f7/cieN653+IzzOhXW3+v92Hwvz32Zv/9TnPde1+jKH/XqX/bWrvc+bNOv9koNUL0LwFDw==
   </data>
  </layer>
  <layer name="Solid" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJztmNkKgzAQRe1GaSn63n157/9/XhOaAQnGqIneaO6BgQQuEo9jIlYFQVGqqtCLyJhDQf9I6B/LGP6/VhE37H8sPH+xhPQ/95lw6v7pcnr69D+fS3y4/2PR/X9ELyJjQvzb5y/Pjv7w+x/LmP75fvhh/2Ohfyz0jwXtP/fzAe0/d+gfy1T+c99nXLD/sdA/lpT8L2Vf2qpam9p5sj7/S/ARi65etdO9Kd+/zZT6H0Vsr65c0/u9dP/iNpbXk6k2r3I9O+e65hz9d/GqERdD+jU0N1f/q+LvdtOS6eJVU5pc2z3qjPT1lDnJXlRdVd0SGsv8bq33PDCX2rg+f6p6qXonNJb5x/L6GJhLbVyf/wDsvCIc
+   eJztmGsLgyAUhtuNsTHq++6X7/v/P2/KFEQyS63X8n3ggMJL1LPTcdRUBEUtqkHfRMEcKvpHQv9YxvD/tYq4Yf9j4fmLJab/OWfiMf3T5fQM6X/+Lunh/Mci+/+IvomCifFvn788O4bD//9YxvTP98MP+x8L/WOhfyxo/6WfD2j/pUP/WKbyX/qccRHqn/7SwPmDJafvz0uZS1tRa1U7T9bnP8bHElya9PUqne5V+b5tcv6k9+rKtb3fS/ev3abyelLV5VVfz865rjlH/328SrSLkH6Nzc3V/6r6u910ZPp4ldQq1/WMMqP7esqczl5EXUXdMlrr/d2633NgLre1uX+Keol6Z7TW+4/l9RGYy21t7n+JzSKm
   </data>
  </layer>
  <layer name="oneWayPlatforms" width="96" height="32">
@@ -24,7 +24,7 @@
    eJztmMsKwjAQReMLUaTdq/X5///oBDIYumjGEHpTcw8MJHAX6WEyLe0dQdFJ9ehDNMzB0T8S+sdC/1joHwvfv1jY/1joHwv9Y+H8x+L7/4g+RMPQPxbOfyz0j4X+sdA/FvrHQv9Y6B8L/WNR/yupdUZt5j/yX8H+x0L/WEr5j+dX6zNp674udoks+9+O1at3ug+V+rdJ/+W9lvRv+S6qed6o21JeT6Es/lM5zS6x/y1ePeqiRL/+mluqf71zU/fK4tXThdzUM/qM9vWcOc1epK5SQ0Vr3d9G5z1n5mpbx/uH1FPqVdFa9++R13tmrrZ1vP8A5Mwa+A==
   </data>
  </layer>
- <layer name="Foreground" width="96" height="32" visible="0">
+ <layer name="Foreground" width="96" height="32">
   <data encoding="base64" compression="zlib">
    eJztzrkNACAMA0CW4Nt/UVJThS4Sd5IlFy7cGgAAAAAAAAAAAACQNSIzsgr2fX3tD7sK/zMdfnYAlF4IGA==
   </data>
