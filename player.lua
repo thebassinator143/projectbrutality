@@ -313,8 +313,6 @@ end
 
 function player:update(dt)
 
-	--print(self.x_vel)
-
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
 		self.acceleration = RUNACCEL
