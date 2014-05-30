@@ -24,6 +24,7 @@ function ent:load(x, y)
 	self.axe_y_vel = 800
 	self.spriteOffset_x = 0
 	self.spriteOffset_y = 0
+	self.brutality=15
 end
 
 function ent:setPos(x, y)
@@ -39,11 +40,12 @@ function ent:Damage(n)
 		end
 		if self.health <= 0 then
 			ent:kill()
-		end	
+		end
 	end
 end
 
 function ent:kill()
+	brutality.addBrutality(self.brutality,1)
 	ents.Destroy( self.id )
 end
 
@@ -62,7 +64,7 @@ function ent:CheckCollision()
       if self.id ~= ent2.id then
          if ((self.x < ent2.x+ent2.w and self.x > ent2.x) or (self.x+self.w < ent2.x+ent2.w and self.x+self.w > ent2.x)) and
 			(self.y+self.h < ent2.y and self.y+self.h > ent2.y+ent2.h) then
-            if ent2.type == "spike" then 
+            if ent2.type == "spike" then
                self:Damage(spike.damage)
                print("It worked!")
             --elseif ent2.type == "hellhound" then ???
@@ -73,17 +75,17 @@ function ent:CheckCollision()
 end
 
 function ent:update(dt)
-	
+
 	if self.y > world.ground + self.h then
 		ents.Destroy( self.id )
 	end
-	
+
 	if self.health <= 0 then
 		ent:kill()
 	end
-	
+
 	self.y_vel = self.y_vel + (world.gravity * dt)
-		
+
 	if self.standing then
 	 if self.x_vel > 0 then
 	   if self.x_vel <= (world.friction * dt) then
@@ -101,38 +103,38 @@ function ent:update(dt)
      self.x_vel = 0
    end
   end
-	
+
 	if player.x + player.w >= self.x - self.throwRange or player.x <= self.x + self.w + self.throwRange then
 		if self.axethrown == 0 then
 			self:throwAxe()
 			self.axethrown = 5
 		end
 	end
-	
-	if player.x >= self.x - self.throwRange and player.x + player.w/2 < self.x + self.w/2 then 
+
+	if player.x >= self.x - self.throwRange and player.x + player.w/2 < self.x + self.w/2 then
 		self.facingleft = true
 		self.facingright = false
 	elseif player.x <= self.x + self.throwRange and player.x + player.w/2 > self.x + self.w/2 then
 		self.facingright = true
 		self.facingleft = false
 	end
-	
+
 	if self.axethrown <= 0 then
 		self.axethrown = 0
-	else 
+	else
 		self.axethrown = self.axethrown - dt
 	end
-	
+
 	ent:CheckCollision()
-	
+
 	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
 		player:damage(self.damage)
 		--print ("Axethrower colliding with player!")
 	end
-	
+
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)
 	self.y_vel = math.clamp(self.y_vel, -self.flySpeed, self.flySpeed)
-		
+
 	local nextY = self.y + (self.y_vel*dt)
 	if self.y_vel < 0 then
 		if not (ent:isColliding(map, self.x, nextY))
@@ -154,7 +156,7 @@ function ent:update(dt)
 			ent:collide("floor")
 		end
 	end
-		
+
 	local nextX = self.x + (self.x_vel * dt)
 	if self.x_vel > 0 then
 		if not(ent:isColliding(map, nextX + self.w, self.y))
@@ -170,7 +172,7 @@ function ent:update(dt)
 		else
 			self.x = nextX + map.tileWidth - ((nextX) % map.tileWidth)
 		end
-	end	
+	end
 end
 
 function ent:isColliding(map, x, y)
@@ -210,10 +212,10 @@ function ent:throwAxe()
 end
 
 function ent:draw()
-	
+
 	love.graphics.setColor( 25, 25, 25, 255)
 	love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)		--Axethrower bounding box
-	
+
 end
 
 return ent;

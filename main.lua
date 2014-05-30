@@ -78,7 +78,7 @@ function game:draw()
 	love.graphics.print ( "Lives: " .. player.lives, 16, 32, 0, 1, 1 )
 
 	love.graphics.setColor( 25, 25, 25, 255 )
-	love.graphics.print ( "Brutality: " .. player.brutality, 16, 48, 0, 1, 1 )
+	love.graphics.print ( "Brutality: " .. player.brutality.currentBrutality, 16, 48, 0, 1, 1 )
 end
 
 function game:update(dt)
