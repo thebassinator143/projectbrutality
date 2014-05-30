@@ -1,4 +1,5 @@
 require("entities")
+require("brutality")
 
 WALK = 285
 WALKACCEL = 13 + 1/3
@@ -42,6 +43,8 @@ player = 	{
 				flySpeed = 580,
 				slidefriction = 0.25,
 				state = "",
+				brutality=brutality,
+				brutalityTier=nil,
 				running = false,
 				standing = false,
 				ducking = false,
@@ -51,7 +54,6 @@ player = 	{
 				charging = false,
 				charge = 0,
 				health = 10,
-				brutality = 0,
 				lives = 3,
 				invincibilityRemaining = 0,
 				damage = 1,
@@ -106,20 +108,22 @@ function player:attack()
 					--Collision Detection
 					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x)
 					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
-						ent.health = ent.health - self.ability.damage     --Apply Damage
-						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
-						ent.x_vel = ent.x_vel + self.ability.knockback.x  --Apply X knockback
+						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
+						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
+						ent.x_vel = ent.x_vel + (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
 						print("Right attack on "..ent.type.."!")
+						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				else --If facing left, invert width and x for player.
-					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width)
-					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
-						ent.health = ent.health - self.ability.damage     --Apply Damage
-						ent.y_vel = ent.y_vel + self.ability.knockback.y  --Apply Y knockback
-						ent.x_vel = ent.x_vel - self.ability.knockback.x  --Apply X knockback
+					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width+self.brutaltiyTier.hitboxBoost)
+					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height+self.brutaltiyTier.hitboxBoost) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
+						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
+						ent.x_vel = ent.x_vel - (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
 						print("Left attack on "..ent.type.."!")
+						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				end
 				self.delay = self.delay - self.ability.delay
@@ -250,7 +254,7 @@ function player:collide(event)
 		self.doubleJump = true
 		self.isWallJumping = false
 		self.wallTimer = 0
-		
+
 		wallFric = 1
 	end
  	if event == "ceiling" then
@@ -301,7 +305,7 @@ end
 function player:damage(n)
 	if self.invincibilityRemaining <= 0 then
 		if (n >= 0) then
-			self.health = self.health - n
+			self.health = self.health - (n-self.brutalityTier.defenseBoost)
 			self.invincibilityRemaining = 1
 		end
 	end
@@ -312,6 +316,13 @@ function player:damage(n)
 end
 
 function player:update(dt)
+<<<<<<< HEAD
+=======
+	self.brutality.update(dt)
+	self.brutalityTier=self.brutality.getCurrentTier()
+	print(self.brutalityTier.maximum)
+	--print(self.x_vel)
+>>>>>>> 3f8e4d39388bc8aa5a602b3166a5eb40b49ef69a
 
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
@@ -357,10 +368,6 @@ function player:update(dt)
 	--if love.keyboard.isDown(" ") and not(hasJumped) then
 	--	self:jump()
 	--end
-
-	if self.brutality >= 100 then
-		self.brutality = 100
-	end
 
 	if self.invincibilityRemaining <= 0 then
 		self.invincibilityRemaining = 0
@@ -578,7 +585,7 @@ end
 --end
 
 function player:setChargeTimer()
-	print("CHARGNING")
+	print("CHARGING")
 	self.charging=true
 end
 
