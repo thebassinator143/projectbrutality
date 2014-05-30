@@ -313,7 +313,7 @@ end
 
 function player:update(dt)
 
-	print(self.x_vel)
+	--print(self.x_vel)
 
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
@@ -532,6 +532,7 @@ function player:draw()
 		end
 	end
 
+	
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
 
@@ -600,52 +601,6 @@ function player:chargedMelee()
 	self.charging=false
 	self.charge=0
 end
-
-
-function player:setBasicAttack()
-	self.damage = 1
-	self.cooldown = 0
-	self.x_knockback = 0
-	self.y_knockback = 0
-	self.enemyAttackDelay = 1
-	self.meleeHitboxSize = 24
-	if self.facingright then
-		print("swing right!")
-		for i, ent in pairs(ents.objects) do
-			if (self.x + self.w/2)+22 < ent.x + ent.w
-			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
-			and (self.y - self.h/2) < ent.y + ent.h
-			and ((self.y - self.h/2) + self.h) > ent.y then
-				if ent.type == "hellhound" or "axethrower" then
-					ent:Damage(1)
-					print("hit!")
-				end
-			end
-		end
-	else
-		if self.facingright then
-			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
-		elseif self.facingleft then
-			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
-		end
-	end
-end
-
---Deprecated function. Each attack type should have its own function to set the values (see setBasicAttack), then call attack() to perform the attack.
---function player:melee()
---	self.ability.delay = 0
---	self.ability.damage = 10
---	self.ability.knockback.x = 1000
---	self.ability.knockback.y = -1000
---	self.ability.enemyDelay = 0
---	self.ability.hitbox.x = 0
---	self.ability.hitbox.y = -25
---	self.ability.hitbox.width = 30
---	self.ability.hitbox.height = 50
---	player:attack()
---end
 
 function player:setBasicAttack()
 	self.ability.cooldown = 0

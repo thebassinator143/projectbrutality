@@ -2,6 +2,7 @@ local AdvTiledLoader = require("AdvTiledLoader.Loader")
 require("camera")
 require("entities")
 require("player")
+require("particlesystem")
 Gamestate = require ("gamestate")
 
 local menu = {}
@@ -27,6 +28,8 @@ end
 function game:init()
 	love.graphics.setBackgroundColor( 220, 220, 255 )
 	ents.Startup()
+	setupPS()
+	attackPS:stop()
 
 	AdvTiledLoader.path = "maps/"
 	map = AdvTiledLoader.load("map.tmx")
@@ -70,7 +73,9 @@ function game:draw()
 	ents:draw()
 
 	camera:unset()
-
+	
+	love.graphics.draw(attackPS, 0, 0)
+	
 	love.graphics.setColor( 25, 25, 25, 255 )
 	love.graphics.print ( "Health: " .. player.health, 16, 16, 0, 1, 1 )
 
@@ -91,6 +96,8 @@ function game:update(dt)
 	player:update(dt)
 
 	ents:update(dt)
+	
+	attackPS:update(dt)
 
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
 end
@@ -102,6 +109,7 @@ function game:keypressed(key,dt)
 		player:jump(dt)
 	end
 	if key == "v" then
+		attackPS:start()
 		interval = timer.gameTime - timer.lastAttack
 		print(interval)
 		if interval <= 1.7 and interval >= 1.3 and timer.attackCount < 6 then
