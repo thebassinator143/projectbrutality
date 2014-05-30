@@ -2,7 +2,7 @@ require("entities")
 
 WALK = 285
 WALKACCEL = 13 + 1/3
-WALKAIRACCEL = 2.60
+WALKAIRACCEL = 2.3
 
 RUNRATIO = 1.3509									 --Ratio based on WALK that determines RUN
 RUN = WALK * RUNRATIO
