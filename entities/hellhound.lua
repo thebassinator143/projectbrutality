@@ -24,7 +24,6 @@ function ent:load(x, y)
 	self.spriteOffset_x = -7
 	self.spriteOffset_y = 0
 	self.brutality=10
-	--ent:right()
 end
 
 function ent:setPos( x, y )
@@ -129,8 +128,8 @@ function ent:update(dt)
 	ent:CheckCollision()
 
 	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
-		player:damage(self.damage)
-		--print ("Hellhound colliding with player!")
+		player:damage(1)
+		print ("Hellhound colliding with player!")
 	end
 
 	self.x_vel = math.clamp(self.x_vel, -self.speed, self.speed)

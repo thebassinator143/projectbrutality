@@ -1,16 +1,18 @@
 require("entities")
 require("brutality")
 
-WALK = 300
+WALK = 285
 WALKACCEL = 13 + 1/3
-WALKAIRACCEL = 4 + 2/3
+WALKAIRACCEL = 2.60
 
-RUNRATIO = 1 + 1/3									 --Ratio based on WALK that determines RUN
-RUN = (RUNRATIO) * WALK
+RUNRATIO = 1.3509									 --Ratio based on WALK that determines RUN
+RUN = WALK * RUNRATIO
 RUNACCEL = (WALK/RUN) * WALKACCEL					 --Formula ensures rate of acceleration remains fixed whether walking or running
 RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
 REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
+
+WALLFRIC = 1.16										 --Modifies gravity while player is wallsliding
 
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
@@ -20,8 +22,8 @@ BASE_MELEE_DAMAGE = 1
 
 player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
-				x = 1820,
-				y = 673,
+				x = 532,
+				y = 616,
 				h = 54,
 				w = 16,
 				spriteOffset_x = -24,
@@ -34,7 +36,9 @@ player = 	{
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
 				acceleration = 15,
 				airacceleration = 4,
-				jump_vel = -1024,
+				jump_vel = -495,
+				doublejump_vel = 0.86,							--Multiplies by jump_vel
+				walljump_vel = 0.86,							--Multiplies by jump_vel
 				speed = WALK,
 				flySpeed = 580,
 				slidefriction = 0.25,
@@ -47,8 +51,8 @@ player = 	{
 				standing = false,
 				facingright = true,
 				facingleft = false,
-				charging=false,
-				charge=0,
+				charging = false,
+				charge = 0,
 				health = 10,
 				lives = 3,
 				invincibilityRemaining = 0,
@@ -146,7 +150,7 @@ function player:jump(dt)
  			if self.wallLeft == true then
  				print("walljump right")
  				self:right(dt)
-				self.y_vel = self.jump_vel*2
+				self.y_vel = self.jump_vel * self.walljump_vel
 				self.wallslide = false
 				self.isWallJumping = true
 				self.wallFric = 1
@@ -157,7 +161,7 @@ function player:jump(dt)
  			if self.wallLeft == false then
  				print("walljump left")
  				self:left(dt)
-				self.y_vel = self.jump_vel*2
+				self.y_vel = self.jump_vel * self.walljump_vel
 				self.wallslide = false
 				self.wallFric = 1
 				self.wallTimer = 10
@@ -171,7 +175,7 @@ function player:jump(dt)
 	elseif self.doubleJump then
 		print ("doubleJumping")
 		if self.wallslide == false then
-			self.y_vel = self.jump_vel*0.5
+			self.y_vel = self.jump_vel * self.doublejump_vel
 			self.doubleJump = false
 		end
   	end
@@ -265,7 +269,7 @@ function player:collide(event)
 					self.wallslide = true
 					self.doubleJump = true
 					if self.wallFric == 1 then
-						self.wallFric = 2
+						self.wallFric = WALLFRIC
 						print ("wallslide after:", self.wallslide)
 					end
 				end
@@ -274,7 +278,7 @@ function player:collide(event)
 					self.wallslide = true
 					self.doubleJump = true
 					if self.wallFric == 1 then
-						self.wallFric = 2
+						self.wallFric = WALLFRIC
 						print ("wallslide after:", self.wallslide)
 					end
 				end
@@ -530,6 +534,7 @@ function player:draw()
 		end
 	end
 
+	
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
 
@@ -598,52 +603,6 @@ function player:chargedMelee()
 	self.charging=false
 	self.charge=0
 end
-
-
-function player:setBasicAttack()
-	self.damage = 1
-	self.cooldown = 0
-	self.x_knockback = 0
-	self.y_knockback = 0
-	self.enemyAttackDelay = 1
-	self.meleeHitboxSize = 24
-	if self.facingright then
-		print("swing right!")
-		for i, ent in pairs(ents.objects) do
-			if (self.x + self.w/2)+22 < ent.x + ent.w
-			and ((self.x + self.w/2)+22 + (self.w * 1.5)) > ent.x
-			and (self.y - self.h/2) < ent.y + ent.h
-			and ((self.y - self.h/2) + self.h) > ent.y then
-				if ent.type == "hellhound" or "axethrower" then
-					ent:Damage(1)
-					print("hit!")
-				end
-			end
-		end
-	else
-		if self.facingright then
-			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
-		elseif self.facingleft then
-			love.graphics.setColor( 255, 255, 255, 255 )
-			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
-		end
-	end
-end
-
---Deprecated function. Each attack type should have its own function to set the values (see setBasicAttack), then call attack() to perform the attack.
---function player:melee()
---	self.ability.delay = 0
---	self.ability.damage = 10
---	self.ability.knockback.x = 1000
---	self.ability.knockback.y = -1000
---	self.ability.enemyDelay = 0
---	self.ability.hitbox.x = 0
---	self.ability.hitbox.y = -25
---	self.ability.hitbox.width = 30
---	self.ability.hitbox.height = 50
---	player:attack()
---end
 
 function player:setBasicAttack()
 	self.ability.cooldown = 0
