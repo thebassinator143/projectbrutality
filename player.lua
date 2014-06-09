@@ -116,8 +116,8 @@ function player:attack()
 						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				else --If facing left, invert width and x for player.
-					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width+self.brutaltiyTier.hitboxBoost)
-					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height+self.brutaltiyTier.hitboxBoost) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width+self.brutalityTier.hitboxBoost)
+					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height+self.brutalityTier.hitboxBoost) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel - (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
@@ -318,7 +318,7 @@ end
 function player:update(dt)
 	self.brutality.update(dt)
 	self.brutalityTier=self.brutality.getCurrentTier()
-	print(self.brutalityTier.maximum)
+	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
 
 	if love.keyboard.isDown("lshift") then
