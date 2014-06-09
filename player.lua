@@ -316,13 +316,10 @@ function player:damage(n)
 end
 
 function player:update(dt)
-<<<<<<< HEAD
-=======
 	self.brutality.update(dt)
-	self.brutalityTier=self.brutality.getCurrentTier()
+	self.brutalityTier = self.brutality.getCurrentTier()
 	print(self.brutalityTier.maximum)
 	--print(self.x_vel)
->>>>>>> 3f8e4d39388bc8aa5a602b3166a5eb40b49ef69a
 
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
