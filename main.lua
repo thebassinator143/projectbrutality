@@ -74,7 +74,7 @@ function game:draw()
 
 	camera:unset()
 	
-	love.graphics.draw(attackPS, 0, 0)
+	love.graphics.draw(attackPS, 500, 500)
 	
 	love.graphics.setColor( 25, 25, 25, 255 )
 	love.graphics.print ( "Health: " .. player.health, 16, 16, 0, 1, 1 )
@@ -97,6 +97,7 @@ function game:update(dt)
 
 	ents:update(dt)
 	
+	attackPS:setPosition(0, 0)
 	attackPS:update(dt)
 
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
@@ -109,6 +110,8 @@ function game:keypressed(key,dt)
 		player:jump(dt)
 	end
 	if key == "v" then
+		print("Player x: "..player.x.." Player y: "..player.y)
+		print("Emitter position: "..attackPS:getPosition())
 		attackPS:start()
 		interval = timer.gameTime - timer.lastAttack
 		print(interval)
