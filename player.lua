@@ -12,7 +12,7 @@ RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
 REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
 
-WALLFRIC = 1.16										 --Modifies gravity while player is wallsliding
+WALLFRIC = 1.11									 --Modifies gravity while player is wallsliding
 
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
@@ -116,8 +116,8 @@ function player:attack()
 						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				else --If facing left, invert width and x for player.
-					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width+self.brutaltiyTier.hitboxBoost)
-					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height+self.brutaltiyTier.hitboxBoost) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width)
+					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel - (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
