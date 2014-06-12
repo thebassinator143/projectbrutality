@@ -1,9 +1,9 @@
 require("entities")
 require("brutality")
 
-WALK = 285
-WALKACCEL = 13 + 1/3
-WALKAIRACCEL = 2.60
+WALK = 210
+WALKACCEL = 18.5
+WALKAIRACCEL = 1.8
 
 RUNRATIO = 1.3509									 --Ratio based on WALK that determines RUN
 RUN = WALK * RUNRATIO
@@ -12,13 +12,13 @@ RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
 REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
 
-WALLFRIC = 1.16										 --Modifies gravity while player is wallsliding
+WALLFRIC = 1.11									 --Modifies gravity while player is wallsliding
 
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
 
 
-BASE_MELEE_DAMAGE = 1
+BASE_MELEE_DAMAGE = 5
 
 player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
@@ -36,8 +36,6 @@ player = 	{
 				acceleration = WALKACCEL,
 				airacceleration = WALKAIRACCEL,
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
-				acceleration = 15,
-				airacceleration = 4,
 				jump_vel = -495,
 				doublejump_vel = 0.86,							--Multiplies by jump_vel
 				walljump_vel = 0.86,							--Multiplies by jump_vel
@@ -55,10 +53,10 @@ player = 	{
 				facingleft = false,
 				charging = false,
 				charge = 0,
-				health = 10,
+				health = 100,
 				lives = 3,
 				invincibilityRemaining = 0,
-				damage = 1,
+				damage = 5,
 				cooldown = 0,
 				x_knockback = 0,
 				y_knockback = 0,
@@ -610,11 +608,11 @@ end
 
 function player:chargedMelee()
 	print(self.charge)
-	if self.charge>2 then
+	if self.charge>1.5 then
 		self.ability.delay = 0
 		self.ability.damage = 20
-		self.ability.knockback.x = 1000
-		self.ability.knockback.y = -2000
+		self.ability.knockback.x = 300
+		self.ability.knockback.y = -350
 		self.ability.enemyDelay = 0
 		self.ability.hitbox.x = 0
 		self.ability.hitbox.y = 0
