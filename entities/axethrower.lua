@@ -45,7 +45,7 @@ function ent:Damage(n)
 end
 
 function ent:kill()
-	brutality.addBrutality(self.brutality,1)
+	brutality:addBrutality(self.brutality,1)
 	ents.Destroy( self.id )
 end
 

@@ -1,8 +1,10 @@
-
+DECAY_TIME=5
 
 brutality = {
 	currentBrutality=0,
 	maxBrutality=100,
+	decaying=false,
+	decayTimer=0,
 	tier0={
 		minimum=0,
 		maximum=24,
@@ -58,29 +60,41 @@ brutality = {
 }
 
 function brutality:addBrutality(amount,multiplier)
-	print(self)
-	brutality.currentBrutality=brutality.currentBrutality+(self*amount)
+	brutality.currentBrutality=brutality.currentBrutality+(amount*multiplier)
+	brutality:resetDecayTimer()
+end
+
+function brutality:resetDecayTimer()
+	self.decayTimer=DECAY_TIME
+	self.decaying=False
 end
 
 function brutality:getCurrentTier()
-	if brutality.currentBrutality>brutality.tier3.minimum then
-		return brutality.tier3
-	elseif brutality.currentBrutality>brutality.tier2.minimum then
-		return brutality.tier2
-	elseif brutality.currentBrutality>brutality.tier1.minimum then
-		return brutality.tier1
+	if self.currentBrutality>self.tier3.minimum then
+		return self.tier3
+	elseif self.currentBrutality>self.tier2.minimum then
+		return self.tier2
+	elseif self.currentBrutality>self.tier1.minimum then
+		return self.tier1
 	else
-		return brutality.tier0
+		return self.tier0
 	end
 end
 
 function brutality:update(dt)
-	if brutality.currentBrutality>100 then
-		brutality.currentBrutality=100
+	if self.currentBrutality>100 then
+		self.currentBrutality=100
 	end
-	brutality.currentBrutality=brutality.currentBrutality-(brutality.getCurrentTier().decayRate*self)
-	if brutality.currentBrutality<0 then
-		brutality.currentBrutality=0
+	if self.decaying then
+		self.currentBrutality=self.currentBrutality-(self:getCurrentTier().decayRate*dt)
+	else
+		self.decayTimer=self.decayTimer-dt
+		if self.decayTimer<=0 then
+			self.decaying=true
+		end
+	end
+	if self.currentBrutality<0 then
+		self.currentBrutality=0
 	end
 end
 
