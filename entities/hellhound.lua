@@ -5,6 +5,7 @@ require("entities/spike")
 require("brutality")
 
 function ent:load(x, y)
+	self:setPos( x, y )
 	self.image = love.graphics.newImage("sprites/warpig.png")
 	self.speed = 316
 	self.x_vel = 0
@@ -23,6 +24,11 @@ function ent:load(x, y)
 	self.spriteOffset_x = -7
 	self.spriteOffset_y = 0
 	self.brutality=10
+end
+
+function ent:setPos( x, y )
+	self.x = x
+	self.y = y
 end
 
 function ent:right(dt)
