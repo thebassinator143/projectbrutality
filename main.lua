@@ -62,6 +62,7 @@ function game:init()
 	ents.Create( "axethrower", 1680, 756, false )
 	--ents.Create( "axe", 1820, 600, false )
 	ents.Create( "movingplatform", 1680, 700, false)
+	ents.Create("healthcheckpoint",308,532,false)
 end
 
 function game:draw()
@@ -75,7 +76,7 @@ function game:draw()
 	ents:draw()
 
 	love.graphics.draw(attackPS, player.x -  player.w, player.y + player.h/2)
-	
+
 	camera:unset()
 
 	love.graphics.setColor( 25, 25, 25, 255 )
@@ -98,7 +99,7 @@ function game:update(dt)
 	player:update(dt)
 
 	ents:update(dt)
-	
+
 	attackPS:update(dt)
 
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/camera.sx)), player.y - (love.graphics.getHeight()/(2/camera.sx)))
