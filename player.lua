@@ -336,16 +336,9 @@ function player:damage(n)
 	end
 end
 
-<<<<<<< HEAD
 function player:update(dt)
-	self.brutality:update(dt)
-	self.brutalityTier=self.brutality:getCurrentTier()
-	--print(self.x_vel)
-=======
-function player:update(dt)	
 	self.brutality.update(dt)
 	self.brutalityTier=self.brutality.getCurrentTier()
->>>>>>> origin/RandeeBranch
 
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN

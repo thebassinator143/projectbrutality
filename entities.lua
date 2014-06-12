@@ -68,7 +68,7 @@ function ents.Create(name, x, y, BG)
 		ent.wallColliding = false
 		ent.aggroed = false
 		ent.entColliding = false
-		ent:load()
+		ent:load()					--sets variable values from entity file
 		ents.objects[id] = ent
 		return ents.objects[id]
 	else

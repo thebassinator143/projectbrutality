@@ -49,29 +49,29 @@ function game:init()
 				attackCount = 1
 				}
 
-	ents.Create( "hellhound", 130, 784, false )
-	ents.Create( "hellhound", 588, 784, false )
-	ents.Create( "hellhound", 532, 784, false )
-	ents.Create( "hellhound", 2576, 784, false )
-	ents.Create( "hellhound", 1960, 684, false )
+	--ents.Create( "hellhound", 130, 784, false )
+	--ents.Create( "hellhound", 588, 784, false )
+	--ents.Create( "hellhound", 532, 784, false )
+	--ents.Create( "hellhound", 2576, 784, false )
+	--ents.Create( "hellhound", 1960, 684, false )
 
-	ents.Create( "spike", 1120, 868, false )
-	ents.Create( "spike", 1148, 868, false )
-	ents.Create( "spike", 1176, 868, false )
+	--ents.Create( "spike", 1120, 868, false )
+	--ents.Create( "spike", 1148, 868, false )
+	--ents.Create( "spike", 1176, 868, false )
 
 	--ents.Create( "movingplatform", 1680, 700, false)
-	ents.Create("healthcheckpoint",308,532,false)
-	ents.Create("soulgate",336+28,532-56,false)
+	--ents.Create("healthcheckpoint",308,532,false)
+	--ents.Create("soulgate",336+28,532-56,false)
 
 	--ents.Create( "axethrower", 1680, 756, false )
 	--ents.Create( "axe", "none", 1820, 600, false )
 	--ents.Create( "movingplatform", 1680, 700, false)
 	
-	ents.Create( "plaguewalker", 250, 784, false)
-	ents.Create( "plaguewalker", 300, 784, false)
-	ents.Create( "plaguewalker", 350, 784, false)
-	ents.Create( "plaguewalker", 200, 784, false)
-	ents.Create( "plaguewalker", 400, 784, false)
+	--ents.Create( "plaguewalker", 250, 784, false)
+	--ents.Create( "plaguewalker", 300, 784, false)
+	--ents.Create( "plaguewalker", 350, 784, false)
+	--ents.Create( "plaguewalker", 200, 784, false)
+	--ents.Create( "plaguewalker", 400, 784, false)
 
 end
 

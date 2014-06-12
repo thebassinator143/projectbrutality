@@ -60,7 +60,7 @@ brutality = {
 }
 
 function brutality:addBrutality(amount,multiplier)
-	brutality.currentBrutality=brutality.currentBrutality+(amount*multiplier)
+	self.currentBrutality=self.currentBrutality+(amount*multiplier)
 	brutality:resetDecayTimer()
 end
 
@@ -86,7 +86,7 @@ function brutality:update(dt)
 		self.currentBrutality=100
 	end
 	if self.decaying then
-		self.currentBrutality=self.currentBrutality-(self:getCurrentTier().decayRate*dt)
+		self.currentBrutality=self.currentBrutality-(brutality:getCurrentTier().decayRate*dt)
 	else
 		self.decayTimer=self.decayTimer-dt
 		if self.decayTimer<=0 then
