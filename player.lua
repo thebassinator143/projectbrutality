@@ -315,7 +315,7 @@ function player:die()
 	self.x = 256
 	self.y = 256
 	self.lives = self.lives - 1
-	self.health = 10
+	self.health = 100
 
 	--self.x_vel = 0  --Freeze for better visual collision check
 	--self.y_vel = 0
