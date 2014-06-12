@@ -63,6 +63,7 @@ function game:init()
 	--ents.Create( "axe", 1820, 600, false )
 	ents.Create( "movingplatform", 1680, 700, false)
 	ents.Create("healthcheckpoint",308,532,false)
+	ents.Create("soulgate",336+28,532-56,false)
 end
 
 function game:draw()
