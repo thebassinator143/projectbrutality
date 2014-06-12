@@ -35,7 +35,7 @@ function game:init()
 	map = AdvTiledLoader.load("map.tmx")
 	map:setDrawRange(0, 0, map.width * map.tileWidth, map.height * map.tileHeight)
 
-	camera:setBounds(0, 0, (map.width * map.tileWidth - (0.5 * love.graphics.getWidth())), (map.height * map.tileHeight - (0.5*love.graphics.getHeight())) )
+	camera:setBounds(0, 0, (map.width * map.tileWidth - (camera.sx * love.graphics.getWidth())), (map.height * map.tileHeight - (camera.sx * love.graphics.getHeight())) )
 
 	world = 	{
 				gravity = 1350,
@@ -50,6 +50,8 @@ function game:init()
 				}
 
 	ents.Create( "hellhound", 130, 784, false )
+	ents.Create( "hellhound", 588, 784, false )
+	ents.Create( "hellhound", 532, 784, false )
 	ents.Create( "hellhound", 2576, 784, false )
 	ents.Create( "hellhound", 1960, 684, false )
 
@@ -99,7 +101,7 @@ function game:update(dt)
 	
 	attackPS:update(dt)
 
-	camera:setPosition( player.x - (love.graphics.getWidth()/(2/0.5)), player.y - (love.graphics.getHeight()/(2/0.5)))
+	camera:setPosition( player.x - (love.graphics.getWidth()/(2/camera.sx)), player.y - (love.graphics.getHeight()/(2/camera.sx)))
 end
 
 function game:keypressed(key,dt)
@@ -147,5 +149,8 @@ function game:keyreleased(key, code)
 	end
 	if key == "v" then
 		player:chargedMelee()
+	end
+	if key == "q" then
+		love.event.quit()
 	end
 end
