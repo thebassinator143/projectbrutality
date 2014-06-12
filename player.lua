@@ -34,8 +34,6 @@ player = 	{
 				acceleration = WALKACCEL,
 				airacceleration = WALKAIRACCEL,
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
-				acceleration = 15,
-				airacceleration = 4,
 				jump_vel = -495,
 				doublejump_vel = 0.86,							--Multiplies by jump_vel
 				walljump_vel = 0.86,							--Multiplies by jump_vel
@@ -48,7 +46,6 @@ player = 	{
 				running = false,
 				standing = false,
 				ducking = false,
-				standing = false,
 				facingright = true,
 				facingleft = false,
 				charging = false,
@@ -168,10 +165,10 @@ function player:jump(dt)
 			end
 		end
 	elseif self.standing then
+		self.standing = false
 		print("Is Standing")
 		print("not Wallslide")
 		self.y_vel = self.jump_vel
-		self.standing = false
 	elseif self.doubleJump then
 		print ("doubleJumping")
 		if self.wallslide == false then
@@ -239,6 +236,7 @@ end
 
 function player:stand()
 	self.h = HEIGHT
+	self.y = self.y - DUCKHEIGHT
 	self.ducking = false
 end
 
@@ -315,11 +313,9 @@ function player:damage(n)
 	end
 end
 
-function player:update(dt)
+function player:update(dt)	
 	self.brutality.update(dt)
 	self.brutalityTier=self.brutality.getCurrentTier()
-	--print(self.brutalityTier.maximum)
-	--print(self.x_vel)
 
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
@@ -680,7 +676,7 @@ function player:teleport()
 		for i, ent in pairs(ents.objects) do
 			if ent.x + ent.w > self.x - self.teleHitboxSize and ent.x + ent.w < self.x
 			and ent.y < self.y + self.h	and ent.y + ent.h > self.y then
-				if ent.type == "hellhound" then
+				if ent.type ~= "spike" then
 					ydiff = self.h - ent.h
 					xdiff = ent.w - self.w
 					ent.x, self.x = self.x - xdiff, ent.x
