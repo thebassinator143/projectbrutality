@@ -3,7 +3,7 @@ require("brutality")
 
 WALK = 285
 WALKACCEL = 13 + 1/3
-WALKAIRACCEL = 2.3
+WALKAIRACCEL = 2.60
 
 RUNRATIO = 1.3509									 --Ratio based on WALK that determines RUN
 RUN = WALK * RUNRATIO
@@ -12,7 +12,7 @@ RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
 REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
 
-WALLFRIC = 1.11									 --Modifies gravity while player is wallsliding
+WALLFRIC = 1.16										 --Modifies gravity while player is wallsliding
 
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
@@ -103,6 +103,9 @@ function player:attack()
 	--All values are set to 0 after attack is called.
 	--]]
 	if self.delay <= 0 then --delay is a global cooldown period where the player cannot use skills, generally this means they are still animating a skill and cant use another.
+		print("derp")
+		print (self.brutalityTier.hitboxBoost)
+		print("/derp")
 		for i, ent in pairs(ents.objects) do
 			if not ent.BG then --why??
 				if self.facingright then
@@ -114,6 +117,7 @@ function player:attack()
 						ent.x_vel = ent.x_vel + (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
 						print("Right attack on "..ent.type.."!")
+						self.brutality:resetDecayTimer()
 						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				else --If facing left, invert width and x for player.
@@ -124,6 +128,7 @@ function player:attack()
 						ent.x_vel = ent.x_vel - (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
 						--ent.delay = ent.delay + self.ability.enemyDelay   --Apply enemy delay --Not yet implemeneted in entities
 						print("Left attack on "..ent.type.."!")
+						self.brutality:resetDecayTimer()
 						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				end
@@ -332,9 +337,8 @@ function player:damage(n)
 end
 
 function player:update(dt)
-	self.brutality.update(dt)
-	self.brutalityTier = self.brutality.getCurrentTier()
-	print(self.brutalityTier.maximum)
+	self.brutality:update(dt)
+	self.brutalityTier=self.brutality:getCurrentTier()
 	--print(self.x_vel)
 
 	if love.keyboard.isDown("lshift") then
@@ -550,7 +554,7 @@ function player:draw()
 		end
 	end
 
-	
+
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
 
@@ -657,7 +661,7 @@ function player:setSequenceAttack(count)
 		self.ability.hitbox.y = 0
 		self.ability.hitbox.width = 40
 		self.ability.hitbox.height = 54
-		self.brutality = self.brutality + 1
+		self.brutality:addBrutality(1,1)
 		print("Executing special attack 2!")
 	elseif count == 6 then
 		self.ability.cooldown = 0
@@ -670,7 +674,7 @@ function player:setSequenceAttack(count)
 		self.ability.hitbox.y = 0
 		self.ability.hitbox.width = 40
 		self.ability.hitbox.height = 54
-		self.brutality = self.brutality + 2
+		self.brutality:addBrutality(2,1)
 		print("Executing special attack 3!")
 	end
 end
