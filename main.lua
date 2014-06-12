@@ -72,10 +72,10 @@ function game:draw()
 
 	ents:draw()
 
+	love.graphics.draw(attackPS, player.x -  player.w, player.y + player.h/2)
+	
 	camera:unset()
-	
-	love.graphics.draw(attackPS, 0, 0)
-	
+
 	love.graphics.setColor( 25, 25, 25, 255 )
 	love.graphics.print ( "Health: " .. player.health, 16, 16, 0, 1, 1 )
 

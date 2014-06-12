@@ -79,6 +79,7 @@ player = 	{
 						}
 					},
 				wallslide = false,
+				wallJump = false,
 				doubleJump = false,
 				swallLeft = false,
 				wallFric = 1,
@@ -148,7 +149,7 @@ end
 
 function player:jump(dt)
 	print("attempting Jump")
- 	if self.wallslide then
+ 	if self.wallJump then
 		print("Is Wallslide")
  		if love.keyboard.isDown("a") then
 			print("a down")
@@ -157,6 +158,7 @@ function player:jump(dt)
  				self:right(dt)
 				self.y_vel = self.jump_vel * self.walljump_vel
 				self.wallslide = false
+				self.wallJump = false
 				self.isWallJumping = true
 				self.wallFric = 1
 				self.wallTimer = 10
@@ -168,18 +170,18 @@ function player:jump(dt)
  				self:left(dt)
 				self.y_vel = self.jump_vel * self.walljump_vel
 				self.wallslide = false
+				self.wallJump = false
 				self.wallFric = 1
 				self.wallTimer = 10
 			end
 		end
 	elseif self.standing then
 		print("Is Standing")
-		print("not Wallslide")
 		self.y_vel = self.jump_vel
 		self.standing = false
 	elseif self.doubleJump then
 		print ("doubleJumping")
-		if self.wallslide == false then
+		if self.wallJump == false then
 			self.y_vel = self.jump_vel * self.doublejump_vel
 			self.doubleJump = false
 		end
@@ -258,6 +260,8 @@ function player:collide(event)
 		self.standing = true
 		self.doubleJump = true
 		self.isWallJumping = false
+		self.wallslide = false
+		self.wallJump = false
 		self.wallTimer = 0
 
 		wallFric = 1
@@ -271,20 +275,31 @@ function player:collide(event)
  	if event == "wall" then
 			if self.wallLeft == true then
 				if love.keyboard.isDown("a") then
-					self.wallslide = true
-					self.doubleJump = true
-					if self.wallFric == 1 then
-						self.wallFric = WALLFRIC
-						print ("wallslide after:", self.wallslide)
+					if self.y_vel >0 or self.y_vel < 0 then
+						self.wallJump = true
+						self.doubleJump = true
+					end
+					if self.y_vel > 0 then
+						self.wallslide = true
+						if self.wallFric == 1 then
+							self.wallFric = WALLFRIC
+							print ("wallslide after:", self.wallslide)
+						end
 					end
 				end
 			else
 				if love.keyboard.isDown("d") then
-					self.wallslide = true
-					self.doubleJump = true
-					if self.wallFric == 1 then
-						self.wallFric = WALLFRIC
-						print ("wallslide after:", self.wallslide)
+					if self.y_vel >0 or self.y_vel < 0 then
+						self.wallJump = true
+						self.doubleJump = true
+					end
+					if self.y_vel > 0 then
+						self.wallslide = true
+						self.doubleJump = true
+						if self.wallFric == 1 then
+							self.wallFric = WALLFRIC
+							print ("wallslide after:", self.wallslide)
+						end
 					end
 				end
 			end
@@ -293,6 +308,7 @@ function player:collide(event)
  	if event == "none" then
  		self.wallFric = 1
 		self.wallslide = false
+		self.wallJump = false
 		--print ("none")
   	end
 end
