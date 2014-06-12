@@ -16,7 +16,7 @@ function ent:load(x, y)
 	self.size = 1
 	self.h = 28
 	self.w = 43
-	self.health = 10
+	self.health = 35
 	self.damage = 1
 	self.invincibilityRemaining = 0
 	self.maxhealth = self.health
@@ -162,19 +162,15 @@ function ent:update(dt)
 		if not(ent:isColliding(map, nextX + self.w, self.y))
 			and not(ent:isColliding(map, nextX + self.w, self.y + self.h - 1)) then
 			self.x = nextX
-			ent:right(dt)
 		else
 			self.x = nextX - ((nextX + self.w) % map.tileWidth)
-			ent:left(dt)
 		end
 	elseif self.x_vel < 0 then
 		if not(ent:isColliding(map, nextX, self.y))
 			and not(ent:isColliding(map, nextX, self.y + self.h - 1)) then
 			self.x = nextX
-			ent:left(dt)
 		else
 			self.x = nextX + map.tileWidth - ((nextX) % map.tileWidth)
-			ent:right(dt)
 		end
 	end
 
