@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="122" height="52" tilewidth="28" tileheight="28">
+ <tileset firstgid="1" name="PlatformGround" tilewidth="28" tileheight="28">
+  <image source="platformground.png" width="140" height="112"/>
+ </tileset>
+ <tileset firstgid="21" name="SkullBox" tilewidth="28" tileheight="28">
+  <image source="skullbox28.png" width="28" height="28"/>
+ </tileset>
+ <tileset firstgid="22" name="rockGround" tilewidth="28" tileheight="28">
+  <image source="rockGround.png" width="140" height="112"/>
+ </tileset>
+ <tileset firstgid="42" name="coblestone" tilewidth="28" tileheight="28">
+  <image source="stoneGround.png" width="84" height="84"/>
+ </tileset>
+ <tileset firstgid="51" name="GreyGrass" tilewidth="28" tileheight="28">
+  <image source="greygrass.png" width="140" height="140"/>
+ </tileset>
+ <layer name="Background" width="122" height="52">
+  <data encoding="base64" compression="zlib">
+   eJzt2KENACAMBEAchhHYf04ECBxggDR3ybuKJp+apgQAAACs5Ck7cwAAAABA518Wn45j0298OoYY3DIAAAAAAAAAAAAAAABwU3m9AF+oIycaP7wAiw==
+  </data>
+ </layer>
+ <layer name="Solid" width="122" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztnFtvFDEMhQd44KJKPFBRhFouhQcoUC7//8cxIzZSiGzHjk9mkq6PZFWrzsxO8uU4GWd3lyUUCoVCoVAoFHq4ulvj+47nhY7RjzV+7nheqddrXGXxmIgnp+PerPEoe/0W8P7noo3X/WLz5t3pHATn6yyeCvFhjdvs9Xb8e8D7n4sSZwuzlnM4SWylCM42zcz5M+D9z0Uzck55/uvyb87eQ9tc9e0UM64/f63xe40/nc/hVLLjmF4Tr7e4AdyDRmlso8b3uYnix3GmAsE5eVXyKZJznhvK4O5h9ufYj864BdyDZh5Ccs6vVQZ37edrXC70c2evuCJir3myh2bhfAEOzRooD5SvjtJMnFufT7ig+PeYH6nc0BqpXlbW0bj/p3h1avNlcU5+fDpmixfONrdwfrf83++SRylOpU85T1MeRvi4ts6yRKqX1cZmLZ9xfZTipbPNLZw/Ke4rtV3TV5Sfez7LIPim8aa5d2ksS3MTsj6D8HOtPVJ/cW3vORf38HCNc80T0rEjcqb8qT2WanePmgSCsYczx1ri7a2ro/J2rR2aY3rn66RWxjfE/XpYW84bzc+WtTPVZyNzzr1sqYlbOHOsR/OztN6YmbPFy555muurI/xcy9tUP9Q4c+N/VM5eX1vHxqh+pmpd0lgYnTOXfzQ1PoT3R/WzZlyXfTEy51Y/S8/Mlrncyznt61LB7fVq87Y2d82at/f08xGfV7L4WWqD5riROdd8XKuBWXx9xOeVrPNzS7+OzFnjTzTn7fNK1D5Kyx5vudfCxRfmXlrmnRk5e+boi+yvt84ieauWYzxMkD5O13gInC3rsVafaNYOCN8hfZxf55lIrE1ezi15W3ptuYaVAzK3UveNyAejcm7xMcfbei1rH9aeZ0qOlvGDygkjcrb6UOvxlnWdtg8l71nWBh4v5/cxA2fEnNzqZ00+tuRta373+Lls7+h5G+Xn0UMzNyDydk/OIZ1aOVpY9+CcvpMQsgnBVJqzkZzT96fvQdc7NyF8W5sXvcoZB2efPOsuae2G4FzuvYZ80jDOOWvWeMF5XEk+puoEvf1c7rGHcMpZUnU/Ta0GxTnUT1Rtj6oHBee5Jc3D5Vpsj/V2/v39EE4lU6qeq6mdeTmXz1SxDsOKytXaNTaKM8U4OGNF+bllX6uVM8c4OGMl7c1Z6mYbZ83vcXK/F7BFPD/3U8t+l7Vmqo2S81/DI9s0
+  </data>
+ </layer>
+ <layer name="oneWayPlatforms" width="122" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgZ2MgAAE=
+  </data>
+ </layer>
+ <layer name="Foreground" width="122" height="52">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20KP6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgZ2MgAAE=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="122" height="52" visible="0"/>
+</map>
