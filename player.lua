@@ -2,7 +2,7 @@ require("entities")
 require("brutality")
 
 WALK = 210
-WALKACCEL = 18
+WALKACCEL = 18.5
 WALKAIRACCEL = 1.8
 
 RUNRATIO = 1.3509									 --Ratio based on WALK that determines RUN
@@ -12,7 +12,7 @@ RUNAIRACCEL = (WALK/RUN) * WALKAIRACCEL
 
 REACTIVITY = 0.75									 --Modifies running deceleration without affecting acceleration
 
-WALLFRIC = 1.11										 --Modifies gravity while player is wallsliding
+WALLFRIC = 1.11									 --Modifies gravity while player is wallsliding
 
 HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
@@ -29,11 +29,15 @@ player = 	{
 				spriteOffset_x = -24,
 				spriteOffset_y = -4,
 				teleHitboxSize = 100,
+				spawnX=256,
+				spawnY=256,
 				x_vel = 0,
 				y_vel = 0,
 				acceleration = WALKACCEL,
 				airacceleration = WALKAIRACCEL,
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
+				acceleration = 15,
+				airacceleration = 4,
 				jump_vel = -495,
 				doublejump_vel = 0.86,							--Multiplies by jump_vel
 				walljump_vel = 0.86,							--Multiplies by jump_vel
@@ -54,7 +58,7 @@ player = 	{
 				health = 100,
 				lives = 3,
 				invincibilityRemaining = 0,
-				damage = 1,
+				damage = 5,
 				cooldown = 0,
 				x_knockback = 0,
 				y_knockback = 0,
@@ -62,8 +66,10 @@ player = 	{
 				meleeHitboxSize = 24,
 				delay = 0,
 				ability =	{
+					using = false,
 					delay = 0,
 					damage = 0,
+					image = nil,
 					knockback = {
 						x = 0,
 						y = 0
@@ -78,6 +84,8 @@ player = 	{
 					},
 				wallslide = false,
 				wallJump = false,
+				isJump = false,
+				jumpTimer = .2,
 				doubleJump = false,
 				swallLeft = false,
 				wallFric = 1,
@@ -108,7 +116,7 @@ function player:attack()
 			if not ent.BG then --why??
 				if self.facingright then
 					--Collision Detection
-					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x)
+					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x+self.ability.hitbox.width)
 					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
@@ -134,11 +142,11 @@ function player:attack()
 			end
 		end
 	end
-	self.ability.delay = 0
-	self.ability.damage = 0
-	self.ability.knockback.x = 0
-	self.ability.knockback.y = 0
-	self.ability.enemyDelay = 0
+	--self.ability.delay = 0
+	--self.ability.damage = 0
+	--self.ability.knockback.x = 0
+	--self.ability.knockback.y = 0
+	--self.ability.enemyDelay = 0
 	--self.ability.hitbox.x = 0
 	--self.ability.hitbox.y = 0
 	--self.ability.hitbox.width = 0
@@ -152,9 +160,10 @@ function player:jump(dt)
  		if love.keyboard.isDown("a") then
 			print("a down")
  			if self.wallLeft == true then
- 				print("walljump right")
+ 				print("walljump r 	ight")
  				self:right(dt)
 				self.y_vel = self.jump_vel * self.walljump_vel
+				self.x_vel = self.speed
 				self.wallslide = false
 				self.wallJump = false
 				self.isWallJumping = true
@@ -167,6 +176,7 @@ function player:jump(dt)
  				print("walljump left")
  				self:left(dt)
 				self.y_vel = self.jump_vel * self.walljump_vel
+				self.x_vel = -self.speed
 				self.wallslide = false
 				self.wallJump = false
 				self.wallFric = 1
@@ -189,7 +199,7 @@ end
 function player:right(dt)
 	self.facingright = true
 	self.facingleft = false
-	if not self.ducking then
+	if not self.ducking and not self.charging then
 		if self.standing then
 			if self.running then
 				if self.x_vel < 0 then
@@ -213,7 +223,7 @@ end
 function player:left(dt)
 	self.facingleft = true
 	self.facingright = false
-	if not self.ducking then
+	if not self.ducking and not self.charging then
 		if self.standing then
 			if self.running then
 				if self.x_vel > 0 then
@@ -312,10 +322,10 @@ function player:collide(event)
 end
 
 function player:die()
-	self.x = 256
-	self.y = 256
+	self.x = self.spawnX
+	self.y = self.spawnY
 	self.lives = self.lives - 1
-	self.health = 10
+	self.health = 100
 
 	--self.x_vel = 0  --Freeze for better visual collision check
 	--self.y_vel = 0
@@ -334,45 +344,108 @@ function player:damage(n)
 	end
 end
 
+function player:downwardAirAttack()
+	if not self.standing then
+		self.y_vel = 100000
+	end
+	self.ability.damage = 1
+	self.ability.using = "downwardAirAttack"
+	self.ability.hitbox.x = -self.w
+	self.ability.hitbox.y = self.h/2
+	self.ability.hitbox.width = self.w
+	self.ability.hitbox.height = self.h
+	self.ability.image = love.graphics.newImage( "sprites/Down.png" )
+	self.ability.knockback.x = 100000
+	self.ability.knockback.y = 100
+end
+
 function player:update(dt)
 	self.brutality:update(dt)
 	self.brutalityTier=self.brutality:getCurrentTier()
+	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
+	--self.jumpTimer = self.jumpTimer - dt
 
-	--if love.keyboard.isDown("lshift") then								--Runspeed DISABLED
-	--	self.speed = RUN
-	--	self.acceleration = RUNACCEL
-	--	self.airacceleration = RUNAIRACCEL
-	--	self.running = true
-	--else
-	--	self.speed = WALK
-	--	self.acceleration = WALKACCEL
-	--	self.airacceleration = WALKAIRACCEL
-	--	self.running = false
-	--end
+	if self.ability.using then
+		if self.ability.delay < 0 then
+			self.ability.using = false
+		end
+
+		self.ability.delay  = self.ability.delay - dt
+		print(self.ability.delay)
+		if self.ability.using == "downwardAirAttack" then 
+			self.x_vel = 0
+			if self.standing then
+				self.ability.using = false
+			end
+		end
+		if self.ability.using == "basic" then
+			if self.facingright then
+				self.x_vel = 1000
+			else
+				self.x_vel = -1000
+			end
+		end
+		self:attack()
+		--[[for i, ent in pairs (ents.objects) do
+			if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x+self.ability.hitbox.width)
+				and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+				ent.x_vel = ent.x_vel + self.ability.knockback.x
+				ent.x_vel = ent.x_vel + self.ability.knockback.y
+				ent.health = ent.health - self.ability.damage
+			end
+		end--]]
+	end
+
+	if love.keyboard.isDown(" ") then
+		if not self.isJump and not self.ability.using then
+			self.isJump = true
+			self:jump(dt)
+		end
+	end
+
+	if love.keyboard.isDown("s") and love.keyboard.isDown("v") then
+		self:downwardAirAttack()
+	end
+
+	if love.keyboard.isDown("lshift") then
+		self.speed = RUN
+		self.acceleration = RUNACCEL
+		self.airacceleration = RUNAIRACCEL
+		self.running = true
+	else
+		self.speed = WALK
+		self.acceleration = WALKACCEL
+		self.airacceleration = WALKAIRACCEL
+		self.running = false
+	end
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 
 	if love.keyboard.isDown("d") then
+		if not self.ability.using then
 		--print("timer: ",  self.wallTimer)
-		if isWallJumping == false then
-			self:right(dt)
-		else
-			if self.wallTimer <= 0 then
+			if isWallJumping == false then
 				self:right(dt)
 			else
-				self.wallTimer = self.wallTimer - 1
+				if self.wallTimer <= 0 then
+					self:right(dt)
+				else
+					self.wallTimer = self.wallTimer - 1
+				end
 			end
 		end
 	elseif love.keyboard.isDown("a") then
+		if not self.ability.using then
 	--print("timer: ",  self.wallTimer)
-		if isWallJumping == false then
-			self:left(dt)
-		else
-			if self.wallTimer <= 0 then
+			if isWallJumping == false then
 				self:left(dt)
 			else
-				self.wallTimer = self.wallTimer - 1
+				if self.wallTimer <= 0 then
+					self:left(dt)
+				else
+					self.wallTimer = self.wallTimer - 1
+				end
 			end
 		end
 	else
@@ -401,7 +474,7 @@ function player:update(dt)
 
 	if self.standing then
 		if self.x_vel > 0 then
-			if self.ducking then
+			if self.ducking or self.charging then
 				if self.x_vel <= (self.slidefriction * world.friction * dt) then
 					self.x_vel = 0
 				else
@@ -415,7 +488,7 @@ function player:update(dt)
 				end
 			end
 		elseif self.x_vel < 0 then
-			if self.ducking then
+			if self.ducking or self.charging then
 				if self.x_vel >= (self.slidefriction * world.friction * dt) then
 					self.x_vel = 0
 				else
@@ -551,8 +624,6 @@ function player:draw()
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
 		end
 	end
-
-
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
 
@@ -582,6 +653,11 @@ function player:draw()
 			love.graphics.setColor( 255, 255, 255, 255 )
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
 		end
+	end
+
+	if self.ability.using then
+		print("drawing ability")
+		love.graphics.draw( self.ability.image, self.ability.hitbox.x + self.x, self.ability.hitbox.y + self.y,0,.1,.1,0,0,0,0)
 	end
 end
 
@@ -623,8 +699,9 @@ function player:chargedMelee()
 end
 
 function player:setBasicAttack()
+	self.ability.using = "basic"
 	self.ability.cooldown = 0
-	self.ability.delay = 0
+	self.ability.delay = .3
 	self.ability.enemyDelay = 0
 	self.ability.damage = BASE_MELEE_DAMAGE
 	self.ability.knockback.x = 0
@@ -633,6 +710,7 @@ function player:setBasicAttack()
 	self.ability.hitbox.y = 0
 	self.ability.hitbox.width = 40
 	self.ability.hitbox.height = 54
+	self.ability.image = love.graphics.newImage( "sprites/default.png" )
 end
 
 function player:setSequenceAttack(count)

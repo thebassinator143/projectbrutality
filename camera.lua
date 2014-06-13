@@ -4,6 +4,7 @@ camera.y = 0
 camera.sx = 0.63
 camera.sy = 0.63
 camera.rotation = 0
+camera.yLockLocation=nil
 
 function camera:set()
   love.graphics.push()
@@ -49,8 +50,12 @@ function camera:setY(value)
 end
 
 function camera:setPosition(x, y)
-  if x then self:setX(x) end
-  if y then self:setY(y) end
+	if x then self:setX(x) end
+	if self.yLockLocation==nil and y then
+		self:setY(y)
+	else
+		self:setY(self.yLockLocation)
+	end
 end
 
 function camera:setScale(sx, sy)

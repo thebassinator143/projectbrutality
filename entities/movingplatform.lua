@@ -42,14 +42,14 @@ function ent:update(dt)
 	self.x=nextX
 
 	--player collision
-	if ents:CollidingWithEntity(self.x, self.y - 1, self.w, self.h, player.x - (player.w/2), player.y - (player.h/2), player.w, player.h) then
+	if ents:CollidingWithEntity(self.x, self.y, self.w, self.h, player.x, player.y, player.w, player.h) then
 		if (player.y_vel>0) then
 			player:collide("floor")
-			player.y=self.y-(self.h-1)
+			player.y=self.y-player.h
 		end
 	end
-	if player.y==self.y-(self.h-1) then
-		player.x=player.x+(self.deltax*2)
+	if player.y==self.y-(player.h) then
+		player.x=player.x+(self.deltax)
 	end
 end
 

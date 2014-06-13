@@ -59,9 +59,14 @@ function game:init()
 	ents.Create( "spike", 1148, 868, false )
 	ents.Create( "spike", 1176, 868, false )
 
+	ents.Create( "movingplatform", 1680, 700, false)
+	ents.Create("healthcheckpoint",308,532,false)
+	ents.Create("soulgate",336+28,532-56,false)
+
 	ents.Create( "axethrower", 1680, 756, false )
 	--ents.Create( "axe", 1820, 600, false )
 	ents.Create( "movingplatform", 1680, 700, false)
+
 end
 
 function game:draw()
@@ -75,7 +80,7 @@ function game:draw()
 	ents:draw()
 
 	love.graphics.draw(attackPS, player.x -  player.w, player.y + player.h/2)
-	
+
 	camera:unset()
 
 	love.graphics.setColor( 25, 25, 25, 255 )
@@ -98,18 +103,16 @@ function game:update(dt)
 	player:update(dt)
 
 	ents:update(dt)
-	
+
 	attackPS:update(dt)
 
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/camera.sx)), player.y - (love.graphics.getHeight()/(2/camera.sx)))
 end
 
-function game:keypressed(key,dt)
-	print(dt)
-	if key == " " then
-		print(dt)
-		player:jump(dt)
-	end
+function game:keypressed(key)
+	--if key == " " then
+		--player:jump(dt)
+	--end
 	if key == "v" then
 		attackPS:start()
 		interval = timer.gameTime - timer.lastAttack
@@ -144,6 +147,10 @@ function game:keyreleased(key, code)
     if key == 'escape' then
         Gamestate.switch(menu)
     end
+    if key == " " then
+    	player.isJump = false
+    end
+
 	if key == "s" then
 		player:stand()
 	end

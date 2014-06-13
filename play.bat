@@ -1,2 +1,2 @@
 @ECHO OFF
-start "" "%PROGRAMFILES(x86)%\LOVE\love" .
+start "" "%PROGRAMFILES%\LOVE\love" .
