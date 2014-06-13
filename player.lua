@@ -142,11 +142,11 @@ function player:attack()
 			end
 		end
 	end
-	self.ability.delay = 0
-	self.ability.damage = 0
-	self.ability.knockback.x = 0
-	self.ability.knockback.y = 0
-	self.ability.enemyDelay = 0
+	--self.ability.delay = 0
+	--self.ability.damage = 0
+	--self.ability.knockback.x = 0
+	--self.ability.knockback.y = 0
+	--self.ability.enemyDelay = 0
 	--self.ability.hitbox.x = 0
 	--self.ability.hitbox.y = 0
 	--self.ability.hitbox.width = 0
@@ -354,7 +354,7 @@ function player:downwardAirAttack()
 	self.ability.hitbox.height = self.h
 	self.ability.image = love.graphics.newImage( "sprites/Down.png" )
 	self.ability.knockback.x = 100000
-	self.ability.knockback.y = 1000
+	self.ability.knockback.y = 100
 end
 
 function player:update(dt)
@@ -371,14 +371,15 @@ function player:update(dt)
 				self.ability.using = false
 			end
 		end
-		for i, ent in pairs (ents.objects) do
+		self:attack()
+		--[[for i, ent in pairs (ents.objects) do
 			if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x+self.ability.hitbox.width)
 				and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 				ent.x_vel = ent.x_vel + self.ability.knockback.x
 				ent.x_vel = ent.x_vel + self.ability.knockback.y
 				ent.health = ent.health - self.ability.damage
 			end
-		end
+		end--]]
 	end
 
 	if love.keyboard.isDown(" ") then
