@@ -345,7 +345,9 @@ function player:damage(n)
 end
 
 function player:downwardAirAttack()
-	self.y_vel = 100000
+	if not self.standing then
+		self.y_vel = 100000
+	end
 	self.ability.damage = 1
 	self.ability.using = "downwardAirAttack"
 	self.ability.hitbox.x = -self.w
@@ -365,10 +367,23 @@ function player:update(dt)
 	--self.jumpTimer = self.jumpTimer - dt
 
 	if self.ability.using then
+		if self.ability.delay < 0 then
+			self.ability.using = false
+		end
+
+		self.ability.delay  = self.ability.delay - dt
+		print(self.ability.delay)
 		if self.ability.using == "downwardAirAttack" then 
 			self.x_vel = 0
 			if self.standing then
 				self.ability.using = false
+			end
+		end
+		if self.ability.using == "basic" then
+			if self.facingright then
+				self.x_vel = 1000
+			else
+				self.x_vel = -1000
 			end
 		end
 		self:attack()
@@ -383,7 +398,7 @@ function player:update(dt)
 	end
 
 	if love.keyboard.isDown(" ") then
-		if not self.isJump then
+		if not self.isJump and not self.ability.using then
 			self.isJump = true
 			self:jump(dt)
 		end
@@ -408,25 +423,29 @@ function player:update(dt)
 	local halfY = self.h / 2
 
 	if love.keyboard.isDown("d") then
+		if not self.ability.using then
 		--print("timer: ",  self.wallTimer)
-		if isWallJumping == false then
-			self:right(dt)
-		else
-			if self.wallTimer <= 0 then
+			if isWallJumping == false then
 				self:right(dt)
 			else
-				self.wallTimer = self.wallTimer - 1
+				if self.wallTimer <= 0 then
+					self:right(dt)
+				else
+					self.wallTimer = self.wallTimer - 1
+				end
 			end
 		end
 	elseif love.keyboard.isDown("a") then
+		if not self.ability.using then
 	--print("timer: ",  self.wallTimer)
-		if isWallJumping == false then
-			self:left(dt)
-		else
-			if self.wallTimer <= 0 then
+			if isWallJumping == false then
 				self:left(dt)
 			else
-				self.wallTimer = self.wallTimer - 1
+				if self.wallTimer <= 0 then
+					self:left(dt)
+				else
+					self.wallTimer = self.wallTimer - 1
+				end
 			end
 		end
 	else
@@ -680,8 +699,9 @@ function player:chargedMelee()
 end
 
 function player:setBasicAttack()
+	self.ability.using = "basic"
 	self.ability.cooldown = 0
-	self.ability.delay = 0
+	self.ability.delay = .3
 	self.ability.enemyDelay = 0
 	self.ability.damage = BASE_MELEE_DAMAGE
 	self.ability.knockback.x = 0
@@ -690,6 +710,7 @@ function player:setBasicAttack()
 	self.ability.hitbox.y = 0
 	self.ability.hitbox.width = 40
 	self.ability.hitbox.height = 54
+	self.ability.image = love.graphics.newImage( "sprites/default.png" )
 end
 
 function player:setSequenceAttack(count)
