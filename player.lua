@@ -173,6 +173,7 @@ function player:jump(dt)
 				self.y_vel = self.jump_vel * self.walljump_vel
 				self.wallslide = false
 				self.wallJump = false
+				self.isWallJumping = true
 				self.wallFric = 1
 				self.wallTimer = 10
 			end
@@ -205,7 +206,7 @@ function player:right(dt)
 				self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
 			end
 		else
-			if isWallJumping then
+			if self.isWallJumping then
 				self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt*2)
 			else
 				self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
@@ -229,7 +230,7 @@ function player:left(dt)
 				self.x_vel = self.x_vel - (self.acceleration * self.speed * dt)
 			end
 		else
-			if isWallJumping then
+			if self.isWallJumping then
 				self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt*2)
 			else
 				self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
@@ -339,22 +340,22 @@ function player:damage(n)
 end
 
 function player:update(dt)
-	self.brutality.update(dt)
-	self.brutalityTier=self.brutality.getCurrentTier()
+	self.brutality:update(dt)
+	self.brutalityTier=self.brutality:getCurrentTier()
 	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
 
-	if love.keyboard.isDown("lshift") then
-		self.speed = RUN
-		self.acceleration = RUNACCEL
-		self.airacceleration = RUNAIRACCEL
-		self.running = true
-	else
-		self.speed = WALK
-		self.acceleration = WALKACCEL
-		self.airacceleration = WALKAIRACCEL
-		self.running = false
-	end
+	--if love.keyboard.isDown("lshift") then
+	--	self.speed = RUN
+	--	self.acceleration = RUNACCEL
+	--	self.airacceleration = RUNAIRACCEL
+	--	self.running = true
+	--else
+	--	self.speed = WALK
+	--	self.acceleration = WALKACCEL
+	--	self.airacceleration = WALKAIRACCEL
+	--	self.running = false
+	--end
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 

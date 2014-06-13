@@ -109,11 +109,9 @@ function game:update(dt)
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/camera.sx)), player.y - (love.graphics.getHeight()/(2/camera.sx)))
 end
 
-function game:keypressed(key,dt)
-	print(dt)
+function game:keypressed(key, code)
 	if key == " " then
-		print(dt)
-		player:jump(dt)
+		player:jump()
 	end
 	if key == "v" then
 		attackPS:start()

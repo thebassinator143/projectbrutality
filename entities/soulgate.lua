@@ -6,6 +6,8 @@ function ent:load(x, y)
 	self:setPos( x, y )
 	self.h = 112
 	self.w = 56
+	self.x_vel = 0
+	self.y_vel = 0
 	self.arenaX=600
 	self.arenaY=500
 	self.arenaH=100
