@@ -7,6 +7,7 @@ Gamestate = require ("gamestate")
 
 local menu = {}
 local game = {}
+dt = 0
 
 function love.load()
 	Gamestate.registerEvents()
@@ -94,6 +95,7 @@ function game:draw()
 end
 
 function game:update(dt)
+	dt = dt
 	timer.gameTime = timer.gameTime + dt
 
 	if dt > 0.05 then
@@ -109,7 +111,7 @@ function game:update(dt)
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/camera.sx)), player.y - (love.graphics.getHeight()/(2/camera.sx)))
 end
 
-function game:keypressed(key,dt)
+function game:keypressed(key)
 	print(dt)
 	if key == " " then
 		print(dt)

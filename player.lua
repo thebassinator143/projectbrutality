@@ -339,8 +339,8 @@ function player:damage(n)
 end
 
 function player:update(dt)
-	self.brutality.update(dt)
-	self.brutalityTier=self.brutality.getCurrentTier()
+	self.brutality:update(dt)
+	self.brutalityTier=self.brutality:getCurrentTier()
 	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
 
