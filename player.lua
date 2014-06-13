@@ -82,6 +82,7 @@ player = 	{
 					},
 				wallslide = false,
 				wallJump = false,
+				jumpTimer = .2,
 				doubleJump = false,
 				swallLeft = false,
 				wallFric = 1,
@@ -150,43 +151,48 @@ function player:attack()
 end
 
 function player:jump(dt)
-	print("attempting Jump")
- 	if self.wallJump then
-		print("Is Wallslide")
- 		if love.keyboard.isDown("a") then
-			print("a down")
- 			if self.wallLeft == true then
- 				print("walljump right")
- 				self:right(dt)
-				self.y_vel = self.jump_vel * self.walljump_vel
-				self.wallslide = false
-				self.wallJump = false
-				self.isWallJumping = true
-				self.wallFric = 1
-				self.wallTimer = 10
+	if(self.jumpTimer < 0) then
+		print("attempting Jump")
+	 	if self.wallJump then
+			print("Is Wallslide")
+	 		if love.keyboard.isDown("a") then
+				print("a down")
+	 			if self.wallLeft == true then
+	 				print("walljump r 	ight")
+	 				self:right(dt)
+					self.y_vel = self.jump_vel * self.walljump_vel
+					self.x_vel = self.speed
+					self.wallslide = false
+					self.wallJump = false
+					self.isWallJumping = true
+					self.wallFric = 1
+					self.wallTimer = 10
+				end
+	 		elseif love.keyboard.isDown("d") then
+				print("d down")
+	 			if self.wallLeft == false then
+	 				print("walljump left")
+	 				self:left(dt)
+					self.y_vel = self.jump_vel * self.walljump_vel
+					self.x_vel = -self.speed
+					self.wallslide = false
+					self.wallJump = false
+					self.wallFric = 1
+					self.wallTimer = 10
+				end
 			end
- 		elseif love.keyboard.isDown("d") then
-			print("d down")
- 			if self.wallLeft == false then
- 				print("walljump left")
- 				self:left(dt)
-				self.y_vel = self.jump_vel * self.walljump_vel
-				self.wallslide = false
-				self.wallJump = false
-				self.wallFric = 1
-				self.wallTimer = 10
+		elseif self.standing then
+			print("Is Standing")
+			self.y_vel = self.jump_vel
+			self.standing = false
+		elseif self.doubleJump then
+			print ("doubleJumping")
+			if self.wallJump == false then
+				self.y_vel = self.jump_vel * self.doublejump_vel
+				self.doubleJump = false
 			end
-		end
-	elseif self.standing then
-		print("Is Standing")
-		self.y_vel = self.jump_vel
-		self.standing = false
-	elseif self.doubleJump then
-		print ("doubleJumping")
-		if self.wallJump == false then
-			self.y_vel = self.jump_vel * self.doublejump_vel
-			self.doubleJump = false
-		end
+	  	end
+	  	self.jumpTimer = .2
   	end
 end
 
@@ -343,7 +349,10 @@ function player:update(dt)
 	self.brutalityTier=self.brutality:getCurrentTier()
 	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
-
+	self.jumpTimer = self.jumpTimer - dt
+	if love.keyboard.isDown(" ") then
+		self:jump(dt)
+	end
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
 		self.acceleration = RUNACCEL
