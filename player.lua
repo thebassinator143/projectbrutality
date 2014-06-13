@@ -66,8 +66,10 @@ player = 	{
 				meleeHitboxSize = 24,
 				delay = 0,
 				ability =	{
+					using = false,
 					delay = 0,
 					damage = 0,
+					image = nil,
 					knockback = {
 						x = 0,
 						y = 0
@@ -82,6 +84,7 @@ player = 	{
 					},
 				wallslide = false,
 				wallJump = false,
+				isJump = false,
 				jumpTimer = .2,
 				doubleJump = false,
 				swallLeft = false,
@@ -151,48 +154,45 @@ function player:attack()
 end
 
 function player:jump(dt)
-	if(self.jumpTimer < 0) then
-		print("attempting Jump")
-	 	if self.wallJump then
-			print("Is Wallslide")
-	 		if love.keyboard.isDown("a") then
-				print("a down")
-	 			if self.wallLeft == true then
-	 				print("walljump r 	ight")
-	 				self:right(dt)
-					self.y_vel = self.jump_vel * self.walljump_vel
-					self.x_vel = self.speed
-					self.wallslide = false
-					self.wallJump = false
-					self.isWallJumping = true
-					self.wallFric = 1
-					self.wallTimer = 10
-				end
-	 		elseif love.keyboard.isDown("d") then
-				print("d down")
-	 			if self.wallLeft == false then
-	 				print("walljump left")
-	 				self:left(dt)
-					self.y_vel = self.jump_vel * self.walljump_vel
-					self.x_vel = -self.speed
-					self.wallslide = false
-					self.wallJump = false
-					self.wallFric = 1
-					self.wallTimer = 10
-				end
+	print("attempting Jump")
+ 	if self.wallJump then
+		print("Is Wallslide")
+ 		if love.keyboard.isDown("a") then
+			print("a down")
+ 			if self.wallLeft == true then
+ 				print("walljump r 	ight")
+ 				self:right(dt)
+				self.y_vel = self.jump_vel * self.walljump_vel
+				self.x_vel = self.speed
+				self.wallslide = false
+				self.wallJump = false
+				self.isWallJumping = true
+				self.wallFric = 1
+				self.wallTimer = 10
 			end
-		elseif self.standing then
-			print("Is Standing")
-			self.y_vel = self.jump_vel
-			self.standing = false
-		elseif self.doubleJump then
-			print ("doubleJumping")
-			if self.wallJump == false then
-				self.y_vel = self.jump_vel * self.doublejump_vel
-				self.doubleJump = false
+ 		elseif love.keyboard.isDown("d") then
+			print("d down")
+ 			if self.wallLeft == false then
+ 				print("walljump left")
+ 				self:left(dt)
+				self.y_vel = self.jump_vel * self.walljump_vel
+				self.x_vel = -self.speed
+				self.wallslide = false
+				self.wallJump = false
+				self.wallFric = 1
+				self.wallTimer = 10
 			end
-	  	end
-	  	self.jumpTimer = .2
+		end
+	elseif self.standing then
+		print("Is Standing")
+		self.y_vel = self.jump_vel
+		self.standing = false
+	elseif self.doubleJump then
+		print ("doubleJumping")
+		if self.wallJump == false then
+			self.y_vel = self.jump_vel * self.doublejump_vel
+			self.doubleJump = false
+		end
   	end
 end
 
@@ -344,15 +344,54 @@ function player:damage(n)
 	end
 end
 
+function player:downwardAirAttack()
+	self.y_vel = 100000
+	self.ability.damage = 1
+	self.ability.using = "downwardAirAttack"
+	self.ability.hitbox.x = -self.w
+	self.ability.hitbox.y = self.h/2
+	self.ability.hitbox.width = self.w
+	self.ability.hitbox.height = self.h
+	self.ability.image = love.graphics.newImage( "sprites/Down.png" )
+	self.ability.knockback.x = 100000
+	self.ability.knockback.y = 1000
+end
+
 function player:update(dt)
 	self.brutality:update(dt)
 	self.brutalityTier=self.brutality:getCurrentTier()
 	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
-	self.jumpTimer = self.jumpTimer - dt
-	if love.keyboard.isDown(" ") then
-		self:jump(dt)
+	--self.jumpTimer = self.jumpTimer - dt
+
+	if self.ability.using then
+		if self.ability.using == "downwardAirAttack" then 
+			self.x_vel = 0
+			if self.standing then
+				self.ability.using = false
+			end
+		end
+		for i, ent in pairs (ents.objects) do
+			if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x+self.ability.hitbox.width)
+				and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+				ent.x_vel = ent.x_vel + self.ability.knockback.x
+				ent.x_vel = ent.x_vel + self.ability.knockback.y
+				ent.health = ent.health - self.ability.damage
+			end
+		end
 	end
+
+	if love.keyboard.isDown(" ") then
+		if not self.isJump then
+			self.isJump = true
+			self:jump(dt)
+		end
+	end
+
+	if love.keyboard.isDown("s") and love.keyboard.isDown("v") then
+		self:downwardAirAttack()
+	end
+
 	if love.keyboard.isDown("lshift") then
 		self.speed = RUN
 		self.acceleration = RUNACCEL
@@ -565,8 +604,6 @@ function player:draw()
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 1, 0, 0, 0, 0 )
 		end
 	end
-
-
 	--love.graphics.setColor( 255, 0, 0, 255)
 	--love.graphics.rectangle("fill", self.x - self.meleeHitboxSize, self.y, self.meleeHitboxSize, self.h)   --Left melee hitbox
 
@@ -596,6 +633,11 @@ function player:draw()
 			love.graphics.setColor( 255, 255, 255, 255 )
 			love.graphics.draw( self.image, self.x + self.spriteOffset_x, self.y + self.spriteOffset_y, 0, 1, 0.5, 0, 0, 0, 0 )
 		end
+	end
+
+	if self.ability.using then
+		print("drawing ability")
+		love.graphics.draw( self.ability.image, self.ability.hitbox.x + self.x, self.ability.hitbox.y + self.y,0,.1,.1,0,0,0,0)
 	end
 end
 

@@ -147,6 +147,10 @@ function game:keyreleased(key, code)
     if key == 'escape' then
         Gamestate.switch(menu)
     end
+    if key == " " then
+    	player.isJump = false
+    end
+
 	if key == "s" then
 		player:stand()
 	end
