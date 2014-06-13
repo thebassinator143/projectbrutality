@@ -12,6 +12,7 @@ function ents.Startup()
 	register["movingplatform"] = love.filesystem.load( ents.objpath .. "movingplatform.lua" )
 	register["healthcheckpoint"] = love.filesystem.load( ents.objpath .. "healthcheckpoint.lua" )
 	register["soulgate"] = love.filesystem.load( ents.objpath .. "soulgate.lua" )
+	register["plaguewalker"] = love.filesystem.load( ents.objpath .. "plaguewalker.lua" )
 end
 
 function ents.Derive(name)

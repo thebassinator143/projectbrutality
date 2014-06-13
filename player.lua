@@ -343,7 +343,7 @@ function player:update(dt)
 	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
 
-	--if love.keyboard.isDown("lshift") then
+	--if love.keyboard.isDown("lshift") then                                               --To turn runspeed on, uncomment this block
 	--	self.speed = RUN
 	--	self.acceleration = RUNACCEL
 	--	self.airacceleration = RUNAIRACCEL

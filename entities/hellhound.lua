@@ -97,9 +97,9 @@ end
 
 function ent:update(dt)
 
-	if self.y > world.ground + self.h then
-		ents.Destroy( self.id )
-	end
+	--if self.y > world.ground + self.h then
+	--	ents.Destroy( self.id )
+	--end
 
 	if self.health <= 0 then
 		ent:kill()

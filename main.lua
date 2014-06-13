@@ -37,7 +37,7 @@ function game:init()
 	map:setDrawRange(0, 0, map.width * map.tileWidth, map.height * map.tileHeight)
 
 	camera:setBounds(0, 0, (map.width * map.tileWidth - (camera.sx * love.graphics.getWidth())), (map.height * map.tileHeight - (camera.sx * love.graphics.getHeight())) )
-
+	
 	world = 	{
 				gravity = 1350,
 				ground = 896,
@@ -52,8 +52,8 @@ function game:init()
 
 	ents.Create( "hellhound", 130, 784, false )
 	ents.Create( "hellhound", 588, 784, false )
-	ents.Create( "hellhound", 532, 784, false )
-	ents.Create( "hellhound", 2576, 784, false )
+	ents.Create( "plaguewalker", 532, 784, false )
+	ents.Create( "plaguewalker", 2576, 784, false )
 	ents.Create( "hellhound", 1960, 684, false )
 
 	ents.Create( "spike", 1120, 868, false )
@@ -101,9 +101,9 @@ function game:update(dt)
 	if dt > 0.05 then
 		dt = 0.05
 	end
-
+	
 	player:update(dt)
-
+	
 	ents:update(dt)
 
 	attackPS:update(dt)
