@@ -36,6 +36,8 @@ player = 	{
 				acceleration = WALKACCEL,
 				airacceleration = WALKAIRACCEL,
 				reactivity = REACTIVITY * (WALKACCEL - RUNACCEL),
+				acceleration = 15,
+				airacceleration = 4,
 				jump_vel = -495,
 				doublejump_vel = 0.86,							--Multiplies by jump_vel
 				walljump_vel = 0.86,							--Multiplies by jump_vel
@@ -80,6 +82,7 @@ player = 	{
 					},
 				wallslide = false,
 				wallJump = false,
+				jumpTimer = .2,
 				doubleJump = false,
 				swallLeft = false,
 				wallFric = 1,
@@ -148,44 +151,48 @@ function player:attack()
 end
 
 function player:jump(dt)
-	print("attempting Jump")
- 	if self.wallJump then
-		print("Is Wallslide")
- 		if love.keyboard.isDown("a") then
-			print("a down")
- 			if self.wallLeft == true then
- 				print("walljump right")
- 				self:right(dt)
-				self.y_vel = self.jump_vel * self.walljump_vel
-				self.wallslide = false
-				self.wallJump = false
-				self.isWallJumping = true
-				self.wallFric = 1
-				self.wallTimer = 10
+	if(self.jumpTimer < 0) then
+		print("attempting Jump")
+	 	if self.wallJump then
+			print("Is Wallslide")
+	 		if love.keyboard.isDown("a") then
+				print("a down")
+	 			if self.wallLeft == true then
+	 				print("walljump r 	ight")
+	 				self:right(dt)
+					self.y_vel = self.jump_vel * self.walljump_vel
+					self.x_vel = self.speed
+					self.wallslide = false
+					self.wallJump = false
+					self.isWallJumping = true
+					self.wallFric = 1
+					self.wallTimer = 10
+				end
+	 		elseif love.keyboard.isDown("d") then
+				print("d down")
+	 			if self.wallLeft == false then
+	 				print("walljump left")
+	 				self:left(dt)
+					self.y_vel = self.jump_vel * self.walljump_vel
+					self.x_vel = -self.speed
+					self.wallslide = false
+					self.wallJump = false
+					self.wallFric = 1
+					self.wallTimer = 10
+				end
 			end
- 		elseif love.keyboard.isDown("d") then
-			print("d down")
- 			if self.wallLeft == false then
- 				print("walljump left")
- 				self:left(dt)
-				self.y_vel = self.jump_vel * self.walljump_vel
-				self.wallslide = false
-				self.wallJump = false
-				self.isWallJumping = true
-				self.wallFric = 1
-				self.wallTimer = 10
+		elseif self.standing then
+			print("Is Standing")
+			self.y_vel = self.jump_vel
+			self.standing = false
+		elseif self.doubleJump then
+			print ("doubleJumping")
+			if self.wallJump == false then
+				self.y_vel = self.jump_vel * self.doublejump_vel
+				self.doubleJump = false
 			end
-		end
-	elseif self.standing then
-		print("Is Standing")
-		self.y_vel = self.jump_vel
-		self.standing = false
-	elseif self.doubleJump then
-		print ("doubleJumping")
-		if self.wallJump == false then
-			self.y_vel = self.jump_vel * self.doublejump_vel
-			self.doubleJump = false
-		end
+	  	end
+	  	self.jumpTimer = .2
   	end
 end
 
@@ -204,7 +211,7 @@ function player:right(dt)
 				self.x_vel = self.x_vel + (self.acceleration * self.speed * dt)
 			end
 		else
-			if self.isWallJumping then
+			if isWallJumping then
 				self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt*2)
 			else
 				self.x_vel = self.x_vel + (self.airacceleration * self.speed * dt)
@@ -228,7 +235,7 @@ function player:left(dt)
 				self.x_vel = self.x_vel - (self.acceleration * self.speed * dt)
 			end
 		else
-			if self.isWallJumping then
+			if isWallJumping then
 				self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt*2)
 			else
 				self.x_vel = self.x_vel - (self.airacceleration * self.speed * dt)
@@ -342,18 +349,21 @@ function player:update(dt)
 	self.brutalityTier=self.brutality:getCurrentTier()
 	--print(self.brutalityTier.maximum)
 	--print(self.x_vel)
-
-	--if love.keyboard.isDown("lshift") then                                               --To turn runspeed on, uncomment this block
-	--	self.speed = RUN
-	--	self.acceleration = RUNACCEL
-	--	self.airacceleration = RUNAIRACCEL
-	--	self.running = true
-	--else
-	--	self.speed = WALK
-	--	self.acceleration = WALKACCEL
-	--	self.airacceleration = WALKAIRACCEL
-	--	self.running = false
-	--end
+	self.jumpTimer = self.jumpTimer - dt
+	if love.keyboard.isDown(" ") then
+		self:jump(dt)
+	end
+	if love.keyboard.isDown("lshift") then
+		self.speed = RUN
+		self.acceleration = RUNACCEL
+		self.airacceleration = RUNAIRACCEL
+		self.running = true
+	else
+		self.speed = WALK
+		self.acceleration = WALKACCEL
+		self.airacceleration = WALKAIRACCEL
+		self.running = false
+	end
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 

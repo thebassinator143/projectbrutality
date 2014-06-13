@@ -7,7 +7,6 @@ Gamestate = require ("gamestate")
 
 local menu = {}
 local game = {}
-dt = 0
 
 function love.load()
 	Gamestate.registerEvents()
@@ -95,7 +94,6 @@ function game:draw()
 end
 
 function game:update(dt)
-	dt = dt
 	timer.gameTime = timer.gameTime + dt
 
 	if dt > 0.05 then
@@ -112,11 +110,9 @@ function game:update(dt)
 end
 
 function game:keypressed(key)
-	print(dt)
-	if key == " " then
-		print(dt)
-		player:jump(dt)
-	end
+	--if key == " " then
+		--player:jump(dt)
+	--end
 	if key == "v" then
 		attackPS:start()
 		interval = timer.gameTime - timer.lastAttack
