@@ -82,7 +82,7 @@ player = 	{
 					},
 				wallslide = false,
 				wallJump = false,
-				jumpTimer = .2,
+				jumpTimer = .3,
 				doubleJump = false,
 				swallLeft = false,
 				wallFric = 1,
@@ -93,7 +93,7 @@ player = 	{
 
 function player:attack()
 	--[[
-	--Prequisite: unset values are default to 0
+	--Prequisite: unset values are default to 0 
 	--set ability.delay
 	--set ability.damage
 	--set ability.knockback.x
