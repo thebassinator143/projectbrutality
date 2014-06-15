@@ -65,6 +65,7 @@ player = 	{
 				enemyAttackDelay = 0,
 				meleeHitboxSize = 24,
 				delay = 0,
+				attackX_vel = 100,
 				ability =	{
 					using = false,
 					delay = 0,
@@ -115,7 +116,7 @@ function player:attack()
 				if self.facingright then
 					--Collision Detection
 					if (ent.x < (self.x + self.w) + self.ability.hitbox.width - self.ability.hitbox.x) and (ent.x + ent.w > (self.x + self.w) - self.ability.hitbox.x)
-					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					and (ent.y < self.y + self.ability.hitbox.height - self.ability.hitbox.y ) and (ent.y + ent.h > self.y - self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel + (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
@@ -126,7 +127,7 @@ function player:attack()
 					end
 				else --If facing left, invert width and x for player.
 					if (ent.x < (self.x - self.ability.hitbox.width) + self.ability.hitbox.width + self.ability.hitbox.x) and (ent.x + ent.w > self.x - self.ability.hitbox.width + self.ability.hitbox.x)
-					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					and (ent.y < self.y + self.ability.hitbox.height - self.ability.hitbox.y ) and (ent.y + ent.h > self.y - self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel - (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
@@ -348,8 +349,8 @@ function player:downwardAirAttack()
 	end
 	self.ability.damage = 1
 	self.ability.using = "downwardAirAttack"
-	self.ability.hitbox.x = -self.w
-	self.ability.hitbox.y = self.h/2
+	self.ability.hitbox.x = 0
+	self.ability.hitbox.y = 0
 	self.ability.hitbox.width = self.w
 	self.ability.hitbox.height = self.h
 	self.ability.image = love.graphics.newImage( "sprites/Down.png" )
@@ -364,7 +365,7 @@ function player:update(dt)
 	--print(self.x_vel)
 	--self.jumpTimer = self.jumpTimer - dt
 
-	if self.charge > 1.5 then
+	if self.charge > 1 then
 		chargePS:start()
 	else
 		chargePS:stop()
@@ -385,9 +386,9 @@ function player:update(dt)
 		end
 		if self.ability.using == "basic" then
 			if self.facingright then
-				self.x_vel = 0
+				self.x_vel = self.attackX_vel
 			else
-				self.x_vel = 0
+				self.x_vel = -self.attackX_vel
 			end
 		end
 		self:attack()
@@ -412,17 +413,6 @@ function player:update(dt)
 		self:downwardAirAttack()
 	end
 
-	if love.keyboard.isDown("lshift") then
-		self.speed = RUN
-		self.acceleration = RUNACCEL
-		self.airacceleration = RUNAIRACCEL
-		self.running = true
-	else
-		self.speed = WALK
-		self.acceleration = WALKACCEL
-		self.airacceleration = WALKAIRACCEL
-		self.running = false
-	end
 	local halfX = self.w / 2
 	local halfY = self.h / 2
 
@@ -665,20 +655,6 @@ function player:draw()
 	--end
 end
 
---function player:melee()
---	print("MELEE")
---	self.ability.delay = 0
---	self.ability.damage = 10
---	self.ability.knockback.x = 1000
---	self.ability.knockback.y = -1000
---	self.ability.enemyDelay = 02
---	self.ability.hitbox.x = 0
---	self.ability.hitbox.y = -25
---	self.ability.hitbox.width = 30
---	self.ability.hitbox.height = 50
---	player:attack()
---end
-
 function player:setChargeTimer()
 	print("CHARGING")
 	self.charging=true
@@ -688,14 +664,14 @@ function player:chargedMelee()
 	print(self.charge)
 	if self.charge>1.0 then
 		self.ability.delay = 0
-		self.ability.damage = 15
+		self.ability.damage = 10
 		self.ability.knockback.x = 300
 		self.ability.knockback.y = -350
 		self.ability.enemyDelay = 0
 		self.ability.hitbox.x = 8
-		self.ability.hitbox.y = 0
+		self.ability.hitbox.y = 2
 		self.ability.hitbox.width = 36
-		self.ability.hitbox.height = 54
+		self.ability.hitbox.height = 56
 		player:attack()
 	end
 	self.charging=false
@@ -705,15 +681,15 @@ end
 function player:setBasicAttack()
 	self.ability.using = "basic"
 	self.ability.cooldown = 0
-	self.ability.delay = .3
+	self.ability.delay = .08
 	self.ability.enemyDelay = 0
 	self.ability.damage = BASE_MELEE_DAMAGE
-	self.ability.knockback.x = 0
+	self.ability.knockback.x = 73
 	self.ability.knockback.y = 0
 	self.ability.hitbox.x = 8
-	self.ability.hitbox.y = 0
+	self.ability.hitbox.y = 2
 	self.ability.hitbox.width = 36
-	self.ability.hitbox.height = 54
+	self.ability.hitbox.height = 56
 	--self.ability.image = love.graphics.newImage( "sprites/default.png" )
 end
 
@@ -725,10 +701,10 @@ function player:setSequenceAttack(count)
 		self.ability.damage = 2 * BASE_MELEE_DAMAGE
 		self.ability.knockback.x = 0
 		self.ability.knockback.y = 0
-		self.ability.hitbox.x = 0
-		self.ability.hitbox.y = 0
-		self.ability.hitbox.width = 40
-		self.ability.hitbox.height = 54
+		self.ability.hitbox.x = 8
+		self.ability.hitbox.y = 2
+		self.ability.hitbox.width = 36
+		self.ability.hitbox.height = 56
 		print("Executing special attack 1!")
 	elseif count == 5 then
 		self.ability.cooldown = 0
@@ -737,10 +713,10 @@ function player:setSequenceAttack(count)
 		self.ability.damage = 2 * BASE_MELEE_DAMAGE
 		self.ability.knockback.x = 0
 		self.ability.knockback.y = 0
-		self.ability.hitbox.x = 0
-		self.ability.hitbox.y = 0
-		self.ability.hitbox.width = 40
-		self.ability.hitbox.height = 54
+		self.ability.hitbox.x = 8
+		self.ability.hitbox.y = 2
+		self.ability.hitbox.width = 36
+		self.ability.hitbox.height = 56
 		self.brutality:addBrutality(1,1)
 		print("Executing special attack 2!")
 	elseif count == 6 then
@@ -750,10 +726,10 @@ function player:setSequenceAttack(count)
 		self.ability.damage = 3 * BASE_MELEE_DAMAGE
 		self.ability.knockback.x = 50
 		self.ability.knockback.y = -1000
-		self.ability.hitbox.x = 0
-		self.ability.hitbox.y = 0
-		self.ability.hitbox.width = 40
-		self.ability.hitbox.height = 54
+		self.ability.hitbox.x = 8
+		self.ability.hitbox.y = 2
+		self.ability.hitbox.width = 36
+		self.ability.hitbox.height = 56
 		self.brutality:addBrutality(2,1)
 		print("Executing special attack 3!")
 	end
