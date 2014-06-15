@@ -51,6 +51,7 @@ function game:init()
 				}
 
 	ents.Create( "hellhound", 130, 784, false )
+	ents.Create( "hellhound", 89, 532, false )
 	ents.Create( "hellhound", 588, 784, false )
 	ents.Create( "plaguewalker", 532, 784, false )
 	ents.Create( "plaguewalker", 2576, 784, false )

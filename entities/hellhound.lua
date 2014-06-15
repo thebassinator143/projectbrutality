@@ -15,13 +15,13 @@ function ent:load(x, y)
 	self.acceleration = 10
 	self.size = 1
 	self.h = 28
-	self.w = 43
+	self.w = 51
 	self.health = 35
 	self.damage = 1
 	self.invincibilityRemaining = 0
 	self.maxhealth = self.health
 	self.standing = false
-	self.spriteOffset_x = -7
+	self.spriteOffset_x = 0
 	self.spriteOffset_y = 0
 	self.brutality=10
 end
@@ -148,7 +148,9 @@ function ent:update(dt)
 	end
 	if self.y_vel > 0 then
 		if not (ent:isColliding(map, self.x + 1, nextY + self.h))
-			and not(ent:isColliding(map, self.x + self.w - 1, nextY + self.h)) then
+			and not(ent:isColliding(map, self.x + self.w - 1, nextY + self.h))	
+			and not(ent:isOneWayColliding(map, self.x + 1, nextY + self.h))
+			and not(ent:isOneWayColliding(map, self.x + self.w - 1, nextY + self.h)) then
 				self.y = nextY
 				self.standing = false
 		else
@@ -178,6 +180,13 @@ end
 
 function ent:isColliding(map, x, y)
 	local layer = map.tl["Solid"]
+	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
+	local tile = layer.tileData(tileX, tileY)
+	return not(tile == nil)
+end
+
+function ent:isOneWayColliding(map, x, y)
+	local layer = map.tl["oneWayPlatforms"]
 	local tileX, tileY = math.floor(x / map.tileWidth), math.floor(y / map.tileHeight)
 	local tile = layer.tileData(tileX, tileY)
 	return not(tile == nil)

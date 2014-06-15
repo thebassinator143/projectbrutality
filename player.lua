@@ -18,7 +18,7 @@ HEIGHT = 54
 DUCKHEIGHT = HEIGHT/2
 
 
-BASE_MELEE_DAMAGE = 5
+BASE_MELEE_DAMAGE = 1
 
 player = 	{
 				image = love.graphics.newImage( "sprites/playersprite.png" ),
@@ -116,8 +116,8 @@ function player:attack()
 			if not ent.BG then --why??
 				if self.facingright then
 					--Collision Detection
-					if (ent.x < self.x + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.ability.hitbox.x+self.ability.hitbox.width)
-					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					if (ent.x < self.x + self.w + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.w + self.ability.hitbox.x + self.ability.hitbox.width)
+					and (ent.y < self.y + self.ability.hitbox.height + self.ability.hitbox.y) and (ent.y + ent.h > self.y + self.ability.hitbox.height + self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel + (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
@@ -127,8 +127,8 @@ function player:attack()
 						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				else --If facing left, invert width and x for player.
-					if (ent.x < self.x + self.w - self.ability.hitbox.x) and (ent.x + ent.w > self.x + self.w - self.ability.hitbox.width)
-					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
+					if (ent.x < self.x - self.ability.hitbox.width - self.ability.hitbox.x) and (ent.x + ent.w > self.x - self.ability.hitbox.x - self.ability.hitbox.width)
+					and (ent.y < self.y + self.ability.hitbox.height + self.ability.hitbox.y) and (ent.y + ent.h > self.y + self.ability.hitbox.height + self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel - (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
@@ -688,15 +688,15 @@ end
 
 function player:chargedMelee()
 	print(self.charge)
-	if self.charge>1.5 then
+	if self.charge>1.0 then
 		self.ability.delay = 0
-		self.ability.damage = 20
+		self.ability.damage = 15
 		self.ability.knockback.x = 300
 		self.ability.knockback.y = -350
 		self.ability.enemyDelay = 0
 		self.ability.hitbox.x = 0
 		self.ability.hitbox.y = 0
-		self.ability.hitbox.width = 40
+		self.ability.hitbox.width = 28
 		self.ability.hitbox.height = 54
 		player:attack()
 	end
@@ -714,7 +714,7 @@ function player:setBasicAttack()
 	self.ability.knockback.y = 0
 	self.ability.hitbox.x = 0
 	self.ability.hitbox.y = 0
-	self.ability.hitbox.width = 40
+	self.ability.hitbox.width = 28
 	self.ability.hitbox.height = 54
 	--self.ability.image = love.graphics.newImage( "sprites/default.png" )
 end

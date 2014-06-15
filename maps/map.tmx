@@ -16,7 +16,7 @@
  </layer>
  <layer name="Solid" width="96" height="32">
   <data encoding="base64" compression="zlib">
-   eJztmGsLgyAUhtuNsTHq+7Z2/d7//3lT5oEQS03tWL4PHFI4RHv2dhxrKsBFLarhfoiCOVXwzwn885LCf6cVGAb55wXnLy8h+cecCafvHy7nxyf/+F7ig/nPi8z/mfshCibEv37+4uzwB7//+ZBZTekf74cd5J+P1PkHduCfjxzyX/r5wO2/ZHLIf+nM5b/0OWPClP/OcDX5gr84YP7w4Tv/U2d+LXNpL2qr6mDptfn38WGaXS7XpeDqVTo9qrL9t4n5E9/rUJ/p/V67f3Iby+tF1ZhXup/eN3TPJfp38SohF1PyGtq3VP+b6u92N9Lj4lVSq76xzyh7KNdz9lHvTdRdVJvRmvYP7XmvE/tyW/f3L1FvUZ+M1rT/al6fE/tyW/f3P+cgJbQ=
+   eJztmNkKgzAQRe1GaSn63tau7/7/5zWhGZAQTWISJ5p7YDChg9jT6yhtKsBFLarhvoiCOVXwzwn885LCf6cVGAb55wXPX15C8o85E07fP1zOj0/+8bvEB/OfF5n/M/dFFEyIf/35i2eHP3j/50NmNaV/3B92kH8+Uucf2IF/PnLIf+nPB27/JaPnv9M+M61BXObKf+lzxoRp/neGo8kX/MUB858P3/ef1Jlfy1zai9qqOlh6bf59fJhml8txKbh6lU6Pqmz/bWL+xPc61Ge6v9fun9zG8npRNeaVzqf3DZ1zif5dvErIxZS8hvYt1f+m+rvdjfS4eJXUqm/sO8oeyvWcfdR7E3UX1Wa0pv1Du97rxL7c1v39S9Rb1CejNe2/mtfnxL7c1v39D5DuJj4=
   </data>
  </layer>
  <layer name="oneWayPlatforms" width="96" height="32">
