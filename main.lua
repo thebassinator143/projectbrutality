@@ -30,6 +30,7 @@ function game:init()
 	ents.Startup()
 	setupPS()
 	attackPS:stop()
+	chargePS:stop()
 
 	AdvTiledLoader.path = "maps/"
 	map = AdvTiledLoader.load("map.tmx")
@@ -75,6 +76,8 @@ function game:draw()
 	love.graphics.setColor( 255, 255, 255 )
 	map:draw()
 
+	love.graphics.draw(chargePS, player.x - player.w, player.y + player.h/2)
+	
 	player:draw()
 
 	ents:draw()
@@ -105,6 +108,7 @@ function game:update(dt)
 	ents:update(dt)
 
 	attackPS:update(dt)
+	chargePS:update(dt)
 
 	camera:setPosition( player.x - (love.graphics.getWidth()/(2/camera.sx)), player.y - (love.graphics.getHeight()/(2/camera.sx)))
 end

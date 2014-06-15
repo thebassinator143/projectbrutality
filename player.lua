@@ -366,6 +366,12 @@ function player:update(dt)
 	--print(self.x_vel)
 	--self.jumpTimer = self.jumpTimer - dt
 
+	if self.charge > 1.5 then
+		chargePS:start()
+	else
+		chargePS:stop()
+	end
+	
 	if self.ability.using then
 		if self.ability.delay < 0 then
 			self.ability.using = false
@@ -655,10 +661,10 @@ function player:draw()
 		end
 	end
 
-	if self.ability.using then
-		print("drawing ability")
-		love.graphics.draw( self.ability.image, self.ability.hitbox.x + self.x, self.ability.hitbox.y + self.y,0,.1,.1,0,0,0,0)
-	end
+	--if self.ability.using then
+	--	print("drawing ability")
+	--	love.graphics.draw(self.ability.image, self.ability.hitbox.x + self.x, self.ability.hitbox.y + self.y,0,.1,.1,0,0,0,0)
+	--end
 end
 
 --function player:melee()
@@ -710,7 +716,7 @@ function player:setBasicAttack()
 	self.ability.hitbox.y = 0
 	self.ability.hitbox.width = 40
 	self.ability.hitbox.height = 54
-	self.ability.image = love.graphics.newImage( "sprites/default.png" )
+	--self.ability.image = love.graphics.newImage( "sprites/default.png" )
 end
 
 function player:setSequenceAttack(count)
