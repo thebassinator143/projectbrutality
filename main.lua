@@ -52,6 +52,7 @@ function game:init()
 
 	ents.Create( "hellhound", 130, 784, false )
 	ents.Create( "hellhound", 89, 532, false )
+	ents.Create( "hellhound", 252, 532, false )
 	ents.Create( "hellhound", 588, 784, false )
 	ents.Create( "plaguewalker", 532, 784, false )
 	ents.Create( "plaguewalker", 2576, 784, false )
@@ -164,5 +165,11 @@ function game:keyreleased(key, code)
 	end
 	if key == "q" then
 		love.event.quit()
+	end
+	if key == "t" then
+		player.x = player.x - 1
+	end
+	if key == "y" then
+		player.x = player.x + 1
 	end
 end

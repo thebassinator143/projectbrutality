@@ -110,14 +110,12 @@ function player:attack()
 	--]]
 	if self.delay <= 0 then --delay is a global cooldown period where the player cannot use skills, generally this means they are still animating a skill and cant use another.
 		print("derp")
-		print (self.brutalityTier.hitboxBoost)
-		print("/derp")
 		for i, ent in pairs(ents.objects) do
 			if not ent.BG then --why??
 				if self.facingright then
 					--Collision Detection
-					if (ent.x < self.x + self.w + self.ability.hitbox.x + self.ability.hitbox.width) and (ent.x + ent.w > self.x + self.w + self.ability.hitbox.x + self.ability.hitbox.width)
-					and (ent.y < self.y + self.ability.hitbox.height + self.ability.hitbox.y) and (ent.y + ent.h > self.y + self.ability.hitbox.height + self.ability.hitbox.y) then
+					if (ent.x < (self.x + self.w) + self.ability.hitbox.width - self.ability.hitbox.x) and (ent.x + ent.w > (self.x + self.w) - self.ability.hitbox.x)
+					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel + (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
@@ -127,8 +125,8 @@ function player:attack()
 						self.health=self.health+self.brutalityTier.lifeSteal
 					end
 				else --If facing left, invert width and x for player.
-					if (ent.x < self.x - self.ability.hitbox.width - self.ability.hitbox.x) and (ent.x + ent.w > self.x - self.ability.hitbox.x - self.ability.hitbox.width)
-					and (ent.y < self.y + self.ability.hitbox.height + self.ability.hitbox.y) and (ent.y + ent.h > self.y + self.ability.hitbox.height + self.ability.hitbox.y) then
+					if (ent.x < (self.x - self.ability.hitbox.width) + self.ability.hitbox.width + self.ability.hitbox.x) and (ent.x + ent.w > self.x - self.ability.hitbox.width + self.ability.hitbox.x)
+					and (ent.y < self.y + self.ability.hitbox.y + self.ability.hitbox.height) and (ent.y + ent.h > self.y + self.ability.hitbox.y) then
 						ent.health = ent.health - (self.ability.damage+self.brutalityTier.damageBoost)     --Apply Damage
 						ent.y_vel = ent.y_vel + (self.ability.knockback.y+self.brutalityTier.yKnockbackBoost)  --Apply Y knockback
 						ent.x_vel = ent.x_vel - (self.ability.knockback.x+self.brutalityTier.xKnockbackBoost)  --Apply X knockback
@@ -387,9 +385,9 @@ function player:update(dt)
 		end
 		if self.ability.using == "basic" then
 			if self.facingright then
-				self.x_vel = 1000
+				self.x_vel = 0
 			else
-				self.x_vel = -1000
+				self.x_vel = 0
 			end
 		end
 		self:attack()
@@ -694,9 +692,9 @@ function player:chargedMelee()
 		self.ability.knockback.x = 300
 		self.ability.knockback.y = -350
 		self.ability.enemyDelay = 0
-		self.ability.hitbox.x = 0
+		self.ability.hitbox.x = 8
 		self.ability.hitbox.y = 0
-		self.ability.hitbox.width = 28
+		self.ability.hitbox.width = 36
 		self.ability.hitbox.height = 54
 		player:attack()
 	end
@@ -712,9 +710,9 @@ function player:setBasicAttack()
 	self.ability.damage = BASE_MELEE_DAMAGE
 	self.ability.knockback.x = 0
 	self.ability.knockback.y = 0
-	self.ability.hitbox.x = 0
+	self.ability.hitbox.x = 8
 	self.ability.hitbox.y = 0
-	self.ability.hitbox.width = 28
+	self.ability.hitbox.width = 36
 	self.ability.hitbox.height = 54
 	--self.ability.image = love.graphics.newImage( "sprites/default.png" )
 end
